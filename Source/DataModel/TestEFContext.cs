@@ -11,6 +11,7 @@ namespace Tests.DataModel
 			optionsBuilder.UseSqlServer($"Server=.;Database=PerformanceTest;Trusted_Connection=True");
 		}
 
-		public DbSet<Narrow> Narrow { get; set; }
+		public DbSet<Narrow>     Narrow     { get; set; }
+		public DbSet<NarrowLong> NarrowLong { get; set; }
 	}
 }

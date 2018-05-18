@@ -38,7 +38,8 @@ namespace Tests
 		{
 			var testProviders = new ITests[]
 			{
-				new AdoNetTests       (),
+				new AdoNetIDTests     (),
+				new AdoNetNameTests   (),
 				new DapperTests       (),
 				new LinqToDBQueryTests(),
 				new LinqToDBLinqTests (),
@@ -50,58 +51,93 @@ namespace Tests
 #endif
 			};
 
-			var testMethods = new[]
-			{
-				new { Func = (TTest)(t => t.GetSingleColumnFast), Repeat =  1000 },
-//				new { Func = (TTest)(t => t.GetSingleColumnFast), Repeat = 10000 },
-				new { Func = (TTest)(t => t.GetSingleColumnSlow), Repeat =  1000 },
-//				new { Func = (TTest)(t => t.GetSingleColumnSlow), Repeat = 10000 },
-			};
 
+			RunTests("Simple tests", testProviders, new[]
+			{
+//				CreateTest<ITests>(t => t.GetSingleColumnFast,  10000),
+//				CreateTest<ITests>(t => t.GetSingleColumnSlow,  10000),
+//				CreateTest<ITests>(t => t.GetSingleColumnParam, 10000),
+				CreateTest<ITests>(t => t.GetNarrowList,        100,   10000),
+				CreateTest<ITests>(t => t.GetNarrowList,        10,   100000),
+				CreateTest<ITests>(t => t.GetNarrowList,        1,   1000000),
+			});
+		}
+
+		static void RunTests(string description, ITests[] testProviders, Test<ITests>[] testMethods)
+		{
 			var tests = testMethods.Select(m =>
 			{
-				var func  = m.Func.Compile();
+				Console.Write($"{m.Name} / {m.Repeat} ");
+
+				if (m.Take > 0)
+					Console.Write($"/ {m.Take} ");
+
+				var func  = m.Func;
 				var watch = testProviders.Select(p =>
 				{
 					// Warmup
-					if (func(p)(new Stopwatch(), 1) == false)
+					if (func(p)(new Stopwatch(), 1, 1) == false)
+					{
+						Console.Write(' ');
 						return null;
+					}
 
 					// Test
 					var stopwatch = new Stopwatch();
-					func(p)(stopwatch, m.Repeat);
+					func(p)(stopwatch, m.Repeat, m.Take ?? -1);
 					var time = new TimeSpan(stopwatch.ElapsedTicks);
+
+					Console.Write('.');
 
 					return new { time, stopwatch, p, m.Repeat };
 				}).ToArray();
 
-				return new
-				{
-					Test = ((MethodInfo)((ConstantExpression)m.Func.Body
-						.Find(e => e is ConstantExpression c && c.Value is MethodInfo)).Value).Name,
-					m.Repeat,
-					Stopwatch = watch,
-				};
+				Console.WriteLine();
+
+				return new { Test = m.Name, m.Repeat, Stopwatch = watch, };
 			})
 			.ToArray()
 			.Select(t => new
 			{
 				t.Test,
 				t.Repeat,
-				AdoNet     = t.Stopwatch.Single(w => w.p is AdoNetTests).       time,
-				Dapper     = t.Stopwatch.Single(w => w.p is DapperTests).       time,
-				L2DB_Query = t.Stopwatch.Single(w => w.p is LinqToDBQueryTests).time,
-				L2DB_Linq  = t.Stopwatch.Single(w => w.p is LinqToDBLinqTests). time,
-				L2DB_Comp  = t.Stopwatch.Single(w => w.p is LinqToDBCompTests). time,
+				AdoNet_ID   = t.Stopwatch.SingleOrDefault(w => w?.p is AdoNetIDTests)     ?.time,
+				AdoNet_Name = t.Stopwatch.SingleOrDefault(w => w?.p is AdoNetNameTests)   ?.time,
+				Dapper      = t.Stopwatch.SingleOrDefault(w => w?.p is DapperTests)       ?.time,
+				L2DB_Query  = t.Stopwatch.SingleOrDefault(w => w?.p is LinqToDBQueryTests)?.time,
+				L2DB_Linq   = t.Stopwatch.SingleOrDefault(w => w?.p is LinqToDBLinqTests) ?.time,
+				L2DB_Comp   = t.Stopwatch.SingleOrDefault(w => w?.p is LinqToDBCompTests) ?.time,
 #if !NET452
-				EF_Query   = t.Stopwatch.Single(w => w.p is EFQueryTests).      time,
-				EF_Linq    = t.Stopwatch.Single(w => w.p is EFLinqTests).       time,
-				EF_Comp    = t.Stopwatch.Single(w => w.p is EFCompTests).       time,
+				EF_Query    = t.Stopwatch.SingleOrDefault(w => w?.p is EFQueryTests)      ?.time,
+				EF_Linq     = t.Stopwatch.SingleOrDefault(w => w?.p is EFLinqTests)       ?.time,
+				EF_Comp     = t.Stopwatch.SingleOrDefault(w => w?.p is EFCompTests)       ?.time,
 #endif
 			})
 			.ToArray();
 
+			Console.WriteLine();
+			Console.WriteLine(description);
 			Console.WriteLine(tests.ToDiagnosticString());
+		}
+
+		class Test<T>
+		{
+			public Func<T,Func<Stopwatch,int,int,bool>> Func;
+			public string Name;
+			public int    Repeat;
+			public int?   Take;
+		}
+
+		static Test<T> CreateTest<T>(Expression<Func<T,Func<Stopwatch,int,int,bool>>> func, int repeat, int take = -1)
+		{
+			return new Test<T>
+			{
+				Func   = func.Compile(),
+				Name   = ((MethodInfo)((ConstantExpression)func.Body
+					.Find(e => e is ConstantExpression c && c.Value is MethodInfo)).Value).Name,
+				Repeat = repeat,
+				Take   = take > 0 ? take : (int?)null
+			};
 		}
 
 		static void CreateDatabase(string serverName = ".")

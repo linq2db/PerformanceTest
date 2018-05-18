@@ -15,7 +15,9 @@ namespace Tests.Tools
 	{
 		class ValueHolder<T>
 		{
+#pragma warning disable 414
 			public T Value;
+#pragma warning restore 414
 		}
 
 		public static StringBuilder ToDiagnosticString<T>(this IEnumerable<T> source, StringBuilder stringBuilder)
@@ -25,18 +27,19 @@ namespace Tests.Tools
 
 			var ta         = TypeAccessor.GetAccessor<T>();
 			var itemValues = new List<string[]>();
+			var members    = ta.Members.Where(m => source.Any(v => m.GetValue(v) != null)).ToList();
 
 			foreach (var item in source)
 			{
-				var values = new string[ta.Members.Count];
+				var values = new string[members.Count];
 
-				for (var i = 0; i < ta.Members.Count; i++)
+				for (var i = 0; i < members.Count; i++)
 				{
-					var member = ta.Members[i];
+					var member = members[i];
 					var value  = member.GetValue(item);
-					var type   = ta.Members[i].Type.ToNullableUnderlying();
+					var type   = members[i].Type.ToNullableUnderlying();
 
-					if      (value == null)            values[i] = "<NULL>";
+					if      (value == null)            values[i] = ""; //"<NULL>";
 					else if (type == typeof(decimal))  values[i] = ((decimal) value).ToString("G");
 					else if (type == typeof(DateTime)) values[i] = ((DateTime)value).ToString("yyy-MM-dd hh:mm:ss");
 					else if (type == typeof(TimeSpan))
@@ -55,7 +58,7 @@ namespace Tests.Tools
 				.Append("Count : ").Append(itemValues.Count).AppendLine()
 				;
 
-			var lens = ta.Members.Select(m => m.Name.Length).ToArray();
+			var lens = members.Select(m => m.Name.Length).ToArray();
 
 			foreach (var values in itemValues)
 				for (var i = 0; i < lens.Length; i++)
@@ -72,7 +75,7 @@ namespace Tests.Tools
 
 			for (var i = 0; i < lens.Length; i++)
 			{
-				var member = ta.Members[i];
+				var member = members[i];
 				stringBuilder.Append("| ").Append(member.Name).Append(' ', lens[i] - member.Name.Length).Append(" ");
 			}
 
@@ -86,7 +89,7 @@ namespace Tests.Tools
 				{
 					stringBuilder.Append("| ");
 
-					var type  = ta.Members[i].Type.ToNullableUnderlying();
+					var type  = members[i].Type.ToNullableUnderlying();
 					var right = false;
 
 					switch (Type.GetTypeCode(type))
@@ -123,10 +126,6 @@ namespace Tests.Tools
 			}
 
 			PrintDivider();
-
-			stringBuilder
-				.AppendLine()
-				;
 
 			return stringBuilder;
 		}
