@@ -4,13 +4,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime;
 
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider.SqlServer;
 using LinqToDB.Expressions;
-
-using TTest = System.Linq.Expressions.Expression<System.Func<Tests.ITests,System.Func<System.Diagnostics.Stopwatch,int,bool>>>;
 
 namespace Tests
 {
@@ -30,7 +29,7 @@ namespace Tests
 
 			DataConnection.DefaultConfiguration = "Test";
 
-			//CreateDatabase(serverName);
+			CreateDatabase(serverName);
 			RunTests();
 		}
 
@@ -38,8 +37,7 @@ namespace Tests
 		{
 			var testProviders = new ITests[]
 			{
-				new AdoNetIDTests     (),
-				new AdoNetNameTests   (),
+				new AdoNetTests       (),
 				new DapperTests       (),
 				new LinqToDBQueryTests(),
 				new LinqToDBLinqTests (),
@@ -54,9 +52,9 @@ namespace Tests
 
 			RunTests("Simple tests", testProviders, new[]
 			{
-//				CreateTest<ITests>(t => t.GetSingleColumnFast,  10000),
-//				CreateTest<ITests>(t => t.GetSingleColumnSlow,  10000),
-//				CreateTest<ITests>(t => t.GetSingleColumnParam, 10000),
+				CreateTest<ITests>(t => t.GetSingleColumnFast,  10000),
+				CreateTest<ITests>(t => t.GetSingleColumnSlow,  10000),
+				CreateTest<ITests>(t => t.GetSingleColumnParam, 10000),
 				CreateTest<ITests>(t => t.GetNarrowList,        100,   10000),
 				CreateTest<ITests>(t => t.GetNarrowList,        10,   100000),
 				CreateTest<ITests>(t => t.GetNarrowList,        1,   1000000),
@@ -82,6 +80,11 @@ namespace Tests
 						return null;
 					}
 
+					GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
+					GC.Collect();
+					GC.WaitForPendingFinalizers();
+					GC.Collect();
+
 					// Test
 					var stopwatch = new Stopwatch();
 					func(p)(stopwatch, m.Repeat, m.Take ?? -1);
@@ -101,16 +104,15 @@ namespace Tests
 			{
 				t.Test,
 				t.Repeat,
-				AdoNet_ID   = t.Stopwatch.SingleOrDefault(w => w?.p is AdoNetIDTests)     ?.time,
-				AdoNet_Name = t.Stopwatch.SingleOrDefault(w => w?.p is AdoNetNameTests)   ?.time,
-				Dapper      = t.Stopwatch.SingleOrDefault(w => w?.p is DapperTests)       ?.time,
-				L2DB_Query  = t.Stopwatch.SingleOrDefault(w => w?.p is LinqToDBQueryTests)?.time,
-				L2DB_Linq   = t.Stopwatch.SingleOrDefault(w => w?.p is LinqToDBLinqTests) ?.time,
-				L2DB_Comp   = t.Stopwatch.SingleOrDefault(w => w?.p is LinqToDBCompTests) ?.time,
+				AdoNet_ID  = t.Stopwatch.SingleOrDefault(w => w?.p is AdoNetTests)       ?.time,
+				Dapper     = t.Stopwatch.SingleOrDefault(w => w?.p is DapperTests)       ?.time,
+				L2DB_Query = t.Stopwatch.SingleOrDefault(w => w?.p is LinqToDBQueryTests)?.time,
+				L2DB_Linq  = t.Stopwatch.SingleOrDefault(w => w?.p is LinqToDBLinqTests) ?.time,
+				L2DB_Comp  = t.Stopwatch.SingleOrDefault(w => w?.p is LinqToDBCompTests) ?.time,
 #if !NET452
-				EF_Query    = t.Stopwatch.SingleOrDefault(w => w?.p is EFQueryTests)      ?.time,
-				EF_Linq     = t.Stopwatch.SingleOrDefault(w => w?.p is EFLinqTests)       ?.time,
-				EF_Comp     = t.Stopwatch.SingleOrDefault(w => w?.p is EFCompTests)       ?.time,
+				EF_Query   = t.Stopwatch.SingleOrDefault(w => w?.p is EFQueryTests)      ?.time,
+				EF_Linq    = t.Stopwatch.SingleOrDefault(w => w?.p is EFLinqTests)       ?.time,
+				EF_Comp    = t.Stopwatch.SingleOrDefault(w => w?.p is EFCompTests)       ?.time,
 #endif
 			})
 			.ToArray();

@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
-using Tests.DataModel;
 
 namespace Tests
 {
-	class AdoNetIDTests : ITests
+	using DataModel;
+
+	class AdoNetTests : ITests
 	{
 		readonly string _connectionString = LinqToDB.Data.DataConnection.GetConnectionString("Test");
 
