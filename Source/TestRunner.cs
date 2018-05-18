@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -52,12 +53,12 @@ namespace Tests
 
 			RunTests("Simple tests", testProviders, new[]
 			{
-				CreateTest<ITests>(t => t.GetSingleColumnFast,  10000),
-				CreateTest<ITests>(t => t.GetSingleColumnSlow,  10000),
-				CreateTest<ITests>(t => t.GetSingleColumnParam, 10000),
-				CreateTest<ITests>(t => t.GetNarrowList,        100,   10000),
-				CreateTest<ITests>(t => t.GetNarrowList,        10,   100000),
-				CreateTest<ITests>(t => t.GetNarrowList,        1,   1000000),
+				CreateTest<ITests>(t => t.GetSingleColumnFast,  100000),
+				CreateTest<ITests>(t => t.GetSingleColumnSlow,  100000),
+				CreateTest<ITests>(t => t.GetSingleColumnParam, 100000),
+				CreateTest<ITests>(t => t.GetNarrowList,        1000,   10000),
+				CreateTest<ITests>(t => t.GetNarrowList,        100,   100000),
+				CreateTest<ITests>(t => t.GetNarrowList,        10,   1000000),
 			});
 		}
 
@@ -97,13 +98,14 @@ namespace Tests
 
 				Console.WriteLine();
 
-				return new { Test = m.Name, m.Repeat, Stopwatch = watch, };
+				return new { Test = m.Name, m.Repeat, m.Take, Stopwatch = watch, };
 			})
 			.ToArray()
 			.Select(t => new
 			{
 				t.Test,
 				t.Repeat,
+				t.Take,
 				AdoNet_ID  = t.Stopwatch.SingleOrDefault(w => w?.p is AdoNetTests)       ?.time,
 				Dapper     = t.Stopwatch.SingleOrDefault(w => w?.p is DapperTests)       ?.time,
 				L2DB_Query = t.Stopwatch.SingleOrDefault(w => w?.p is LinqToDBQueryTests)?.time,
@@ -117,9 +119,17 @@ namespace Tests
 			})
 			.ToArray();
 
+			var results = tests.ToDiagnosticString();
+
 			Console.WriteLine();
 			Console.WriteLine(description);
-			Console.WriteLine(tests.ToDiagnosticString());
+			Console.WriteLine(results);
+
+			var filePath = Path.Combine(Path.GetDirectoryName(typeof(TestRunner).Assembly.Location), @"..\..\..\Results.txt");
+
+			File.WriteAllText(filePath, results);
+
+			Console.WriteLine(filePath);
 		}
 
 		class Test<T>
