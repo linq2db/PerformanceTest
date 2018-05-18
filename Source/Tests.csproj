@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>netcoreapp2.0;net452</TargetFrameworks>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\linq2db\Source\LinqToDB\LinqToDB.csproj" />
+		<PackageReference Include="CodeJam" Version="2.0.0" />
+		<PackageReference Include="Dapper" Version="1.50.4" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.0-rc1-final" />
+	</ItemGroup>
+
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net452'">
+		<Compile Remove="DataModel\TestEFContext.cs" />
+		<Compile Remove="EFQueryTests.cs" />
+		<Compile Remove="EFLinqTests.cs" />
+		<Compile Remove="EFCompTests.cs" />
+	</ItemGroup>
+
+</Project>
