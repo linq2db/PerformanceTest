@@ -8,7 +8,7 @@ namespace Tests.DataModel
 		public L2SContext()
 			: base($"Server=.;Database=PerformanceTest;Trusted_Connection=True")
 		{
-			ObjectTrackingEnabled = true;
+			ObjectTrackingEnabled = false;
 		}
 
 		public ITable<Narrow>     Narrows     => GetTable<Narrow>();

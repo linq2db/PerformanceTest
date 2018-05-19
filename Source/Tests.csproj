@@ -20,4 +20,8 @@
 		<Compile Remove="**\EFCore*.cs" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="L2S\" />
+	</ItemGroup>
+
 </Project>

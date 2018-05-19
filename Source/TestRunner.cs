@@ -61,23 +61,23 @@ namespace Tests
 
 			RunTests(platform, "Single Column", testProviders, new[]
 			{
-				CreateTest<ITests>(t => t.GetSingleColumnFast,  100000),
-				CreateTest<ITests>(t => t.GetSingleColumnSlow,  100000),
-				CreateTest<ITests>(t => t.GetSingleColumnParam, 100000),
+				CreateTest<ITests>(t => t.GetSingleColumnFast,  10000),
+				CreateTest<ITests>(t => t.GetSingleColumnSlow,  10000),
+				CreateTest<ITests>(t => t.GetSingleColumnParam, 10000),
 			});
 
 			RunTests(platform, "Narrow List", testProviders, new[]
 			{
-				CreateTest<ITests>(t => t.GetNarrowList,        1000,   10000),
-				CreateTest<ITests>(t => t.GetNarrowList,        100,   100000),
-				CreateTest<ITests>(t => t.GetNarrowList,        10,   1000000),
+				CreateTest<ITests>(t => t.GetNarrowList,        100,   10000),
+				CreateTest<ITests>(t => t.GetNarrowList,        10,   100000),
+				CreateTest<ITests>(t => t.GetNarrowList,        1,   1000000),
 			});
 
 			RunTests(platform, "Wide List", testProviders, new[]
 			{
-				CreateTest<ITests>(t => t.GetWideList,          1000,   10000),
-				CreateTest<ITests>(t => t.GetWideList,          100,   100000),
-				CreateTest<ITests>(t => t.GetWideList,          10,   1000000),
+				CreateTest<ITests>(t => t.GetWideList,          100,   10000),
+				CreateTest<ITests>(t => t.GetWideList,          10,   100000),
+				CreateTest<ITests>(t => t.GetWideList,          1,   1000000),
 			});
 		}
 
