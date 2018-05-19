@@ -6,13 +6,20 @@ namespace Tests
 {
 	using DataModel;
 
-	class EFLinqTests : ITests
+	class EFCoreLinqTests : ITests
 	{
+		public readonly bool NoTracking;
+
+		public EFCoreLinqTests(bool noTracking)
+		{
+			NoTracking = noTracking;
+		}
+
 		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
-			using (var db = new TestEFContext())
+			using (var db = new EFCoreContext(NoTracking))
 				for (var i = 0; i < repeatCount; i++)
 					db.Narrow.Where(t => t.ID == 1).Select(t => t.ID).AsEnumerable().First();
 
@@ -26,7 +33,7 @@ namespace Tests
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new TestEFContext())
+				using (var db = new EFCoreContext(NoTracking))
 					db.Narrow.Where(t => t.ID == 1).Select(t => t.ID).AsEnumerable().First();
 
 			watch.Stop();
@@ -38,7 +45,7 @@ namespace Tests
 		{
 			watch.Start();
 
-			using (var db = new TestEFContext())
+			using (var db = new EFCoreContext(NoTracking))
 				for (var i = 0; i < repeatCount; i++)
 				{
 					var id = 1;
@@ -55,9 +62,22 @@ namespace Tests
 		{
 			watch.Start();
 
-			using (var db = new TestEFContext())
-				for (var i = 0; i < repeatCount; i++)
+			for (var i = 0; i < repeatCount; i++)
+				using (var db = new EFCoreContext(NoTracking))
 					foreach (var item in db.NarrowLong.Take(takeCount)) {}
+
+			watch.Stop();
+
+			return true;
+		}
+
+		public bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
+		{
+			watch.Start();
+
+			for (var i = 0; i < repeatCount; i++)
+				using (var db = new EFCoreContext(NoTracking))
+					foreach (var item in db.WideLong.Take(takeCount)) {}
 
 			watch.Stop();
 

@@ -19,8 +19,10 @@ namespace Tests
 
 	public static class TestRunner
 	{
-		public static void Run(string[] args)
+		public static void Run(string platform)
 		{
+			Console.WriteLine($"Testing {platform}...");
+
 			var serverName = ".";
 
 			DataConnection.AddConfiguration(
@@ -30,39 +32,56 @@ namespace Tests
 
 			DataConnection.DefaultConfiguration = "Test";
 
-			CreateDatabase(serverName);
-			RunTests();
+			//CreateDatabase(serverName);
+			RunTests(platform);
 		}
 
-		static void RunTests()
+		static void RunTests(string platform)
 		{
 			var testProviders = new ITests[]
 			{
 				new AdoNetTests       (),
 				new DapperTests       (),
-				new LinqToDBQueryTests(),
-				new LinqToDBLinqTests (),
-				new LinqToDBCompTests (),
-#if !NET452
-				new EFQueryTests      (),
-				new EFLinqTests       (),
-				new EFCompTests       (),
+				new L2DBQueryTests    (true),
+				new L2DBLinqTests     (true),
+				new L2DBCompTests     (true),
+				new L2DBLinqTests     (false),
+				new L2DBCompTests     (false),
+#if NETCOREAPP2_0
+				new EFCoreQueryTests  (true),
+				new EFCoreLinqTests   (true),
+				new EFCoreCompTests   (true),
+				new EFCoreQueryTests  (false),
+				new EFCoreLinqTests   (false),
+				new EFCoreCompTests   (false),
+#else
+				new L2SLinqTests      (),
 #endif
 			};
 
-
-			RunTests("Simple tests", testProviders, new[]
+			RunTests(platform, "Single Column", testProviders, new[]
 			{
 				CreateTest<ITests>(t => t.GetSingleColumnFast,  100000),
 				CreateTest<ITests>(t => t.GetSingleColumnSlow,  100000),
 				CreateTest<ITests>(t => t.GetSingleColumnParam, 100000),
+			});
+
+			RunTests(platform, "Narrow List", testProviders, new[]
+			{
 				CreateTest<ITests>(t => t.GetNarrowList,        1000,   10000),
 				CreateTest<ITests>(t => t.GetNarrowList,        100,   100000),
 				CreateTest<ITests>(t => t.GetNarrowList,        10,   1000000),
 			});
+
+			RunTests(platform, "Wide List", testProviders, new[]
+			{
+				CreateTest<ITests>(t => t.GetWideList,          1000,   10000),
+				CreateTest<ITests>(t => t.GetWideList,          100,   100000),
+				CreateTest<ITests>(t => t.GetWideList,          10,   1000000),
+			});
 		}
 
-		static void RunTests(string description, ITests[] testProviders, Test<ITests>[] testMethods)
+		static void RunTests(string platform, string testName, ITests[] testProviders, Test<ITests>[] testMethods)
 		{
 			var tests = testMethods.Select(m =>
 			{
@@ -106,15 +125,24 @@ namespace Tests
 				t.Test,
 				t.Repeat,
 				t.Take,
-				AdoNet_ID  = t.Stopwatch.SingleOrDefault(w => w?.p is AdoNetTests)       ?.time,
-				Dapper     = t.Stopwatch.SingleOrDefault(w => w?.p is DapperTests)       ?.time,
-				L2DB_Query = t.Stopwatch.SingleOrDefault(w => w?.p is LinqToDBQueryTests)?.time,
-				L2DB_Linq  = t.Stopwatch.SingleOrDefault(w => w?.p is LinqToDBLinqTests) ?.time,
-				L2DB_Comp  = t.Stopwatch.SingleOrDefault(w => w?.p is LinqToDBCompTests) ?.time,
-#if !NET452
-				EF_Query   = t.Stopwatch.SingleOrDefault(w => w?.p is EFQueryTests)      ?.time,
-				EF_Linq    = t.Stopwatch.SingleOrDefault(w => w?.p is EFLinqTests)       ?.time,
-				EF_Comp    = t.Stopwatch.SingleOrDefault(w => w?.p is EFCompTests)       ?.time,
+				AdoNet_ID    = t.Stopwatch.SingleOrDefault(w => w?.p is AdoNetTests)?.time,
+				Dapper       = t.Stopwatch.SingleOrDefault(w => w?.p is DapperTests)?.time,
+
+				L2DB_Query   = t.Stopwatch.SingleOrDefault(w => w?.p is L2DBQueryTests   p &&  p.NoTracking)?.time,
+				L2DB_Linq    = t.Stopwatch.SingleOrDefault(w => w?.p is L2DBLinqTests    p &&  p.NoTracking)?.time,
+				L2DB_Comp    = t.Stopwatch.SingleOrDefault(w => w?.p is L2DBCompTests    p &&  p.NoTracking)?.time,
+				L2DB_CT_Linq = t.Stopwatch.SingleOrDefault(w => w?.p is L2DBLinqTests    p && !p.NoTracking)?.time,
+				L2DB_CT_Comp = t.Stopwatch.SingleOrDefault(w => w?.p is L2DBCompTests    p && !p.NoTracking)?.time,
+#if NETCOREAPP2_0
+
+				EF_Query     = t.Stopwatch.SingleOrDefault(w => w?.p is EFCoreQueryTests p &&  p.NoTracking)?.time,
+				EF_Linq      = t.Stopwatch.SingleOrDefault(w => w?.p is EFCoreLinqTests  p &&  p.NoTracking)?.time,
+				EF_Comp      = t.Stopwatch.SingleOrDefault(w => w?.p is EFCoreCompTests  p &&  p.NoTracking)?.time,
+				EF_CT_Query  = t.Stopwatch.SingleOrDefault(w => w?.p is EFCoreQueryTests p && !p.NoTracking)?.time,
+				EF_CT_Linq   = t.Stopwatch.SingleOrDefault(w => w?.p is EFCoreLinqTests  p && !p.NoTracking)?.time,
+				EF_CT_Comp   = t.Stopwatch.SingleOrDefault(w => w?.p is EFCoreCompTests  p && !p.NoTracking)?.time,
+#else
+				L2S_Linq     = t.Stopwatch.SingleOrDefault(w => w?.p is L2SLinqTests)?.time,
 #endif
 			})
 			.ToArray();
@@ -122,14 +150,22 @@ namespace Tests
 			var results = tests.ToDiagnosticString();
 
 			Console.WriteLine();
-			Console.WriteLine(description);
+			Console.WriteLine(testName);
 			Console.WriteLine(results);
 
-			var filePath = Path.Combine(Path.GetDirectoryName(typeof(TestRunner).Assembly.Location), @"..\..\..\Results.txt");
+			var basePath = Path.GetDirectoryName(typeof(TestRunner).Assembly.Location);
+
+			while (!Directory.Exists(Path.Combine(basePath, "Result")))
+			{
+				basePath = Path.GetDirectoryName(basePath);
+			}
+
+			var filePath = Path.Combine(basePath, "Result", $"{platform}.{testName}.txt");
 
 			File.WriteAllText(filePath, results);
 
 			Console.WriteLine(filePath);
+			Console.WriteLine();
 		}
 
 		class Test<T>
@@ -162,10 +198,20 @@ namespace Tests
 				db.Execute("CREATE DATABASE PerformanceTest");
 			}
 
-			using (var db = new TestContext())
+			using (var db = new L2DBContext())
 			{
 				CreateTable(db, new[] { new Narrow { ID = 1, Field1 = 2 } });
 				CreateTable(db, Enumerable.Range(1, 1000000).Select(i => new NarrowLong { ID = i, Field1 = -i }));
+				CreateTable(db, Enumerable.Range(1, 1000000).Select(i => new WideLong
+				{
+					ID            = i,
+					Field1        = -i,
+					ShortValue    = i % 2 == 0 ? null : (short?)   (i % Int16.MaxValue / 2),
+					IntValue      = i % 2 == 1 ? null : (int?)     (i % Int32.MaxValue - 1),
+					LongValue     = i % 2 == 0 ? null : (long?)    (i * 2),
+					DateTimeValue = i % 2 == 1 ? null : (DateTime?)new DateTime(i),
+					StringValue   = i % 2 == 0 ? null : new string(Enumerable.Range(0, 95).Select(n => (char)(n % 30 + (int)' ')).ToArray()),
+				}));
 			}
 
 			Console.WriteLine("Database created.");

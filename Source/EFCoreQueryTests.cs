@@ -9,13 +9,20 @@ namespace Tests
 {
 	using DataModel;
 
-	class EFQueryTests : ITests
+	class EFCoreQueryTests : ITests
 	{
+		public readonly bool NoTracking;
+
+		public EFCoreQueryTests(bool noTracking)
+		{
+			NoTracking = noTracking;
+		}
+
 		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
-			using (var db = new TestEFContext())
+			using (var db = new EFCoreContext(NoTracking))
 				for (var i = 0; i < repeatCount; i++)
 					db.Narrow.FromSql("SELECT ID FROM Narrow WHERE ID = 1").Select(t => t.ID).AsEnumerable().First();
 
@@ -29,7 +36,7 @@ namespace Tests
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new TestEFContext())
+				using (var db = new EFCoreContext(NoTracking))
 					db.Narrow.FromSql("SELECT ID FROM Narrow WHERE ID = 1").Select(t => t.ID).AsEnumerable().First();
 
 			watch.Stop();
@@ -41,7 +48,7 @@ namespace Tests
 		{
 			watch.Start();
 
-			using (var db = new TestEFContext())
+			using (var db = new EFCoreContext(NoTracking))
 			{
 				for (var i = 0; i < repeatCount; i++)
 					db.Narrow
@@ -60,9 +67,31 @@ namespace Tests
 		{
 			watch.Start();
 
-			using (var db = new TestEFContext())
-				for (var i = 0; i < repeatCount; i++)
+			for (var i = 0; i < repeatCount; i++)
+				using (var db = new EFCoreContext(NoTracking))
 					foreach (var item in db.NarrowLong.FromSql($"SELECT TOP ({takeCount}) ID, Field1 FROM NarrowLong")) {}
+
+			watch.Stop();
+
+			return true;
+		}
+
+		public bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
+		{
+			watch.Start();
+
+			for (var i = 0; i < repeatCount; i++)
+				using (var db = new EFCoreContext(NoTracking))
+					foreach (var item in db.WideLong.FromSql($@"
+SELECT TOP ({takeCount})
+	ID,
+	Field1,
+	ShortValue,
+	IntValue,
+	LongValue,
+	StringValue,
+	DateTimeValue
+FROM WideLong")) {}
 
 			watch.Stop();
 

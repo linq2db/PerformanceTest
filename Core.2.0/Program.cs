@@ -6,7 +6,7 @@ namespace Core._2._0
 	{
 		static void Main(string[] args)
 		{
-			Tests.TestRunner.Run(args);
+			Tests.TestRunner.Run("Core.2.0");
 		}
 	}
 }

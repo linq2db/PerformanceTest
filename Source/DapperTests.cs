@@ -63,12 +63,37 @@ namespace Tests
 		{
 			watch.Start();
 
+			for (var i = 0; i < repeatCount; i++)
+			using (var con = new SqlConnection(_connectionString))
+			{
+				con.Open();
+				foreach (var item in con.Query<NarrowLong>($"SELECT TOP {takeCount} ID, Field1 FROM NarrowLong")) {}
+			}
+
+			watch.Stop();
+
+			return true;
+		}
+
+		public bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
+		{
+			watch.Start();
+
+			for (var i = 0; i < repeatCount; i++)
 			using (var con = new SqlConnection(_connectionString))
 			{
 				con.Open();
 
-				for (var i = 0; i < repeatCount; i++)
-					foreach (var item in con.Query<NarrowLong>($"SELECT TOP {takeCount} ID, Field1 FROM NarrowLong")) {}
+				foreach (var item in con.Query<WideLong>($@"
+SELECT TOP {takeCount}
+	ID,
+	Field1,
+	ShortValue,
+	IntValue,
+	LongValue,
+	StringValue,
+	DateTimeValue
+FROM WideLong")) {}
 			}
 
 			watch.Stop();

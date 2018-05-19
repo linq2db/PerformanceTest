@@ -12,13 +12,12 @@
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.0-rc1-final" />
+		<Compile Remove="**\L2S*.cs" />
 	</ItemGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net452'">
-		<Compile Remove="DataModel\TestEFContext.cs" />
-		<Compile Remove="EFQueryTests.cs" />
-		<Compile Remove="EFLinqTests.cs" />
-		<Compile Remove="EFCompTests.cs" />
+		<Reference Include="System.Data.Linq" />
+		<Compile Remove="**\EFCore*.cs" />
 	</ItemGroup>
 
 </Project>

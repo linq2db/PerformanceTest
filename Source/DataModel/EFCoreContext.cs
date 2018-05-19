@@ -4,8 +4,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Tests.DataModel
 {
-	public class TestEFContext : DbContext
+	public class EFCoreContext : DbContext
 	{
+		public EFCoreContext(bool noTracking)
+		{
+			if (noTracking)
+				ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+		}
+
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
 			optionsBuilder.UseSqlServer($"Server=.;Database=PerformanceTest;Trusted_Connection=True");
@@ -13,5 +19,6 @@ namespace Tests.DataModel
 
 		public DbSet<Narrow>     Narrow     { get; set; }
 		public DbSet<NarrowLong> NarrowLong { get; set; }
+		public DbSet<WideLong>   WideLong   { get; set; }
 	}
 }

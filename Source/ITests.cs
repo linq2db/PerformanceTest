@@ -9,5 +9,6 @@ namespace Tests
 		bool GetSingleColumnSlow (Stopwatch watch, int repeatCount, int takeCount);
 		bool GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount);
 		bool GetNarrowList       (Stopwatch watch, int repeatCount, int takeCount);
+		bool GetWideList         (Stopwatch watch, int repeatCount, int takeCount);
 	}
 }

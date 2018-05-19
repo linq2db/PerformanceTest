@@ -6,13 +6,13 @@ namespace Tests
 {
 	using DataModel;
 
-	class LinqToDBLinqTests : ITests
+	class L2SLinqTests : ITests
 	{
 		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
-			using (var db = new TestContext())
+			using (var db = new L2SContext())
 				for (var i = 0; i < repeatCount; i++)
 					db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).AsEnumerable().First();
 
@@ -26,7 +26,7 @@ namespace Tests
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new TestContext())
+				using (var db = new L2SContext())
 					db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).AsEnumerable().First();
 
 			watch.Stop();
@@ -38,7 +38,7 @@ namespace Tests
 		{
 			watch.Start();
 
-			using (var db = new TestContext())
+			using (var db = new L2SContext())
 				for (var i = 0; i < repeatCount; i++)
 				{
 					var id = 1;
@@ -55,9 +55,22 @@ namespace Tests
 		{
 			watch.Start();
 
-			using (var db = new TestContext())
-				for (var i = 0; i < repeatCount; i++)
+			for (var i = 0; i < repeatCount; i++)
+				using (var db = new L2SContext())
 					foreach (var item in db.NarrowLongs.Take(takeCount)) {}
+
+			watch.Stop();
+
+			return true;
+		}
+
+		public bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
+		{
+			watch.Start();
+
+			for (var i = 0; i < repeatCount; i++)
+				using (var db = new L2SContext())
+					foreach (var item in db.WideLongs.Take(takeCount)) {}
 
 			watch.Stop();
 
