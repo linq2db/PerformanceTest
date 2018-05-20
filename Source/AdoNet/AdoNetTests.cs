@@ -2,7 +2,7 @@
 using System.Data.SqlClient;
 using System.Diagnostics;
 
-namespace Tests
+namespace Tests.AdoNet
 {
 	using DataModel;
 

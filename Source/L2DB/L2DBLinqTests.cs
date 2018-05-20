@@ -2,10 +2,8 @@
 using System.Diagnostics;
 using System.Linq;
 
-namespace Tests
+namespace Tests.L2DB
 {
-	using DataModel;
-
 	class L2DBLinqTests : ITests
 	{
 		public readonly bool NoTracking;

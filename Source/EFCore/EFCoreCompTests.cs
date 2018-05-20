@@ -4,10 +4,8 @@ using System.Linq;
 
 using Microsoft.EntityFrameworkCore;
 
-namespace Tests
+namespace Tests.EFCore
 {
-	using DataModel;
-
 	class EFCoreCompTests : ITests
 	{
 		public readonly bool NoTracking;

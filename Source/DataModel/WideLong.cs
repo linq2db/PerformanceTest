@@ -1,61 +1,31 @@
 ﻿using System;
 
+using LinqToDB.Mapping;
+
 namespace Tests.DataModel
 {
-#if NETCOREAPP2_0
-#else
-	[System.Data.Linq.Mapping.Table]
-#endif
-	[LinqToDB.Mapping.Table]
+	[Table]
 	public class WideLong
 	{
-#if NETCOREAPP2_0
-#else
-		[System.Data.Linq.Mapping.Column(IsPrimaryKey=true)]
-#endif
-		[LinqToDB.Mapping.PrimaryKey]
+		[PrimaryKey]
 		public int ID { get; set; }
 
-#if NETCOREAPP2_0
-#else
-		[System.Data.Linq.Mapping.Column]
-#endif
-		[LinqToDB.Mapping.Column, LinqToDB.Mapping.NotNull]
+		[Column, NotNull]
 		public int Field1 { get; set; }
 
-#if NETCOREAPP2_0
-#else
-		[System.Data.Linq.Mapping.Column(CanBeNull=true)]
-#endif
-		[LinqToDB.Mapping.Column, LinqToDB.Mapping.Nullable]
+		[Column, Nullable]
 		public short? ShortValue { get; set; }
 
-#if NETCOREAPP2_0
-#else
-		[System.Data.Linq.Mapping.Column(CanBeNull=true)]
-#endif
-		[LinqToDB.Mapping.Column, LinqToDB.Mapping.Nullable]
+		[Column, Nullable]
 		public int? IntValue { get; set; }
 
-#if NETCOREAPP2_0
-#else
-		[System.Data.Linq.Mapping.Column(CanBeNull=true)]
-#endif
-		[LinqToDB.Mapping.Column,LinqToDB.Mapping. Nullable]
+		[Column, Nullable]
 		public long? LongValue { get; set; }
 
-#if NETCOREAPP2_0
-#else
-		[System.Data.Linq.Mapping.Column(CanBeNull=true)]
-#endif
-		[LinqToDB.Mapping.Column(Length=100), LinqToDB.Mapping.Nullable]
+		[Column(Length=100), Nullable]
 		public string StringValue { get; set; }
 
-#if NETCOREAPP2_0
-#else
-		[System.Data.Linq.Mapping.Column(CanBeNull=true)]
-#endif
-		[LinqToDB.Mapping.Column, LinqToDB.Mapping.Nullable]
+		[Column, Nullable]
 		public DateTime? DateTimeValue { get; set; }
 	}
 }

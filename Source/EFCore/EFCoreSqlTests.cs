@@ -5,15 +5,13 @@ using System.Data.SqlClient;
 
 using Microsoft.EntityFrameworkCore;
 
-namespace Tests
+namespace Tests.EFCore
 {
-	using DataModel;
-
-	class EFCoreQueryTests : ITests
+	class EFCoreSqlTests : ITests
 	{
 		public readonly bool NoTracking;
 
-		public EFCoreQueryTests(bool noTracking)
+		public EFCoreSqlTests(bool noTracking)
 		{
 			NoTracking = noTracking;
 		}

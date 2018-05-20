@@ -2,10 +2,8 @@
 using System.Diagnostics;
 using System.Linq;
 
-namespace Tests
+namespace Tests.EFCore
 {
-	using DataModel;
-
 	class EFCoreLinqTests : ITests
 	{
 		public readonly bool NoTracking;

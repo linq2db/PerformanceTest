@@ -1,30 +1,28 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Linq;
 
-using LinqToDB;
+using LinqToDB.Data;
 
 namespace Tests.L2DB
 {
-	class L2DBCompTests : ITests
+	using DataModel;
+
+	class L2DBSqlTests : ITests
 	{
 		public readonly bool NoTracking;
 
-		public L2DBCompTests(bool noTracking)
+		public L2DBSqlTests(bool noTracking)
 		{
 			NoTracking = noTracking;
 		}
 
 		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
 		{
-			var query = CompiledQuery.Compile((L2DBContext db) =>
-				db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).First());
-
 			watch.Start();
 
 			using (var db = new L2DBContext(NoTracking))
 				for (var i = 0; i < repeatCount; i++)
-					query(db);
+					db.Execute<int>("SELECT ID FROM Narrow WHERE ID = 1");
 
 			watch.Stop();
 
@@ -33,14 +31,11 @@ namespace Tests.L2DB
 
 		public bool GetSingleColumnSlow(Stopwatch watch, int repeatCount, int takeCount)
 		{
-			var query = CompiledQuery.Compile((L2DBContext db) =>
-				db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).First());
-
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new L2DBContext(NoTracking))
-					query(db);
+					db.Execute<int>("SELECT ID FROM Narrow WHERE ID = 1");
 
 			watch.Stop();
 
@@ -49,14 +44,13 @@ namespace Tests.L2DB
 
 		public bool GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount)
 		{
-			var query = CompiledQuery.Compile((L2DBContext db, int id, int p) =>
-				db.Narrows.Where(t => t.ID == id && t.Field1 == p).Select(t => t.ID).First());
-
 			watch.Start();
 
 			using (var db = new L2DBContext(NoTracking))
 				for (var i = 0; i < repeatCount; i++)
-					query(db, 1, 2);
+					db.Execute<int>("SELECT ID FROM Narrow WHERE ID = @id AND Field1 = @p",
+						new DataParameter("@id", 1),
+						new DataParameter("@p",  2));
 
 			watch.Stop();
 
@@ -65,14 +59,11 @@ namespace Tests.L2DB
 
 		public bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
 		{
-			var query = CompiledQuery.Compile((L2DBContext db, int top) =>
-				db.NarrowLongs.Take(top));
-
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new L2DBContext(NoTracking))
-					foreach (var item in query(db, takeCount)) {}
+					foreach (var item in db.Query<NarrowLong>($"SELECT TOP {takeCount} ID, Field1 FROM NarrowLong")) {}
 
 			watch.Stop();
 
@@ -81,14 +72,20 @@ namespace Tests.L2DB
 
 		public bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
 		{
-			var query = CompiledQuery.Compile((L2DBContext db, int top) =>
-				db.WideLongs.Take(top));
-
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new L2DBContext(NoTracking))
-					foreach (var item in query(db, takeCount)) {}
+					foreach (var item in db.Query<WideLong>($@"
+SELECT TOP {takeCount}
+	ID,
+	Field1,
+	ShortValue,
+	IntValue,
+	LongValue,
+	StringValue,
+	DateTimeValue
+FROM WideLong")) {}
 
 			watch.Stop();
 

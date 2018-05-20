@@ -7,10 +7,11 @@ using CodeJam.Collections;
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.Mapping;
-using LinqToDB.Reflection;
 
-namespace Tests.DataModel
+namespace Tests.L2DB
 {
+	using DataModel;
+
 	public class L2DBContext : DataConnection
 	{
 		public readonly bool NoTracking;
@@ -24,7 +25,6 @@ namespace Tests.DataModel
 				OnEntityCreated = new ObjectIdentityTracker().EntityCreated;
 			}
 		}
-
 
 		public ITable<Narrow>     Narrows     => GetTable<Narrow>();
 		public ITable<NarrowLong> NarrowLongs => GetTable<NarrowLong>();

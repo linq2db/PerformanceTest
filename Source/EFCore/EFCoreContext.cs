@@ -2,8 +2,10 @@
 
 using Microsoft.EntityFrameworkCore;
 
-namespace Tests.DataModel
+namespace Tests.EFCore
 {
+	using DataModel;
+
 	public class EFCoreContext : DbContext
 	{
 		public EFCoreContext(bool noTracking)

@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Diagnostics;
 
-using LinqToDB.Data;
-
-namespace Tests
+namespace Tests.L2S
 {
 	using DataModel;
 
-	class L2DBQueryTests : ITests
+	class L2SSqlTests : ITests
 	{
 		public readonly bool NoTracking;
 
-		public L2DBQueryTests(bool noTracking)
+		public L2SSqlTests(bool noTracking)
 		{
 			NoTracking = noTracking;
 		}
@@ -20,9 +18,9 @@ namespace Tests
 		{
 			watch.Start();
 
-			using (var db = new L2DBContext(NoTracking))
+			using (var db = new L2SContext(NoTracking))
 				for (var i = 0; i < repeatCount; i++)
-					db.Execute<int>("SELECT ID FROM Narrow WHERE ID = 1");
+					db.ExecuteQuery<int>("SELECT ID FROM Narrow WHERE ID = 1");
 
 			watch.Stop();
 
@@ -34,8 +32,8 @@ namespace Tests
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(NoTracking))
-					db.Execute<int>("SELECT ID FROM Narrow WHERE ID = 1");
+				using (var db = new L2SContext(NoTracking))
+					db.ExecuteQuery<int>("SELECT ID FROM Narrow WHERE ID = 1");
 
 			watch.Stop();
 
@@ -46,11 +44,9 @@ namespace Tests
 		{
 			watch.Start();
 
-			using (var db = new L2DBContext(NoTracking))
+			using (var db = new L2SContext(NoTracking))
 				for (var i = 0; i < repeatCount; i++)
-					db.Execute<int>("SELECT ID FROM Narrow WHERE ID = @id AND Field1 = @p",
-						new DataParameter("@id", 1),
-						new DataParameter("@p",  2));
+					db.ExecuteQuery<int>("SELECT ID FROM Narrow WHERE ID = {0} AND Field1 = {1}", 1, 2);
 
 			watch.Stop();
 
@@ -62,8 +58,8 @@ namespace Tests
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(NoTracking))
-					foreach (var item in db.Query<NarrowLong>($"SELECT TOP {takeCount} ID, Field1 FROM NarrowLong")) {}
+				using (var db = new L2SContext(NoTracking))
+					foreach (var item in db.ExecuteQuery<NarrowLong>($"SELECT TOP {takeCount} ID, Field1 FROM NarrowLong")) {}
 
 			watch.Stop();
 
@@ -75,8 +71,8 @@ namespace Tests
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(NoTracking))
-					foreach (var item in db.Query<WideLong>($@"
+				using (var db = new L2SContext(NoTracking))
+					foreach (var item in db.ExecuteQuery<WideLong>($@"
 SELECT TOP {takeCount}
 	ID,
 	Field1,

@@ -3,10 +3,11 @@ using System.Data.SqlClient;
 using System.Diagnostics;
 
 using Dapper;
-using Tests.DataModel;
 
-namespace Tests
+namespace Tests.Dapper
 {
+	using DataModel;
+
 	class DapperTests : ITests
 	{
 		readonly string _connectionString = LinqToDB.Data.DataConnection.GetConnectionString("Test");

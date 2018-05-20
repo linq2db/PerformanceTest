@@ -2,17 +2,22 @@
 using System.Diagnostics;
 using System.Linq;
 
-namespace Tests
+namespace Tests.L2S
 {
-	using DataModel;
-
 	class L2SLinqTests : ITests
 	{
+		public readonly bool NoTracking;
+
+		public L2SLinqTests(bool noTracking)
+		{
+			NoTracking = noTracking;
+		}
+
 		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
-			using (var db = new L2SContext())
+			using (var db = new L2SContext(NoTracking))
 				for (var i = 0; i < repeatCount; i++)
 					db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).AsEnumerable().First();
 
@@ -26,7 +31,7 @@ namespace Tests
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2SContext())
+				using (var db = new L2SContext(NoTracking))
 					db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).AsEnumerable().First();
 
 			watch.Stop();
@@ -38,7 +43,7 @@ namespace Tests
 		{
 			watch.Start();
 
-			using (var db = new L2SContext())
+			using (var db = new L2SContext(NoTracking))
 				for (var i = 0; i < repeatCount; i++)
 				{
 					var id = 1;
@@ -56,7 +61,7 @@ namespace Tests
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2SContext())
+				using (var db = new L2SContext(NoTracking))
 					foreach (var item in db.NarrowLongs.Take(takeCount)) {}
 
 			watch.Stop();
@@ -69,7 +74,7 @@ namespace Tests
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2SContext())
+				using (var db = new L2SContext(NoTracking))
 					foreach (var item in db.WideLongs.Take(takeCount)) {}
 
 			watch.Stop();

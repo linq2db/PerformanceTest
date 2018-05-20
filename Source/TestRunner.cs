@@ -40,44 +40,53 @@ namespace Tests
 		{
 			var testProviders = new ITests[]
 			{
-				new AdoNetTests       (),
-				new DapperTests       (),
-				new L2DBQueryTests    (true),
-				new L2DBLinqTests     (true),
-				new L2DBCompTests     (true),
-				new L2DBLinqTests     (false),
-				new L2DBCompTests     (false),
+				new AdoNet.AdoNetTests     (),
+				new Dapper.DapperTests     (),
+				new L2DB.L2DBSqlTests      (true),
+				new L2DB.L2DBLinqTests     (true),
+				new L2DB.L2DBCompTests     (true),
+				new L2DB.L2DBLinqTests     (false),
+				new L2DB.L2DBCompTests     (false),
 #if NETCOREAPP2_0
-				new EFCoreQueryTests  (true),
-				new EFCoreLinqTests   (true),
-				new EFCoreCompTests   (true),
-				new EFCoreQueryTests  (false),
-				new EFCoreLinqTests   (false),
-				new EFCoreCompTests   (false),
+				new EFCore.EFCoreSqlTests  (true),
+				new EFCore.EFCoreLinqTests (true),
+				new EFCore.EFCoreCompTests (true),
+				new EFCore.EFCoreSqlTests  (false),
+				new EFCore.EFCoreLinqTests (false),
+				new EFCore.EFCoreCompTests (false),
 #else
-				new L2SLinqTests      (),
+				new L2S.L2SSqlTests        (true),
+				new L2S.L2SLinqTests       (true),
+				new L2S.L2SCompTests       (true),
+				new L2S.L2SSqlTests        (false),
+				new L2S.L2SLinqTests       (false),
+				new L2S.L2SCompTests       (false),
 #endif
 			};
 
-			RunTests(platform, "Single Column", testProviders, new[]
-			{
-				CreateTest<ITests>(t => t.GetSingleColumnFast,  10000),
-				CreateTest<ITests>(t => t.GetSingleColumnSlow,  10000),
-				CreateTest<ITests>(t => t.GetSingleColumnParam, 10000),
-			});
+//			RunTests(platform, "Single Column", testProviders, new[]
+//			{
+//				CreateTest<ITests>(t => t.GetSingleColumnFast,  10000),
+//				CreateTest<ITests>(t => t.GetSingleColumnSlow,  10000),
+//				CreateTest<ITests>(t => t.GetSingleColumnParam, 10000),
+//			});
 
 			RunTests(platform, "Narrow List", testProviders, new[]
 			{
-				CreateTest<ITests>(t => t.GetNarrowList,        100,   10000),
-				CreateTest<ITests>(t => t.GetNarrowList,        10,   100000),
-				CreateTest<ITests>(t => t.GetNarrowList,        1,   1000000),
+//				CreateTest<ITests>(t => t.GetNarrowList,        10000, 100),
+//				CreateTest<ITests>(t => t.GetNarrowList,        1000, 1000),
+//				CreateTest<ITests>(t => t.GetNarrowList,        100, 10000),
+				CreateTest<ITests>(t => t.GetNarrowList,        10, 100000),
+				CreateTest<ITests>(t => t.GetNarrowList,        1, 1000000),
 			});
 
 			RunTests(platform, "Wide List", testProviders, new[]
 			{
-				CreateTest<ITests>(t => t.GetWideList,          100,   10000),
-				CreateTest<ITests>(t => t.GetWideList,          10,   100000),
-				CreateTest<ITests>(t => t.GetWideList,          1,   1000000),
+//				CreateTest<ITests>(t => t.GetWideList,          10000, 100),
+//				CreateTest<ITests>(t => t.GetWideList,          1000, 1000),
+//				CreateTest<ITests>(t => t.GetWideList,          100, 10000),
+				CreateTest<ITests>(t => t.GetWideList,          10, 100000),
+				CreateTest<ITests>(t => t.GetWideList,          1, 1000000),
 			});
 		}
 
@@ -125,24 +134,28 @@ namespace Tests
 				t.Test,
 				t.Repeat,
 				t.Take,
-				AdoNet_ID    = t.Stopwatch.SingleOrDefault(w => w?.p is AdoNetTests)?.time,
-				Dapper       = t.Stopwatch.SingleOrDefault(w => w?.p is DapperTests)?.time,
+				AdoNet_ID    = t.Stopwatch.SingleOrDefault(w => w?.p is AdoNet.AdoNetTests)?.time,
+				Dapper       = t.Stopwatch.SingleOrDefault(w => w?.p is Dapper.DapperTests)?.time,
 
-				L2DB_Query   = t.Stopwatch.SingleOrDefault(w => w?.p is L2DBQueryTests   p &&  p.NoTracking)?.time,
-				L2DB_Linq    = t.Stopwatch.SingleOrDefault(w => w?.p is L2DBLinqTests    p &&  p.NoTracking)?.time,
-				L2DB_Comp    = t.Stopwatch.SingleOrDefault(w => w?.p is L2DBCompTests    p &&  p.NoTracking)?.time,
-				L2DB_CT_Linq = t.Stopwatch.SingleOrDefault(w => w?.p is L2DBLinqTests    p && !p.NoTracking)?.time,
-				L2DB_CT_Comp = t.Stopwatch.SingleOrDefault(w => w?.p is L2DBCompTests    p && !p.NoTracking)?.time,
+				L2DB_Sql     = t.Stopwatch.SingleOrDefault(w => w?.p is L2DB.L2DBSqlTests       p &&  p.NoTracking)?.time,
+				L2DB_Linq    = t.Stopwatch.SingleOrDefault(w => w?.p is L2DB.L2DBLinqTests      p &&  p.NoTracking)?.time,
+				L2DB_Comp    = t.Stopwatch.SingleOrDefault(w => w?.p is L2DB.L2DBCompTests      p &&  p.NoTracking)?.time,
+				L2DB_CT_Linq = t.Stopwatch.SingleOrDefault(w => w?.p is L2DB.L2DBLinqTests      p && !p.NoTracking)?.time,
+				L2DB_CT_Comp = t.Stopwatch.SingleOrDefault(w => w?.p is L2DB.L2DBCompTests      p && !p.NoTracking)?.time,
 #if NETCOREAPP2_0
-
-				EF_Query     = t.Stopwatch.SingleOrDefault(w => w?.p is EFCoreQueryTests p &&  p.NoTracking)?.time,
-				EF_Linq      = t.Stopwatch.SingleOrDefault(w => w?.p is EFCoreLinqTests  p &&  p.NoTracking)?.time,
-				EF_Comp      = t.Stopwatch.SingleOrDefault(w => w?.p is EFCoreCompTests  p &&  p.NoTracking)?.time,
-				EF_CT_Query  = t.Stopwatch.SingleOrDefault(w => w?.p is EFCoreQueryTests p && !p.NoTracking)?.time,
-				EF_CT_Linq   = t.Stopwatch.SingleOrDefault(w => w?.p is EFCoreLinqTests  p && !p.NoTracking)?.time,
-				EF_CT_Comp   = t.Stopwatch.SingleOrDefault(w => w?.p is EFCoreCompTests  p && !p.NoTracking)?.time,
+				EF_Sql       = t.Stopwatch.SingleOrDefault(w => w?.p is EFCore.EFCoreSqlTests   p &&  p.NoTracking)?.time,
+				EF_Linq      = t.Stopwatch.SingleOrDefault(w => w?.p is EFCore.EFCoreLinqTests  p &&  p.NoTracking)?.time,
+				EF_Comp      = t.Stopwatch.SingleOrDefault(w => w?.p is EFCore.EFCoreCompTests  p &&  p.NoTracking)?.time,
+				EF_CT_Query  = t.Stopwatch.SingleOrDefault(w => w?.p is EFCore.EFCoreSqlTests   p && !p.NoTracking)?.time,
+				EF_CT_Linq   = t.Stopwatch.SingleOrDefault(w => w?.p is EFCore.EFCoreLinqTests  p && !p.NoTracking)?.time,
+				EF_CT_Comp   = t.Stopwatch.SingleOrDefault(w => w?.p is EFCore.EFCoreCompTests  p && !p.NoTracking)?.time,
 #else
-				L2S_Linq     = t.Stopwatch.SingleOrDefault(w => w?.p is L2SLinqTests)?.time,
+				L2S_Sql      = t.Stopwatch.SingleOrDefault(w => w?.p is L2S.L2SSqlTests  p &&  p.NoTracking)?.time,
+				L2S_Linq     = t.Stopwatch.SingleOrDefault(w => w?.p is L2S.L2SLinqTests p &&  p.NoTracking)?.time,
+				L2S_Comp     = t.Stopwatch.SingleOrDefault(w => w?.p is L2S.L2SCompTests p &&  p.NoTracking)?.time,
+				L2S_CT_Sql   = t.Stopwatch.SingleOrDefault(w => w?.p is L2S.L2SSqlTests  p && !p.NoTracking)?.time,
+				L2S_CT_Linq  = t.Stopwatch.SingleOrDefault(w => w?.p is L2S.L2SLinqTests p && !p.NoTracking)?.time,
+				L2S_CT_Comp  = t.Stopwatch.SingleOrDefault(w => w?.p is L2S.L2SCompTests p && !p.NoTracking)?.time,
 #endif
 			})
 			.ToArray();
@@ -198,7 +211,7 @@ namespace Tests
 				db.Execute("CREATE DATABASE PerformanceTest");
 			}
 
-			using (var db = new L2DBContext())
+			using (var db = new L2DB.L2DBContext())
 			{
 				CreateTable(db, new[] { new Narrow { ID = 1, Field1 = 2 } });
 				CreateTable(db, Enumerable.Range(1, 1000000).Select(i => new NarrowLong { ID = i, Field1 = -i }));
