@@ -1,0 +1,62 @@
+﻿<controls:MetroWindow x:Class="PerformanceTest.Views.MainWindow.MainWindow"
+	xmlns          = "http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x        = "http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d        = "http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:c        = "clr-namespace:PerformanceTest.Components.Controls"
+	xmlns:mc       = "http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:controls = "clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+	xmlns:vm       = "clr-namespace:PerformanceTest.Views.MainWindow"
+	xmlns:test    = "clr-namespace:PerformanceTest.Views.TestControl"
+	Title          = "Performance Tests"
+	mc:Ignorable   = "d"
+	d:DesignHeight = "250"
+	d:DesignWidth  = "800"
+
+	Height         = "{c:SettingValue Setting=Main.Height, Default=Auto}"
+	Left           = "{c:SettingValue Setting=Main.Left,   Default=Auto}"
+	Top            = "{c:SettingValue Setting=Main.Top,    Default=Auto}"
+	Width          = "{c:SettingValue Setting=Main.Width,  Default=Auto}"
+	ResizeMode     = "CanResizeWithGrip"
+	Loaded         = "Window_Loaded"
+	>
+
+	<controls:MetroWindow.DataContext>
+		<vm:MainWindowViewModel x:Name="ViewModel" />
+	</controls:MetroWindow.DataContext>
+
+	<controls:MetroWindow.InputBindings>
+		<KeyBinding Key="F5" Command="{Binding RefreshCommand}"/>
+	</controls:MetroWindow.InputBindings>
+
+	<Border BorderBrush="{StaticResource AccentColorBrush}" BorderThickness="2,0,2,2">
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="*"    />
+				<RowDefinition Height="24"   />
+			</Grid.RowDefinitions>
+
+			<ToolBarTray Grid.Row="0">
+				<ToolBar Band="1" BandIndex="1">
+					<Button ToolTip="Refresh (F5)" Command="{Binding RefreshCommand}" Style="{DynamicResource MetroCircleButtonStyle}" Height="44" Width="44">
+						<Image Margin="10" Source="{StaticResource RefreshIcon}" />
+					</Button>
+				</ToolBar>
+			</ToolBarTray>
+
+			<ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+				<ItemsControl ItemsSource="{Binding Tests}">
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
+							<test:TestControl />
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+			</ScrollViewer>
+
+			<StatusBar Grid.Row="2" Background="{StaticResource AccentColorBrush}">
+				<StatusBarItem  Margin="5,0" Content="{Binding StatusBar}" Width="Auto" />
+			</StatusBar>
+		</Grid>
+	</Border>
+</controls:MetroWindow>
