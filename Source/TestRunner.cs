@@ -19,6 +19,8 @@ namespace Tests
 
 	public static class TestRunner
 	{
+		const string DatabaseVersion = "1a";
+
 		public static void Run(string platform)
 		{
 			Console.WriteLine($"Testing {platform}...");
@@ -32,7 +34,7 @@ namespace Tests
 
 			DataConnection.DefaultConfiguration = "Test";
 
-			//CreateDatabase(serverName);
+			CreateDatabase(false, serverName);
 			RunTests(platform);
 		}
 
@@ -45,37 +47,45 @@ namespace Tests
 				new L2DB.L2DBSqlTests      (true),
 				new L2DB.L2DBLinqTests     (true),
 				new L2DB.L2DBCompTests     (true),
-				new L2DB.L2DBLinqTests     (false),
-				new L2DB.L2DBCompTests     (false),
 #if NETCOREAPP2_0
 				new EFCore.EFCoreSqlTests  (true),
 				new EFCore.EFCoreLinqTests (true),
 				new EFCore.EFCoreCompTests (true),
-				new EFCore.EFCoreSqlTests  (false),
-				new EFCore.EFCoreLinqTests (false),
-				new EFCore.EFCoreCompTests (false),
 #else
 				new L2S.L2SSqlTests        (true),
 				new L2S.L2SLinqTests       (true),
 				new L2S.L2SCompTests       (true),
+#endif
+			};
+
+			var testProvidersCT = new ITests[]
+			{
+				new AdoNet.AdoNetTests     (),
+				new L2DB.L2DBLinqTests     (false),
+				new L2DB.L2DBCompTests     (false),
+#if NETCOREAPP2_0
+				new EFCore.EFCoreSqlTests  (false),
+				new EFCore.EFCoreLinqTests (false),
+				new EFCore.EFCoreCompTests (false),
+#else
 				new L2S.L2SSqlTests        (false),
 				new L2S.L2SLinqTests       (false),
 				new L2S.L2SCompTests       (false),
 #endif
 			};
 
-//			RunTests(platform, "Single Column", testProviders, new[]
-//			{
-//				CreateTest<ITests>(t => t.GetSingleColumnFast,  10000),
-//				CreateTest<ITests>(t => t.GetSingleColumnSlow,  10000),
-//				CreateTest<ITests>(t => t.GetSingleColumnParam, 10000),
-//			});
+			RunTests(platform, "Single Column", testProviders, new[]
+			{
+				CreateTest<ITests>(t => t.GetSingleColumnFast,  10000),
+				CreateTest<ITests>(t => t.GetSingleColumnSlow,  10000),
+				CreateTest<ITests>(t => t.GetSingleColumnParam, 10000),
+			});
 
 			RunTests(platform, "Narrow List", testProviders, new[]
 			{
 //				CreateTest<ITests>(t => t.GetNarrowList,        10000, 100),
 //				CreateTest<ITests>(t => t.GetNarrowList,        1000, 1000),
-//				CreateTest<ITests>(t => t.GetNarrowList,        100, 10000),
+				CreateTest<ITests>(t => t.GetNarrowList,        100, 10000),
 				CreateTest<ITests>(t => t.GetNarrowList,        10, 100000),
 				CreateTest<ITests>(t => t.GetNarrowList,        1, 1000000),
 			});
@@ -84,7 +94,32 @@ namespace Tests
 			{
 //				CreateTest<ITests>(t => t.GetWideList,          10000, 100),
 //				CreateTest<ITests>(t => t.GetWideList,          1000, 1000),
-//				CreateTest<ITests>(t => t.GetWideList,          100, 10000),
+				CreateTest<ITests>(t => t.GetWideList,          100, 10000),
+				CreateTest<ITests>(t => t.GetWideList,          10, 100000),
+				CreateTest<ITests>(t => t.GetWideList,          1, 1000000),
+			});
+
+			RunTests(platform, "Single Column CT", testProvidersCT, new[]
+			{
+				CreateTest<ITests>(t => t.GetSingleColumnFast,  10000),
+				CreateTest<ITests>(t => t.GetSingleColumnSlow,  10000),
+				CreateTest<ITests>(t => t.GetSingleColumnParam, 10000),
+			});
+
+			RunTests(platform, "Narrow List CT", testProvidersCT, new[]
+			{
+//				CreateTest<ITests>(t => t.GetNarrowList,        10000, 100),
+//				CreateTest<ITests>(t => t.GetNarrowList,        1000, 1000),
+				CreateTest<ITests>(t => t.GetNarrowList,        100, 10000),
+				CreateTest<ITests>(t => t.GetNarrowList,        10, 100000),
+				CreateTest<ITests>(t => t.GetNarrowList,        1, 1000000),
+			});
+
+			RunTests(platform, "Wide List CT", testProvidersCT, new[]
+			{
+//				CreateTest<ITests>(t => t.GetWideList,          10000, 100),
+//				CreateTest<ITests>(t => t.GetWideList,          1000, 1000),
+				CreateTest<ITests>(t => t.GetWideList,          100, 10000),
 				CreateTest<ITests>(t => t.GetWideList,          10, 100000),
 				CreateTest<ITests>(t => t.GetWideList,          1, 1000000),
 			});
@@ -128,13 +163,87 @@ namespace Tests
 
 				return new { Test = m.Name, m.Repeat, m.Take, Stopwatch = watch, };
 			})
-			.ToArray()
-			.Select(t => new
+			.ToArray();
+
+			Console.WriteLine("Storing results...");
+
+			using (var db = new L2DB.L2DBContext())
+			{
+				var id = db.TestRuns
+						.Value(t => t.Platform,  platform)
+						.Value(t => t.Name,      testName)
+						.Value(t => t.CreatedOn, () => Sql.CurrentTimestamp)
+					.InsertWithIdentity();
+
+				foreach (var test in tests)
+				{
+					var mid = db.TestMethods
+							.Value(t => t.TestRunID, id)
+							.Value(t => t.Name,      test.Test)
+							.Value(t => t.Repeat,    test.Repeat)
+							.Value(t => t.Take,      test.Take)
+						.InsertWithIdentity();
+
+					foreach (var watch in test.Stopwatch)
+					{
+						db.TestStopwatches
+								.Value(t => t.TestMethodID, mid)
+								.Value(t => t.Time,         watch.time)
+								.Value(t => t.Ticks,        watch.stopwatch.ElapsedTicks)
+								.Value(t => t.Provider,     watch.p.Name)
+							.Insert();
+					}
+				}
+
+				var list =
+				(
+					from r in db.TestRuns
+					join m in db.TestMethods on r.ID equals m.TestRunID
+					join s in db.TestStopwatches on m.ID equals s.TestMethodID
+					select new { r, m, s}
+				)
+				.AsEnumerable()
+				.GroupBy(r => new
+				{
+					r.r.Platform, GroupName = r.r.Name, TestName = r.m.Name, r.m.Repeat, r.m.Take, r.s.Provider
+				})
+				.Select (g =>
+				{
+					var count = g.Count();
+					var ts    = g.Select(w => w.s.Ticks).OrderBy(t => t).ToList();
+
+					var ticks =
+						count ==  1 ? ts[0] :
+						count ==  2 ? (long)ts.Average(t => t) :
+						count <=  5 ? (long)ts.Skip(1).Take(count - 2).Average(t => t) :
+						count <= 10 ? (long)ts.Skip(2).Take(count - 4).Average(t => t) :
+						              (long)ts.Skip(count / 5).Take(count - count / 5 * 2).Average(t => t);
+
+					return new TestResult
+					{
+						Platform  = g.Key.Platform,
+						GroupName = g.Key.GroupName,
+						TestName  = g.Key.TestName,
+						Repeat    = g.Key.Repeat,
+						Take      = g.Key.Take,
+						TestDescription = g.Key.Take == null ? $"{g.Key.TestName}({g.Key.Repeat})" : $"{g.Key.TestName}({g.Key.Repeat}/{g.Key.Take})",
+						Provider  = g.Key.Provider,
+						Ticks     = ticks,
+						Time      = new TimeSpan(ticks)
+					};
+				})
+				.ToList();
+
+				db.TestResults.Truncate();
+				db.TestResults.BulkCopy(list);
+			}
+
+			var res = tests.Select(t => new
 			{
 				t.Test,
 				t.Repeat,
 				t.Take,
-				AdoNet_ID    = t.Stopwatch.SingleOrDefault(w => w?.p is AdoNet.AdoNetTests)?.time,
+				AdoNet       = t.Stopwatch.SingleOrDefault(w => w?.p is AdoNet.AdoNetTests)?.time,
 				Dapper       = t.Stopwatch.SingleOrDefault(w => w?.p is Dapper.DapperTests)?.time,
 
 				L2DB_Sql     = t.Stopwatch.SingleOrDefault(w => w?.p is L2DB.L2DBSqlTests       p &&  p.NoTracking)?.time,
@@ -160,7 +269,7 @@ namespace Tests
 			})
 			.ToArray();
 
-			var results = tests.ToDiagnosticString();
+			var results = res.ToDiagnosticString();
 
 			Console.WriteLine();
 			Console.WriteLine(testName);
@@ -169,9 +278,7 @@ namespace Tests
 			var basePath = Path.GetDirectoryName(typeof(TestRunner).Assembly.Location);
 
 			while (!Directory.Exists(Path.Combine(basePath, "Result")))
-			{
 				basePath = Path.GetDirectoryName(basePath);
-			}
 
 			var filePath = Path.Combine(basePath, "Result", $"{platform}.{testName}.txt");
 
@@ -201,18 +308,27 @@ namespace Tests
 			};
 		}
 
-		static void CreateDatabase(string serverName = ".")
+		static void CreateDatabase(bool enforceCreate, string serverName)
 		{
 			Console.WriteLine("Creating database...");
 
 			using (var db = SqlServerTools.CreateDataConnection($"Server={serverName};Database=master;Trusted_Connection=True"))
 			{
+				if (!enforceCreate)
+					if (db.Execute<object>("SELECT db_id('PerformanceTest')") != null)
+						if (db.Execute<object>("SELECT OBJECT_ID('PerformanceTest.dbo.Setting', N'U')") != null)
+							if (db.GetTable<Setting>()
+								.DatabaseName("PerformanceTest")
+								.Any(s => s.Name == "DB Version" && s.Value == DatabaseVersion))
+								return;
+
 				db.Execute("DROP DATABASE IF EXISTS PerformanceTest");
 				db.Execute("CREATE DATABASE PerformanceTest");
 			}
 
 			using (var db = new L2DB.L2DBContext())
 			{
+				CreateTable(db, new[] { new Setting { Name = "DB Version", Value =  DatabaseVersion } });
 				CreateTable(db, new[] { new Narrow { ID = 1, Field1 = 2 } });
 				CreateTable(db, Enumerable.Range(1, 1000000).Select(i => new NarrowLong { ID = i, Field1 = -i }));
 				CreateTable(db, Enumerable.Range(1, 1000000).Select(i => new WideLong
@@ -225,6 +341,10 @@ namespace Tests
 					DateTimeValue = i % 2 == 1 ? null : (DateTime?)new DateTime(i),
 					StringValue   = i % 2 == 0 ? null : new string(Enumerable.Range(0, 95).Select(n => (char)(n % 30 + (int)' ')).ToArray()),
 				}));
+				db.CreateTable<TestRun>();
+				db.CreateTable<TestMethod>();
+				db.CreateTable<TestStopwatch>();
+				db.CreateTable<TestResult>();
 			}
 
 			Console.WriteLine("Database created.");

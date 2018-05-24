@@ -7,6 +7,8 @@ namespace Tests.L2S
 {
 	class L2SCompTests : ITests
 	{
+		public string Name => "L2S Comp" + (NoTracking ? "" : " CT");
+
 		public readonly bool NoTracking;
 
 		public L2SCompTests(bool noTracking)

@@ -9,6 +9,8 @@ namespace Tests.EFCore
 {
 	class EFCoreSqlTests : ITests
 	{
+		public string Name => "EF Core Sql" + (NoTracking ? "" : " CT");
+
 		public readonly bool NoTracking;
 
 		public EFCoreSqlTests(bool noTracking)

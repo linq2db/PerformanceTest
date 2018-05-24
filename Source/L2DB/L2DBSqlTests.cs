@@ -9,6 +9,8 @@ namespace Tests.L2DB
 
 	class L2DBSqlTests : ITests
 	{
+		public string Name => "L2DB Sql" + (NoTracking ? "" : " CT");
+
 		public readonly bool NoTracking;
 
 		public L2DBSqlTests(bool noTracking)

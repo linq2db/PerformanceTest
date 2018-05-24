@@ -21,14 +21,18 @@ namespace Tests.L2DB
 			NoTracking = noTracking;
 
 			if (!NoTracking)
-			{
 				OnEntityCreated = new ObjectIdentityTracker().EntityCreated;
-			}
 		}
 
-		public ITable<Narrow>     Narrows     => GetTable<Narrow>();
-		public ITable<NarrowLong> NarrowLongs => GetTable<NarrowLong>();
-		public ITable<WideLong>   WideLongs   => GetTable<WideLong>();
+		public ITable<Narrow>        Narrows         => GetTable<Narrow>();
+		public ITable<NarrowLong>    NarrowLongs     => GetTable<NarrowLong>();
+		public ITable<WideLong>      WideLongs       => GetTable<WideLong>();
+
+		public ITable<Setting>       Settings        => GetTable<Setting>();
+		public ITable<TestRun>       TestRuns        => GetTable<TestRun>();
+		public ITable<TestMethod>    TestMethods     => GetTable<TestMethod>();
+		public ITable<TestStopwatch> TestStopwatches => GetTable<TestStopwatch>();
+		public ITable<TestResult>    TestResults     => GetTable<TestResult>();
 	}
 
 	class ObjectIdentityTracker
@@ -42,11 +46,12 @@ namespace Tests.L2DB
 		{
 			readonly Dictionary<T,T> _dic;
 
+			static readonly IEqualityComparer<T> _comparer = ComparerBuilder<T>.GetEqualityComparer(
+				ta => ta.Members.Where(m => m.MemberInfo.GetCustomAttribute<PrimaryKeyAttribute>() != null));
+
 			public ObjectStore()
 			{
-				var comparer = ComparerBuilder<T>.GetEqualityComparer(
-					ta => ta.Members.Where(m => m.MemberInfo.GetCustomAttribute<PrimaryKeyAttribute>() != null));
-				_dic = new Dictionary<T,T>(comparer);
+				_dic = new Dictionary<T,T>(10000, _comparer);
 			}
 
 			public void StoreEntity(EntityCreatedEventArgs args)
@@ -74,6 +79,22 @@ namespace Tests.L2DB
 			}
 
 			store.StoreEntity(args);
+		}
+
+		static readonly IEqualityComparer<NarrowLong> _comparer = ComparerBuilder<NarrowLong>.GetEqualityComparer(
+			ta => ta.Members.Where(m => m.MemberInfo.GetCustomAttribute<PrimaryKeyAttribute>() != null));
+
+		readonly Dictionary<NarrowLong,NarrowLong> _nlDic = new Dictionary<NarrowLong,NarrowLong>(10000, _comparer);
+
+		public void EntityCreated1(EntityCreatedEventArgs args)
+		{
+			if (args.Entity is NarrowLong nl)
+			{
+				if (!_nlDic.TryGetValue(nl, out var n))
+					_nlDic.Add(nl, nl);
+				else
+					args.Entity = n;
+			}
 		}
 	}
 }

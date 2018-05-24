@@ -6,6 +6,8 @@ namespace Tests.L2DB
 {
 	class L2DBLinqTests : ITests
 	{
+		public string Name => "L2DB Linq" + (NoTracking ? "" : " CT");
+
 		public readonly bool NoTracking;
 
 		public L2DBLinqTests(bool noTracking)

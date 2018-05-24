@@ -10,6 +10,8 @@ namespace Tests.Dapper
 
 	class DapperTests : ITests
 	{
+		public string Name => "Dapper";
+
 		readonly string _connectionString = LinqToDB.Data.DataConnection.GetConnectionString("Test");
 
 		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)

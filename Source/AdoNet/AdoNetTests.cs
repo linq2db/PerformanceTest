@@ -8,6 +8,8 @@ namespace Tests.AdoNet
 
 	class AdoNetTests : ITests
 	{
+		public string Name => "AdoNet";
+
 		readonly string _connectionString = LinqToDB.Data.DataConnection.GetConnectionString("Test");
 
 		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)

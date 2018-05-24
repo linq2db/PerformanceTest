@@ -7,6 +7,8 @@ namespace Tests.L2S
 
 	class L2SSqlTests : ITests
 	{
+		public string Name => "L2S Sql" + (NoTracking ? "" : " CT");
+
 		public readonly bool NoTracking;
 
 		public L2SSqlTests(bool noTracking)

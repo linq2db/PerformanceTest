@@ -6,6 +6,8 @@ namespace Tests.EFCore
 {
 	class EFCoreLinqTests : ITests
 	{
+		public string Name => "EF Core Linq" + (NoTracking ? "" : " CT");
+
 		public readonly bool NoTracking;
 
 		public EFCoreLinqTests(bool noTracking)

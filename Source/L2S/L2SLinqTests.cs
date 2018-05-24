@@ -6,6 +6,8 @@ namespace Tests.L2S
 {
 	class L2SLinqTests : ITests
 	{
+		public string Name => "L2S Linq" + (NoTracking ? "" : " CT");
+
 		public readonly bool NoTracking;
 
 		public L2SLinqTests(bool noTracking)
