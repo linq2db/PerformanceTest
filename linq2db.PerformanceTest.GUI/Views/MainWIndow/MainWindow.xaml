@@ -55,7 +55,7 @@
 			</ScrollViewer>
 
 			<StatusBar Grid.Row="2" Background="{StaticResource AccentColorBrush}">
-				<StatusBarItem  Margin="5,0" Content="{Binding StatusBar}" Width="Auto" />
+				<StatusBarItem  Margin="5,0" Content="{Binding Status}" Width="Auto" />
 			</StatusBar>
 		</Grid>
 	</Border>

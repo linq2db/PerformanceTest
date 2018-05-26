@@ -52,37 +52,37 @@ namespace PerformanceTest.Views.MainWindow
 
 		#endregion
 
-		#region StatusBar : string
+		#region Status : string
 
-		private string _statusBar;
-		public  string  StatusBar
+		private string _status;
+		public  string  Status
 		{
-			get { return _statusBar; }
+			get { return _status; }
 			set
 			{
-				if (_statusBar != value)
+				if (_status != value)
 				{
-					BeforeStatusBarChanged(value);
-					_statusBar = value;
-					AfterStatusBarChanged();
+					BeforeStatusChanged(value);
+					_status = value;
+					AfterStatusChanged();
 
-					OnStatusBarChanged();
+					OnStatusChanged();
 				}
 			}
 		}
 
 		#region INotifyPropertyChanged support
 
-		partial void BeforeStatusBarChanged(string newValue);
-		partial void AfterStatusBarChanged ();
+		partial void BeforeStatusChanged(string newValue);
+		partial void AfterStatusChanged ();
 
-		public const string NameOfStatusBar = "StatusBar";
+		public const string NameOfStatus = "Status";
 
-		private static readonly PropertyChangedEventArgs _statusBarChangedEventArgs = new PropertyChangedEventArgs(NameOfStatusBar);
+		private static readonly PropertyChangedEventArgs _statusChangedEventArgs = new PropertyChangedEventArgs(NameOfStatus);
 
-		private void OnStatusBarChanged()
+		private void OnStatusChanged()
 		{
-			OnPropertyChanged(_statusBarChangedEventArgs);
+			OnPropertyChanged(_statusChangedEventArgs);
 		}
 
 		#endregion

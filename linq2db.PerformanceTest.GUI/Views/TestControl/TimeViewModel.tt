@@ -11,17 +11,20 @@
 
 	Model.Usings.AddRange(new[]
 	{
-		"System.Collections.ObjectModel",
+		"System.Windows.Controls",
+		"System.Windows.Media",
+//		"System.Collections.ObjectModel",
 	});
 
 	Model.Types.Add(
-		new Class("TestViewModel", new[]
+		new Class("TimeViewModel", new[]
 		{
-			new NotifyingProperty("string", "Platform"),
-			new NotifyingProperty("string", "Name"),
-
-			new NotifyingProperty("ObservableCollection<MethodViewModel>",   "Methods"),
-			new NotifyingProperty("ObservableCollection<ProviderViewModel>", "Providers"),
+			new NotifyingProperty("string",   "Name"),
+			new NotifyingProperty("TimeSpan", "Time",    "Width"),
+			new NotifyingProperty("TimeSpan", "MaxTime", "Width"),
+			new NotifyingProperty("Border",   "Border"),
+			new NotifyingProperty("int",      "Width"),
+			new NotifyingProperty("Brush",    "Color"),
 		}));
 
 	GenerateModel();

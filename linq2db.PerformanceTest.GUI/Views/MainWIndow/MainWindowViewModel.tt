@@ -21,7 +21,7 @@
 		new Class("MainWindowViewModel", new[]
 		{
 			new NotifyingProperty("WindowState", "WindowState"),
-			new NotifyingProperty("string",      "StatusBar"),
+			new NotifyingProperty("string",      "Status"),
 
 			new NotifyingProperty("ObservableCollection<TestViewModel>", "Tests"),
 		}));

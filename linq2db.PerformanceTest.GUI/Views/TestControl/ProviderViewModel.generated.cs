@@ -5,50 +5,14 @@
 // </auto-generated>
 //---------------------------------------------------------------------------------------------------
 using System;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace PerformanceTest.Views.TestControl
 {
-	public partial class TestViewModel : INotifyPropertyChanged
+	public partial class ProviderViewModel : INotifyPropertyChanged
 	{
-		#region Platform : string
-
-		private string _platform;
-		public  string  Platform
-		{
-			get { return _platform; }
-			set
-			{
-				if (_platform != value)
-				{
-					BeforePlatformChanged(value);
-					_platform = value;
-					AfterPlatformChanged();
-
-					OnPlatformChanged();
-				}
-			}
-		}
-
-		#region INotifyPropertyChanged support
-
-		partial void BeforePlatformChanged(string newValue);
-		partial void AfterPlatformChanged ();
-
-		public const string NameOfPlatform = "Platform";
-
-		private static readonly PropertyChangedEventArgs _platformChangedEventArgs = new PropertyChangedEventArgs(NameOfPlatform);
-
-		private void OnPlatformChanged()
-		{
-			OnPropertyChanged(_platformChangedEventArgs);
-		}
-
-		#endregion
-
-		#endregion
-
 		#region Name : string
 
 		private string _name;
@@ -86,74 +50,37 @@ namespace PerformanceTest.Views.TestControl
 
 		#endregion
 
-		#region Methods : ObservableCollection<MethodViewModel>
+		#region Color : Brush
 
-		private ObservableCollection<MethodViewModel> _methods;
-		public  ObservableCollection<MethodViewModel>  Methods
+		private Brush _color;
+		public  Brush  Color
 		{
-			get { return _methods; }
+			get { return _color; }
 			set
 			{
-				if (_methods != value)
+				if (_color != value)
 				{
-					BeforeMethodsChanged(value);
-					_methods = value;
-					AfterMethodsChanged();
+					BeforeColorChanged(value);
+					_color = value;
+					AfterColorChanged();
 
-					OnMethodsChanged();
+					OnColorChanged();
 				}
 			}
 		}
 
 		#region INotifyPropertyChanged support
 
-		partial void BeforeMethodsChanged(ObservableCollection<MethodViewModel> newValue);
-		partial void AfterMethodsChanged ();
+		partial void BeforeColorChanged(Brush newValue);
+		partial void AfterColorChanged ();
 
-		public const string NameOfMethods = "Methods";
+		public const string NameOfColor = "Color";
 
-		private static readonly PropertyChangedEventArgs _methodsChangedEventArgs = new PropertyChangedEventArgs(NameOfMethods);
+		private static readonly PropertyChangedEventArgs _colorChangedEventArgs = new PropertyChangedEventArgs(NameOfColor);
 
-		private void OnMethodsChanged()
+		private void OnColorChanged()
 		{
-			OnPropertyChanged(_methodsChangedEventArgs);
-		}
-
-		#endregion
-
-		#endregion
-
-		#region Providers : ObservableCollection<ProviderViewModel>
-
-		private ObservableCollection<ProviderViewModel> _providers;
-		public  ObservableCollection<ProviderViewModel>  Providers
-		{
-			get { return _providers; }
-			set
-			{
-				if (_providers != value)
-				{
-					BeforeProvidersChanged(value);
-					_providers = value;
-					AfterProvidersChanged();
-
-					OnProvidersChanged();
-				}
-			}
-		}
-
-		#region INotifyPropertyChanged support
-
-		partial void BeforeProvidersChanged(ObservableCollection<ProviderViewModel> newValue);
-		partial void AfterProvidersChanged ();
-
-		public const string NameOfProviders = "Providers";
-
-		private static readonly PropertyChangedEventArgs _providersChangedEventArgs = new PropertyChangedEventArgs(NameOfProviders);
-
-		private void OnProvidersChanged()
-		{
-			OnPropertyChanged(_providersChangedEventArgs);
+			OnPropertyChanged(_colorChangedEventArgs);
 		}
 
 		#endregion

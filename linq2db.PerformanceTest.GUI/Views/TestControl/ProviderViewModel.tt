@@ -11,17 +11,15 @@
 
 	Model.Usings.AddRange(new[]
 	{
-		"System.Collections.ObjectModel",
+		"System.Windows.Controls",
+		"System.Windows.Media",
 	});
 
 	Model.Types.Add(
-		new Class("TestViewModel", new[]
+		new Class("ProviderViewModel", new[]
 		{
-			new NotifyingProperty("string", "Platform"),
 			new NotifyingProperty("string", "Name"),
-
-			new NotifyingProperty("ObservableCollection<MethodViewModel>",   "Methods"),
-			new NotifyingProperty("ObservableCollection<ProviderViewModel>", "Providers"),
+			new NotifyingProperty("Brush",  "Color"),
 		}));
 
 	GenerateModel();

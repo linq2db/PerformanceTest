@@ -15,13 +15,14 @@
 	});
 
 	Model.Types.Add(
-		new Class("TestViewModel", new[]
+		new Class("MethodViewModel", new[]
 		{
-			new NotifyingProperty("string", "Platform"),
-			new NotifyingProperty("string", "Name"),
+			new NotifyingProperty("string", "Name",   "DisplayName"),
+			new NotifyingProperty("int",    "Repeat", "DisplayName"),
+			new NotifyingProperty("int?",   "Take",   "DisplayName"),
+			new NotifyingProperty("string", "DisplayName").InitGetter("Name + \" / \" + Repeat + (Take.HasValue ? \" / \" + Take : \"\")"),
 
-			new NotifyingProperty("ObservableCollection<MethodViewModel>",   "Methods"),
-			new NotifyingProperty("ObservableCollection<ProviderViewModel>", "Providers"),
+			new NotifyingProperty("ObservableCollection<TimeViewModel>", "Times"),
 		}));
 
 	GenerateModel();

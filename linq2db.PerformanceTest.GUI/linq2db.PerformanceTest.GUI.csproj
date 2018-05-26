@@ -84,9 +84,27 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>MainWindowViewModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Views\TestControl\ProviderViewModel.generated.cs">
+      <DependentUpon>ProviderViewModel.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Views\TestControl\TimeViewModel.cs" />
+    <Compile Include="Views\TestControl\TimeViewModel.generated.cs">
+      <DependentUpon>TimeViewModel.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Views\TestControl\MethodViewModel.cs" />
+    <Compile Include="Views\TestControl\MethodViewModel.generated.cs">
+      <DependentUpon>MethodViewModel.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Views\TestControl\TestControl.xaml.cs">
       <DependentUpon>TestControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\TestControl\TestViewModel.cs" />
     <Compile Include="Views\TestControl\TestViewModel.generated.cs">
       <DependentUpon>TestViewModel.tt</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -163,6 +181,18 @@
     <Content Include="Views\MainWIndow\MainWindowViewModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>MainWindowViewModel.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\TestControl\ProviderViewModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ProviderViewModel.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\TestControl\TimeViewModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>TimeViewModel.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\TestControl\MethodViewModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>MethodViewModel.generated.cs</LastGenOutput>
     </Content>
     <Content Include="Views\TestControl\TestViewModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
