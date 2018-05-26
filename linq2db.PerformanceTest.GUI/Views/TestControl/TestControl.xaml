@@ -10,8 +10,8 @@
 	d:DesignWidth  = "600"
 	d:DataContext  = "{d:DesignInstance local:TestViewModel, IsDesignTimeCreatable=true}">
 
-	<Border BorderBrush="{StaticResource AccentColorBrush}" BorderThickness="1" Margin="3, 1">
-		<Grid>
+	<Border BorderBrush="{StaticResource AccentColorBrush}" BorderThickness="1" Margin="3,1">
+		<Grid HorizontalAlignment="Stretch" >
 			<Grid.RowDefinitions>
 				<RowDefinition Height="Auto" />
 				<RowDefinition Height="Auto" />
@@ -20,14 +20,16 @@
 
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="Auto"/>
-				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="*" />
 			</Grid.ColumnDefinitions>
 
-			<Grid Grid.Row="0" Grid.ColumnSpan="2">
+			<Grid Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="Auto"/>
 					<ColumnDefinition Width="Auto"/>
 					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="*" />
 					<ColumnDefinition Width="Auto"/>
 				</Grid.ColumnDefinitions>
 
@@ -35,6 +37,12 @@
 				<Label Grid.Column="1" Content="{Binding Platform}" Margin="0" FontSize="14" FontWeight="Bold" />
 				<Label Grid.Column="2" Content="Test:"              Margin="0" FontSize="14" />
 				<Label Grid.Column="3" Content="{Binding Name}"     Margin="0" FontSize="14" FontWeight="Bold" />
+				<Button Grid.Column="4" ToolTip="Delete best and worst" Command="{Binding DeleteCommand}" Style="{DynamicResource MetroCircleButtonStyle}" Height="33" Width="33" HorizontalAlignment="Right">
+					<Image Margin="2,1,0,0" Height="15" Source="{StaticResource DeleteIcon}" />
+				</Button>
+				<Button Grid.Column="5" ToolTip="Kill everything (current tes only)" Command="{Binding DeleteCommand}" Style="{DynamicResource MetroCircleButtonStyle}" Height="33" Width="33" HorizontalAlignment="Right">
+					<Image Margin="0" Height="15" Source="{StaticResource SkullIcon}" />
+				</Button>
 			</Grid>
 
 			<ItemsControl Grid.Row="1" Grid.Column="0" Grid.IsSharedSizeScope="True" ItemsSource="{Binding Methods}" Margin="5,0">

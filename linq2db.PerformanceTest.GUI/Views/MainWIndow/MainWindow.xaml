@@ -45,10 +45,10 @@
 			</ToolBarTray>
 
 			<ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-				<ItemsControl ItemsSource="{Binding Tests}">
+				<ItemsControl ItemsSource="{Binding Tests}" HorizontalAlignment="Stretch">
 					<ItemsControl.ItemTemplate>
 						<DataTemplate>
-							<test:TestControl />
+							<test:TestControl  HorizontalAlignment="Stretch" />
 						</DataTemplate>
 					</ItemsControl.ItemTemplate>
 				</ItemsControl>

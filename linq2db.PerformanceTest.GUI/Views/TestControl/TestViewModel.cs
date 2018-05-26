@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
+using PerformanceTest.Components.Controls;
 
 namespace PerformanceTest.Views.TestControl
 {
@@ -21,6 +23,14 @@ namespace PerformanceTest.Views.TestControl
 					Name = n,
 					Color = MainWindowViewModel.ProviderBrushes[n]
 				}));
+		}
+
+		private AsyncRelayCommand _deleteCommand;
+		public  AsyncRelayCommand  DeleteCommand =>
+			_deleteCommand ?? (_deleteCommand = new AsyncRelayCommand(DeleteDataAsync));
+
+		async Task DeleteDataAsync()
+		{
 		}
 	}
 }
