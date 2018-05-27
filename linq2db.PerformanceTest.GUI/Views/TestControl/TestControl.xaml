@@ -37,10 +37,10 @@
 				<Label Grid.Column="1" Content="{Binding Platform}" Margin="0" FontSize="14" FontWeight="Bold" />
 				<Label Grid.Column="2" Content="Test:"              Margin="0" FontSize="14" />
 				<Label Grid.Column="3" Content="{Binding Name}"     Margin="0" FontSize="14" FontWeight="Bold" />
-				<Button Grid.Column="4" ToolTip="Delete best and worst" Command="{Binding DeleteCommand}" Style="{DynamicResource MetroCircleButtonStyle}" Height="33" Width="33" HorizontalAlignment="Right">
+				<Button Grid.Column="4" ToolTip="Delete best and worst" Command="{Binding DeleteBestWorstCommand}" Style="{DynamicResource MetroCircleButtonStyle}" Height="33" Width="33" HorizontalAlignment="Right">
 					<Image Margin="2,1,0,0" Height="15" Source="{StaticResource DeleteIcon}" />
 				</Button>
-				<Button Grid.Column="5" ToolTip="Kill everything (current tes only)" Command="{Binding DeleteCommand}" Style="{DynamicResource MetroCircleButtonStyle}" Height="33" Width="33" HorizontalAlignment="Right">
+				<Button Grid.Column="5" ToolTip="Kill everything (current test only)" Command="{Binding DeleteCommand}" Style="{DynamicResource MetroCircleButtonStyle}" Height="33" Width="33" HorizontalAlignment="Right">
 					<Image Margin="0" Height="15" Source="{StaticResource SkullIcon}" />
 				</Button>
 			</Grid>
@@ -65,6 +65,7 @@
 												<ColumnDefinition Width="Auto" SharedSizeGroup="ColumnA"/>
 												<ColumnDefinition Width="Auto" SharedSizeGroup="ColumnB"/>
 												<ColumnDefinition Width="Auto" SharedSizeGroup="ColumnC"/>
+												<ColumnDefinition Width="Auto" SharedSizeGroup="ColumnD"/>
 											</Grid.ColumnDefinitions>
 
 											<Label Grid.Column="0" Content="{Binding Name}" Margin="0" Padding="5,0" FontSize="12" />
@@ -75,9 +76,19 @@
 												Width               = "{Binding Width}"
 												Background          = "{Binding Color}"
 												BorderThickness     = "1"
-												HorizontalAlignment = "Left"
-												/>
-											<Label Grid.Column="2" Content="{Binding Time}" Margin="0" Padding="5,0" FontSize="12" />
+												HorizontalAlignment = "Left">
+												<Border.ToolTip>
+													<ItemsControl ItemsSource="{Binding Watches}" Margin="2" BorderThickness="0" BorderBrush="{StaticResource AccentColorBrush}">
+														<ItemsControl.ItemTemplate>
+															<DataTemplate>
+																<Label Content="{Binding Time}" Margin="2" Padding="0" FontSize="12" />
+															</DataTemplate>
+														</ItemsControl.ItemTemplate>
+													</ItemsControl>
+												</Border.ToolTip>
+											</Border>
+											<Label Grid.Column="2" Content="{Binding Time}"  Margin="0" Padding="5,0" FontSize="12" />
+											<Label Grid.Column="3" Content="{Binding Count}" Margin="0" Padding="0,0,5,0" FontSize="12" />
 										</Grid>
 									</DataTemplate>
 								</ItemsControl.ItemTemplate>

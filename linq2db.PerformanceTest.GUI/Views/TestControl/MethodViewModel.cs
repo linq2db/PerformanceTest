@@ -15,7 +15,7 @@ namespace PerformanceTest.Views.TestControl
 			foreach (var item in list)
 				item.MaxTime = max;
 
-			Times     = new ObservableCollection<TimeViewModel>(list);
+			Times = new ObservableCollection<TimeViewModel>(list);
 		}
 	}
 }

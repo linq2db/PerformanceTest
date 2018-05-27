@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using PerformanceTest.Views.MainWindow;
 
 namespace PerformanceTest.Views.TestControl
 {
+	using DataModel;
+	using MainWindow;
+
 	public partial class TimeViewModel
 	{
-		public TimeViewModel(IEnumerable<TimeSpan> times)
+		public TimeViewModel(IEnumerable<TestStopwatch> times)
 		{
-			var ts    = times.Select(t => t.Ticks).OrderBy(t => t).ToList();
+			Watches   = times.OrderBy(t => t.Ticks).ToArray();
+			var ts    = Watches.Select(t => t.Ticks).ToList();
 			var count = ts.Count;
 
 			var ticks =
@@ -23,6 +26,8 @@ namespace PerformanceTest.Views.TestControl
 			Time = new TimeSpan(ticks);
 		}
 
+		public TestStopwatch[] Watches { get; set; }
+
 		partial void AfterMaxTimeChanged()
 		{
 			_width = (int)(300L * Time.Ticks / _maxTime.Ticks);
@@ -31,6 +36,18 @@ namespace PerformanceTest.Views.TestControl
 		partial void AfterNameChanged()
 		{
 			Application.Current.Dispatcher.Invoke(() => Color = MainWindowViewModel.ProviderBrushes[_name]);
+		}
+
+		public IEnumerable<int> GetBestWorst()
+		{
+			var count = Watches.Length;
+
+			if (count <= 2)
+				return new int[0];
+
+			var n = count <=  5 ? 1 : count <= 10 ? 2 : count / 5;
+
+			return Watches.Take(n).Concat(Watches.Skip(count - n)).Select(w => w.ID);
 		}
 	}
 }

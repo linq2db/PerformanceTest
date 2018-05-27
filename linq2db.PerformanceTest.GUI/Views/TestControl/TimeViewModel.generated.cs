@@ -235,6 +235,28 @@ namespace PerformanceTest.Views.TestControl
 
 		#endregion
 
+		#region Count : int
+
+		public int Count
+		{
+			get { return Watches.Length; }
+		}
+
+		#region INotifyPropertyChanged support
+
+		public const string NameOfCount = "Count";
+
+		private static readonly PropertyChangedEventArgs _countChangedEventArgs = new PropertyChangedEventArgs(NameOfCount);
+
+		private void OnCountChanged()
+		{
+			OnPropertyChanged(_countChangedEventArgs);
+		}
+
+		#endregion
+
+		#endregion
+
 		#region INotifyPropertyChanged support
 
 #if !SILVERLIGHT

@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
+
+using LinqToDB.Data;
 
 namespace PerformanceTest
 {
@@ -11,6 +14,9 @@ namespace PerformanceTest
 	{
 		public App()
 		{
+			DataConnection.TurnTraceSwitchOn();
+			DataConnection.WriteTraceLine = (s, s1) => Debug.WriteLine(s, s1);
+
 			SettingValueExtension.AppSettings = new AppSettings();
 		}
 

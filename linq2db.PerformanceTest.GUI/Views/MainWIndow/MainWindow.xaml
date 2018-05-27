@@ -41,6 +41,9 @@
 					<Button ToolTip="Refresh (F5)" Command="{Binding RefreshCommand}" Style="{DynamicResource MetroCircleButtonStyle}" Height="44" Width="44">
 						<Image Margin="10" Source="{StaticResource RefreshIcon}" />
 					</Button>
+					<Button ToolTip="Kill all tests" Command="{Binding KillCommand}" Style="{DynamicResource MetroCircleButtonStyle}" Height="44" Width="44">
+						<Image Margin="10" Source="{StaticResource SkullIcon}" />
+					</Button>
 				</ToolBar>
 			</ToolBarTray>
 

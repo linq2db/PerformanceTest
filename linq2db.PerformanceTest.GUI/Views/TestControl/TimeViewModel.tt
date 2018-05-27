@@ -25,6 +25,7 @@
 			new NotifyingProperty("Border",   "Border"),
 			new NotifyingProperty("int",      "Width"),
 			new NotifyingProperty("Brush",    "Color"),
+			new NotifyingProperty("int",      "Count").InitGetter("Watches.Length"),
 		}));
 
 	GenerateModel();

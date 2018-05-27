@@ -112,7 +112,7 @@ namespace PerformanceTest.DataModel
 	{
 		[PrimaryKey, Identity   ] public int    ID        { get; set; } // int
 		[Column,     NotNull    ] public int    TestRunID { get; set; } // int
-		[Column,        Nullable] public string Name      { get; set; } // nvarchar(20)
+		[Column,        Nullable] public string Name      { get; set; } // nvarchar(50)
 		[Column,     NotNull    ] public int    Repeat    { get; set; } // int
 		[Column,        Nullable] public int?   Take      { get; set; } // int
 	}
@@ -121,9 +121,9 @@ namespace PerformanceTest.DataModel
 	public partial class TestResult
 	{
 		[PrimaryKey, Identity   ] public int      ID              { get; set; } // int
-		[Column,        Nullable] public string   Platform        { get; set; } // nvarchar(20)
-		[Column,        Nullable] public string   GroupName       { get; set; } // nvarchar(20)
-		[Column,        Nullable] public string   TestName        { get; set; } // nvarchar(20)
+		[Column,        Nullable] public string   Platform        { get; set; } // nvarchar(50)
+		[Column,        Nullable] public string   GroupName       { get; set; } // nvarchar(50)
+		[Column,        Nullable] public string   TestName        { get; set; } // nvarchar(50)
 		[Column,     NotNull    ] public int      Repeat          { get; set; } // int
 		[Column,        Nullable] public int?     Take            { get; set; } // int
 		[Column,        Nullable] public string   TestDescription { get; set; } // nvarchar(50)
@@ -136,8 +136,8 @@ namespace PerformanceTest.DataModel
 	public partial class TestRun
 	{
 		[PrimaryKey, Identity   ] public int      ID        { get; set; } // int
-		[Column,        Nullable] public string   Platform  { get; set; } // nvarchar(20)
-		[Column,        Nullable] public string   Name      { get; set; } // nvarchar(20)
+		[Column,        Nullable] public string   Platform  { get; set; } // nvarchar(50)
+		[Column,        Nullable] public string   Name      { get; set; } // nvarchar(50)
 		[Column,     NotNull    ] public DateTime CreatedOn { get; set; } // datetime2(7)
 	}
 
