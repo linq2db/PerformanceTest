@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+
 using CodeJam.Collections;
 
 using LinqToDB;
@@ -81,6 +82,7 @@ namespace Tests.L2DB
 			store.StoreEntity(args);
 		}
 
+		/*
 		static readonly IEqualityComparer<NarrowLong> _comparer = ComparerBuilder<NarrowLong>.GetEqualityComparer(
 			ta => ta.Members.Where(m => m.MemberInfo.GetCustomAttribute<PrimaryKeyAttribute>() != null));
 
@@ -96,5 +98,6 @@ namespace Tests.L2DB
 					args.Entity = n;
 			}
 		}
+		*/
 	}
 }

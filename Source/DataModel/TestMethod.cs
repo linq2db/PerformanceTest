@@ -9,7 +9,7 @@ namespace Tests.DataModel
 	{
 		[PrimaryKey, Identity] public int      ID;
 		[Column]               public int      TestRunID;
-		[Column(Length=20)]    public string   Name;
+		[Column(Length=50)]    public string   Name;
 		[Column]               public int      Repeat;
 		[Column, Nullable]     public int?     Take;
 	}

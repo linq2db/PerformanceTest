@@ -19,7 +19,7 @@ namespace Tests
 
 	public static class TestRunner
 	{
-		const string DatabaseVersion = "1a";
+		const string DatabaseVersion = "1d";
 
 		public static void Run(string platform)
 		{
@@ -99,14 +99,14 @@ namespace Tests
 				CreateTest<ITests>(t => t.GetWideList,          1, 1000000),
 			});
 
-			RunTests(platform, "Single Column CT", testProvidersCT, new[]
+			RunTests(platform, "Single Column with Change Tracking", testProvidersCT, new[]
 			{
 				CreateTest<ITests>(t => t.GetSingleColumnFast,  10000),
 				CreateTest<ITests>(t => t.GetSingleColumnSlow,  10000),
 				CreateTest<ITests>(t => t.GetSingleColumnParam, 10000),
 			});
 
-			RunTests(platform, "Narrow List CT", testProvidersCT, new[]
+			RunTests(platform, "Narrow List with Change Tracking", testProvidersCT, new[]
 			{
 //				CreateTest<ITests>(t => t.GetNarrowList,        10000, 100),
 //				CreateTest<ITests>(t => t.GetNarrowList,        1000, 1000),
@@ -115,7 +115,7 @@ namespace Tests
 				CreateTest<ITests>(t => t.GetNarrowList,        1, 1000000),
 			});
 
-			RunTests(platform, "Wide List CT", testProvidersCT, new[]
+			RunTests(platform, "Wide List with Change Tracking", testProvidersCT, new[]
 			{
 //				CreateTest<ITests>(t => t.GetWideList,          10000, 100),
 //				CreateTest<ITests>(t => t.GetWideList,          1000, 1000),
@@ -125,8 +125,18 @@ namespace Tests
 			});
 		}
 
+		static readonly Random _random = new Random();
+
 		static void RunTests(string platform, string testName, ITests[] testProviders, Test<ITests>[] testMethods)
 		{
+			testProviders =
+			(
+				from p in testProviders
+				orderby _random.Next()
+				select p
+			)
+			.ToArray();
+
 			var tests = testMethods.Select(m =>
 			{
 				Console.Write($"{m.Name} / {m.Repeat} ");

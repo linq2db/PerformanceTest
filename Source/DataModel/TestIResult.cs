@@ -4,13 +4,13 @@ using LinqToDB.Mapping;
 
 namespace Tests.DataModel
 {
-	[Table()]
+	[Table]
 	public class TestResult
 	{
 		[PrimaryKey, Identity] public int      ID;
-		[Column(Length=20)]    public string   Platform;
-		[Column(Length=20)]    public string   GroupName;
-		[Column(Length=20)]    public string   TestName;
+		[Column(Length=50)]    public string   Platform;
+		[Column(Length=50)]    public string   GroupName;
+		[Column(Length=50)]    public string   TestName;
 		[Column]               public int      Repeat;
 		[Column, Nullable]     public int?     Take;
 		[Column(Length=50)]    public string   TestDescription;
