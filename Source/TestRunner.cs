@@ -47,10 +47,10 @@ namespace Tests
 				new L2DB.L2DBSqlTests      (true),
 				new L2DB.L2DBLinqTests     (true),
 				new L2DB.L2DBCompTests     (true),
-#if NETCOREAPP2_0
 				new EFCore.EFCoreSqlTests  (true),
 				new EFCore.EFCoreLinqTests (true),
 				new EFCore.EFCoreCompTests (true),
+#if NETCOREAPP2_0
 #else
 				new L2S.L2SSqlTests        (true),
 				new L2S.L2SLinqTests       (true),
@@ -63,10 +63,10 @@ namespace Tests
 				new AdoNet.AdoNetTests     (),
 				new L2DB.L2DBLinqTests     (false),
 				new L2DB.L2DBCompTests     (false),
-#if NETCOREAPP2_0
 				new EFCore.EFCoreSqlTests  (false),
 				new EFCore.EFCoreLinqTests (false),
 				new EFCore.EFCoreCompTests (false),
+#if NETCOREAPP2_0
 #else
 				new L2S.L2SSqlTests        (false),
 				new L2S.L2SLinqTests       (false),
@@ -261,13 +261,13 @@ namespace Tests
 				L2DB_Comp    = t.Stopwatch.SingleOrDefault(w => w?.p is L2DB.L2DBCompTests      p &&  p.NoTracking)?.time,
 				L2DB_CT_Linq = t.Stopwatch.SingleOrDefault(w => w?.p is L2DB.L2DBLinqTests      p && !p.NoTracking)?.time,
 				L2DB_CT_Comp = t.Stopwatch.SingleOrDefault(w => w?.p is L2DB.L2DBCompTests      p && !p.NoTracking)?.time,
-#if NETCOREAPP2_0
 				EF_Sql       = t.Stopwatch.SingleOrDefault(w => w?.p is EFCore.EFCoreSqlTests   p &&  p.NoTracking)?.time,
 				EF_Linq      = t.Stopwatch.SingleOrDefault(w => w?.p is EFCore.EFCoreLinqTests  p &&  p.NoTracking)?.time,
 				EF_Comp      = t.Stopwatch.SingleOrDefault(w => w?.p is EFCore.EFCoreCompTests  p &&  p.NoTracking)?.time,
 				EF_CT_Query  = t.Stopwatch.SingleOrDefault(w => w?.p is EFCore.EFCoreSqlTests   p && !p.NoTracking)?.time,
 				EF_CT_Linq   = t.Stopwatch.SingleOrDefault(w => w?.p is EFCore.EFCoreLinqTests  p && !p.NoTracking)?.time,
 				EF_CT_Comp   = t.Stopwatch.SingleOrDefault(w => w?.p is EFCore.EFCoreCompTests  p && !p.NoTracking)?.time,
+#if NETCOREAPP2_0
 #else
 				L2S_Sql      = t.Stopwatch.SingleOrDefault(w => w?.p is L2S.L2SSqlTests  p &&  p.NoTracking)?.time,
 				L2S_Linq     = t.Stopwatch.SingleOrDefault(w => w?.p is L2S.L2SLinqTests p &&  p.NoTracking)?.time,
