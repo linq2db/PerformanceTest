@@ -1,0 +1,32 @@
+﻿<#@ template debug="true" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".generated.cs" #>
+<#@ include file="..\..\LinqToDB.Templates\T4Model.ttinclude"               #>
+<#@ include file="..\..\LinqToDB.Templates\NotifyPropertyChanged.ttinclude" #>
+<#
+	Model.Namespace.Name = "PerformanceTest.Views.TestControl";
+
+	Model.Usings.AddRange(new[]
+	{
+		"System.Windows.Controls",
+		"System.Windows.Media",
+//		"System.Collections.ObjectModel",
+	});
+
+	Model.Types.Add(
+		new Class("TimeViewModel", new[]
+		{
+			new NotifyingProperty("string",   "Name"),
+			new NotifyingProperty("TimeSpan", "Time",    "Width"),
+			new NotifyingProperty("TimeSpan", "MaxTime", "Width"),
+			new NotifyingProperty("Border",   "Border"),
+			new NotifyingProperty("int",      "Width"),
+			new NotifyingProperty("Brush",    "Color"),
+			new NotifyingProperty("int",      "Count").InitGetter("Watches.Length"),
+		}));
+
+	GenerateModel();
+#>
