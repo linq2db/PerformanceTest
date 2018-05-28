@@ -121,20 +121,21 @@ namespace PerformanceTest.Views.MainWindow
 						Color.FromRgb(0x56, 0xC5, 0xFF),
 						Color.FromRgb(0x00, 0xD8, 0xCC),
 
-						Color.FromRgb(0x25, 0x72, 0xEB),
-						Color.FromRgb(0x46, 0x17, 0xB4),
 						Color.FromRgb(0xAD, 0x10, 0x3C),
 						Color.FromRgb(0xB0, 0x1E, 0x00),
 						Color.FromRgb(0xC1, 0x00, 0x4F),
+						Color.FromRgb(0xAD, 0x10, 0x3C),
+						Color.FromRgb(0xB0, 0x1E, 0x00),
+						Color.FromRgb(0xC1, 0x00, 0x4F),
+
+						Color.FromRgb(0x25, 0x72, 0xEB),
+						Color.FromRgb(0x46, 0x17, 0xB4),
 						Color.FromRgb(0x72, 0x00, 0xAC),
 						Color.FromRgb(0x00, 0x6A, 0xC1),
 						Color.FromRgb(0x00, 0x82, 0x87),
 						Color.FromRgb(0xFE, 0x7C, 0x22),
 						Color.FromRgb(0xFF, 0x2E, 0x12),
 						Color.FromRgb(0xFF, 0x1D, 0x77),
-						Color.FromRgb(0x1F, 0xAE, 0xFF),
-						Color.FromRgb(0x56, 0xC5, 0xFF),
-						Color.FromRgb(0x00, 0xD8, 0xCC),
 						Color.FromRgb(0x91, 0xD1, 0x00),
 						Color.FromRgb(0xFF, 0x76, 0xBC),
 						Color.FromRgb(0x00, 0xA3, 0xA3),
@@ -146,9 +147,10 @@ namespace PerformanceTest.Views.MainWindow
 							foreach (var name in new[]
 							{
 								"AdoNet", "Dapper",
-								"L2DB Sql", "L2DB Comp", "L2DB Linq", "L2DB Comp CT", "L2DB Linq CT",
-								"EF Core Sql", "EF Core Comp", "EF Core Linq", "EF Core Sql CT", "EF Core Comp CT", "EF Core Linq CT",
-								"L2S Sql", "L2S Comp", "L2S Linq", "L2S Sql CT", "L2S Comp CT", "L2S Linq CT",
+								"L2DB Sql", "L2DB Compiled", "L2DB Linq", "L2DB Compiled CT", "L2DB Linq CT",
+								"EF Core Sql", "EF Core Compiled", "EF Core Linq", "EF Core Sql CT", "EF Core Compiled CT", "EF Core Linq CT",
+								"L2S Sql", "L2S Compiled", "L2S Linq", "L2S Sql CT", "L2S Compiled CT", "L2S Linq CT",
+								"EF6 Sql", "EF6 Compiled", "EF6 Linq", "EF6 Sql CT", "EF6 Compiled CT", "EF6 Linq CT",
 							})
 							{
 								ProviderBrushes[name] = new SolidColorBrush(colors[ProviderBrushes.Count]);
@@ -228,7 +230,7 @@ namespace PerformanceTest.Views.MainWindow
 
 		async Task KillDataAsync()
 		{
-			if (Confirm())
+			if (!Confirm())
 				return;
 
 			try
@@ -241,6 +243,8 @@ namespace PerformanceTest.Views.MainWindow
 					await db.TestMethods.    TruncateAsync();
 					await db.TestRuns.       TruncateAsync();
 				}
+
+				await RefreshDataAsync();
 			}
 			catch (Exception ex)
 			{

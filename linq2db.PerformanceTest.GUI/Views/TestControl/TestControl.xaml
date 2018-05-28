@@ -55,7 +55,24 @@
 								<ColumnDefinition Width="Auto" SharedSizeGroup="ColumnThree" />
 							</Grid.ColumnDefinitions>
 
-							<Label Grid.Column="0" Content="{Binding DisplayName}" Margin="0" Padding="5,0,5,5" FontSize="14" VerticalAlignment="Center" FontWeight="Bold" />
+							<Grid Grid.Column="0" VerticalAlignment="Center">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="Auto" />
+									<ColumnDefinition Width="Auto" />
+								</Grid.ColumnDefinitions>
+
+								<Grid.RowDefinitions>
+									<RowDefinition Height="Auto" />
+									<RowDefinition Height="Auto" />
+									<RowDefinition Height="Auto" />
+								</Grid.RowDefinitions>
+
+								<Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="{Binding Name}" Margin="0" Padding="5,0,5,5" FontSize="14" FontWeight="Bold" />
+								<Label Grid.Row="1" Grid.Column="0" Content="Repeat:" Margin="0" Padding="5,0,5,5" FontSize="14" />
+								<Label Grid.Row="1" Grid.Column="1" Content="{Binding Repeat}" Margin="0" Padding="5,0,5,5" FontSize="14" FontWeight="Bold" HorizontalAlignment="Right" />
+								<Label Grid.Row="2" Grid.Column="0" Content="Take:" Margin="0" Padding="5,0,5,5" FontSize="14" />
+								<Label Grid.Row="2" Grid.Column="1" Content="{Binding Take}" Margin="0" Padding="5,0,5,5" FontSize="14" FontWeight="Bold" HorizontalAlignment="Right" />
+							</Grid>
 
 							<ItemsControl Grid.Column="1" ItemsSource="{Binding Times}" Margin="0,3,0,5" Grid.IsSharedSizeScope="True" >
 								<ItemsControl.ItemTemplate>
