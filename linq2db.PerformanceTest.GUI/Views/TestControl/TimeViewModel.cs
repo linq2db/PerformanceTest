@@ -30,7 +30,7 @@ namespace PerformanceTest.Views.TestControl
 
 		partial void AfterMaxTimeChanged()
 		{
-			_width = (int)(300L * Time.Ticks / _maxTime.Ticks);
+			_width = Math.Max(10, (int)(300L * Time.Ticks / _maxTime.Ticks));
 		}
 
 		partial void AfterNameChanged()

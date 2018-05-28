@@ -100,6 +100,7 @@ namespace PerformanceTest.Views.MainWindow
 					{
 						Color.FromRgb(0xAA, 0x40, 0xFF),
 						Color.FromRgb(0x63, 0x2F, 0x00),
+						Color.FromRgb(0xFF, 0x76, 0xBC),
 
 						Color.FromRgb(0x77, 0xB9, 0x00),
 						Color.FromRgb(0x00, 0xC1, 0x3F),
@@ -137,7 +138,6 @@ namespace PerformanceTest.Views.MainWindow
 						Color.FromRgb(0xFF, 0x2E, 0x12),
 						Color.FromRgb(0xFF, 0x1D, 0x77),
 						Color.FromRgb(0x91, 0xD1, 0x00),
-						Color.FromRgb(0xFF, 0x76, 0xBC),
 						Color.FromRgb(0x00, 0xA3, 0xA3),
 					};
 
@@ -146,7 +146,7 @@ namespace PerformanceTest.Views.MainWindow
 						if (ProviderBrushes.Count == 0)
 							foreach (var name in new[]
 							{
-								"AdoNet", "Dapper",
+								"AdoNet", "Dapper", "PetaPoco",
 								"L2DB Sql", "L2DB Compiled", "L2DB Linq", "L2DB Compiled CT", "L2DB Linq CT",
 								"EF Core Sql", "EF Core Compiled", "EF Core Linq", "EF Core Sql CT", "EF Core Compiled CT", "EF Core Linq CT",
 								"L2S Sql", "L2S Compiled", "L2S Linq", "L2S Sql CT", "L2S Compiled CT", "L2S Linq CT",

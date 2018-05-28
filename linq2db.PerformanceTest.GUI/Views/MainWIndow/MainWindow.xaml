@@ -47,11 +47,11 @@
 				</ToolBar>
 			</ToolBarTray>
 
-			<ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-				<ItemsControl ItemsSource="{Binding Tests}" HorizontalAlignment="Stretch">
+			<ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" >
+				<ItemsControl ItemsSource="{Binding Tests}" HorizontalAlignment="Stretch" Grid.IsSharedSizeScope="True" >
 					<ItemsControl.ItemTemplate>
 						<DataTemplate>
-							<test:TestControl  HorizontalAlignment="Stretch" />
+							<test:TestControl HorizontalAlignment="Stretch" />
 						</DataTemplate>
 					</ItemsControl.ItemTemplate>
 				</ItemsControl>
