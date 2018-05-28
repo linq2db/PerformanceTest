@@ -13,7 +13,7 @@ namespace Tests.EF6
 	{
 		public EF6Context(bool noTracking)
 			//: base(new EF6ObjectContext(), true)
-			//: base("name=EF6Context")
+			//: base("name=Test")
 			: base("Server=.;Database=PerformanceTest;Trusted_Connection=True")
 		{
 			_noTracking = noTracking;
@@ -35,7 +35,7 @@ namespace Tests.EF6
 	public class EF6ObjectContext1 : ObjectContext
 	{
 		public EF6ObjectContext1()
-			//: base("name=EF6Context")
+			//: base("name=Test")
 			: base("Server=.;Database=PerformanceTest;Trusted_Connection=True")
 		{
 		}

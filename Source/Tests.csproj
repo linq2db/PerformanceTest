@@ -9,6 +9,7 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.3" />
 		<PackageReference Include="CodeJam" Version="2.0.0" />
 		<PackageReference Include="Dapper" Version="1.50.5" />
+		<PackageReference Include="PetaPoco.Core.Compiled" Version="5.1.289" />
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">

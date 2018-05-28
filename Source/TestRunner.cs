@@ -44,6 +44,7 @@ namespace Tests
 			{
 				new AdoNet.AdoNetTests     (),
 				new Dapper.DapperTests     (),
+				new PetaPoco.PetaPocoTests (),
 				new L2DB.L2DBSqlTests      (true),
 				new L2DB.L2DBLinqTests     (true),
 				new L2DB.L2DBCompTests     (true),
@@ -89,6 +90,8 @@ namespace Tests
 
 			RunTests(platform, "Narrow List", testProviders, new[]
 			{
+				CreateTest<ITests>(t => t.GetNarrowList,        10000,   1),
+				CreateTest<ITests>(t => t.GetNarrowList,        10000,  10),
 				CreateTest<ITests>(t => t.GetNarrowList,        10000, 100),
 				CreateTest<ITests>(t => t.GetNarrowList,        1000, 1000),
 				CreateTest<ITests>(t => t.GetNarrowList,        100, 10000),
@@ -98,6 +101,8 @@ namespace Tests
 
 			RunTests(platform, "Wide List", testProviders, new[]
 			{
+				CreateTest<ITests>(t => t.GetWideList,          10000,   1),
+				CreateTest<ITests>(t => t.GetWideList,          10000,  10),
 				CreateTest<ITests>(t => t.GetWideList,          10000, 100),
 				CreateTest<ITests>(t => t.GetWideList,          1000, 1000),
 				CreateTest<ITests>(t => t.GetWideList,          100, 10000),
@@ -114,6 +119,8 @@ namespace Tests
 
 			RunTests(platform, "Narrow List with Change Tracking", testProvidersCT, new[]
 			{
+				CreateTest<ITests>(t => t.GetNarrowList,        10000,   1),
+				CreateTest<ITests>(t => t.GetNarrowList,        10000,  10),
 				CreateTest<ITests>(t => t.GetNarrowList,        10000, 100),
 				CreateTest<ITests>(t => t.GetNarrowList,        1000, 1000),
 				CreateTest<ITests>(t => t.GetNarrowList,        100, 10000),
@@ -123,6 +130,8 @@ namespace Tests
 
 			RunTests(platform, "Wide List with Change Tracking", testProvidersCT, new[]
 			{
+				CreateTest<ITests>(t => t.GetWideList,          10000,   1),
+				CreateTest<ITests>(t => t.GetWideList,          10000,  10),
 				CreateTest<ITests>(t => t.GetWideList,          10000, 100),
 				CreateTest<ITests>(t => t.GetWideList,          1000, 1000),
 				CreateTest<ITests>(t => t.GetWideList,          100, 10000),
@@ -259,8 +268,9 @@ namespace Tests
 				t.Test,
 				t.Repeat,
 				t.Take,
-				AdoNet       = t.Stopwatch.SingleOrDefault(w => w?.p is AdoNet.AdoNetTests)?.time,
-				Dapper       = t.Stopwatch.SingleOrDefault(w => w?.p is Dapper.DapperTests)?.time,
+				AdoNet       = t.Stopwatch.SingleOrDefault(w => w?.p is AdoNet.  AdoNetTests)?.time,
+				Dapper       = t.Stopwatch.SingleOrDefault(w => w?.p is Dapper.  DapperTests)?.time,
+				PetaPoco     = t.Stopwatch.SingleOrDefault(w => w?.p is PetaPoco.PetaPocoTests)?.time,
 
 				L2DB_Sql     = t.Stopwatch.SingleOrDefault(w => w?.p is L2DB.L2DBSqlTests       p &&  p.NoTracking)?.time,
 				L2DB_Linq    = t.Stopwatch.SingleOrDefault(w => w?.p is L2DB.L2DBLinqTests      p &&  p.NoTracking)?.time,
