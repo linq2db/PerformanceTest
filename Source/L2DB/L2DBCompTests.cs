@@ -8,7 +8,7 @@ namespace Tests.L2DB
 {
 	class L2DBCompTests : ITests
 	{
-		public string Name => "L2DB Comp" + (NoTracking ? "" : " CT");
+		public string Name => "L2DB Compiled" + (NoTracking ? "" : " CT");
 
 		public readonly bool NoTracking;
 

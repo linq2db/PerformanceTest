@@ -8,7 +8,7 @@ namespace Tests.EFCore
 {
 	class EFCoreCompTests : ITests
 	{
-		public string Name => "EF Core Comp" + (NoTracking ? "" : " CT");
+		public string Name => "EF Core Compiled" + (NoTracking ? "" : " CT");
 
 		public readonly bool NoTracking;
 

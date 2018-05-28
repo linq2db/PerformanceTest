@@ -19,7 +19,7 @@ namespace Tests
 
 	public static class TestRunner
 	{
-		const string DatabaseVersion = "1d";
+		const string DatabaseVersion = "1e";
 
 		public static void Run(string platform)
 		{
@@ -52,6 +52,9 @@ namespace Tests
 				new EFCore.EFCoreCompTests (true),
 #if NETCOREAPP2_0
 #else
+				new EF6.EF6SqlTests        (true),
+				new EF6.EF6LinqTests       (true),
+//				new EF6.EF6CompTests       (true),
 				new L2S.L2SSqlTests        (true),
 				new L2S.L2SLinqTests       (true),
 				new L2S.L2SCompTests       (true),
@@ -68,6 +71,9 @@ namespace Tests
 				new EFCore.EFCoreCompTests (false),
 #if NETCOREAPP2_0
 #else
+				new EF6.EF6SqlTests        (false),
+				new EF6.EF6LinqTests       (false),
+//				new EF6.EF6CompTests       (false),
 				new L2S.L2SSqlTests        (false),
 				new L2S.L2SLinqTests       (false),
 				new L2S.L2SCompTests       (false),
@@ -83,8 +89,8 @@ namespace Tests
 
 			RunTests(platform, "Narrow List", testProviders, new[]
 			{
-//				CreateTest<ITests>(t => t.GetNarrowList,        10000, 100),
-//				CreateTest<ITests>(t => t.GetNarrowList,        1000, 1000),
+				CreateTest<ITests>(t => t.GetNarrowList,        10000, 100),
+				CreateTest<ITests>(t => t.GetNarrowList,        1000, 1000),
 				CreateTest<ITests>(t => t.GetNarrowList,        100, 10000),
 				CreateTest<ITests>(t => t.GetNarrowList,        10, 100000),
 				CreateTest<ITests>(t => t.GetNarrowList,        1, 1000000),
@@ -92,8 +98,8 @@ namespace Tests
 
 			RunTests(platform, "Wide List", testProviders, new[]
 			{
-//				CreateTest<ITests>(t => t.GetWideList,          10000, 100),
-//				CreateTest<ITests>(t => t.GetWideList,          1000, 1000),
+				CreateTest<ITests>(t => t.GetWideList,          10000, 100),
+				CreateTest<ITests>(t => t.GetWideList,          1000, 1000),
 				CreateTest<ITests>(t => t.GetWideList,          100, 10000),
 				CreateTest<ITests>(t => t.GetWideList,          10, 100000),
 				CreateTest<ITests>(t => t.GetWideList,          1, 1000000),
@@ -108,8 +114,8 @@ namespace Tests
 
 			RunTests(platform, "Narrow List with Change Tracking", testProvidersCT, new[]
 			{
-//				CreateTest<ITests>(t => t.GetNarrowList,        10000, 100),
-//				CreateTest<ITests>(t => t.GetNarrowList,        1000, 1000),
+				CreateTest<ITests>(t => t.GetNarrowList,        10000, 100),
+				CreateTest<ITests>(t => t.GetNarrowList,        1000, 1000),
 				CreateTest<ITests>(t => t.GetNarrowList,        100, 10000),
 				CreateTest<ITests>(t => t.GetNarrowList,        10, 100000),
 				CreateTest<ITests>(t => t.GetNarrowList,        1, 1000000),
@@ -117,8 +123,8 @@ namespace Tests
 
 			RunTests(platform, "Wide List with Change Tracking", testProvidersCT, new[]
 			{
-//				CreateTest<ITests>(t => t.GetWideList,          10000, 100),
-//				CreateTest<ITests>(t => t.GetWideList,          1000, 1000),
+				CreateTest<ITests>(t => t.GetWideList,          10000, 100),
+				CreateTest<ITests>(t => t.GetWideList,          1000, 1000),
 				CreateTest<ITests>(t => t.GetWideList,          100, 10000),
 				CreateTest<ITests>(t => t.GetWideList,          10, 100000),
 				CreateTest<ITests>(t => t.GetWideList,          1, 1000000),
@@ -269,6 +275,13 @@ namespace Tests
 				EF_CT_Comp   = t.Stopwatch.SingleOrDefault(w => w?.p is EFCore.EFCoreCompTests  p && !p.NoTracking)?.time,
 #if NETCOREAPP2_0
 #else
+				EG6_Sql      = t.Stopwatch.SingleOrDefault(w => w?.p is EF6.EF6SqlTests  p &&  p.NoTracking)?.time,
+				EG6_Linq     = t.Stopwatch.SingleOrDefault(w => w?.p is EF6.EF6LinqTests p &&  p.NoTracking)?.time,
+				EG6_Comp     = t.Stopwatch.SingleOrDefault(w => w?.p is EF6.EF6CompTests p &&  p.NoTracking)?.time,
+				EG6_CT_Sql   = t.Stopwatch.SingleOrDefault(w => w?.p is EF6.EF6SqlTests  p && !p.NoTracking)?.time,
+				EG6_CT_Linq  = t.Stopwatch.SingleOrDefault(w => w?.p is EF6.EF6LinqTests p && !p.NoTracking)?.time,
+				EG6_CT_Comp  = t.Stopwatch.SingleOrDefault(w => w?.p is EF6.EF6CompTests p && !p.NoTracking)?.time,
+
 				L2S_Sql      = t.Stopwatch.SingleOrDefault(w => w?.p is L2S.L2SSqlTests  p &&  p.NoTracking)?.time,
 				L2S_Linq     = t.Stopwatch.SingleOrDefault(w => w?.p is L2S.L2SLinqTests p &&  p.NoTracking)?.time,
 				L2S_Comp     = t.Stopwatch.SingleOrDefault(w => w?.p is L2S.L2SCompTests p &&  p.NoTracking)?.time,
