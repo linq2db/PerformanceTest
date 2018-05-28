@@ -5,11 +5,13 @@ VisualStudioVersion = 15.0.27703.2000
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Source\Tests.csproj", "{EE1A8CAE-D390-4A2D-89F1-B1C1A934C2F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NET 4.61", "NET 4.61\NET.4.61.csproj", "{BACCAFDE-8873-4100-94A3-9E2AB373C248}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NET.4.61", "NET 4.61\NET.4.61.csproj", "{BACCAFDE-8873-4100-94A3-9E2AB373C248}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core 2.0", "Core 2.0\Core.2.0.csproj", "{1182B7A6-EB49-443E-99A3-9AE7037A6CF9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.2.0", "Core 2.0\Core.2.0.csproj", "{1182B7A6-EB49-443E-99A3-9AE7037A6CF9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinqToDB", "..\linq2db\Source\LinqToDB\LinqToDB.csproj", "{6B15D501-12CD-490C-ACA7-52AAAD00A98E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GUI", "GUI\GUI.csproj", "{8B74CD62-A714-4F97-98BC-731B5132EC98}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{6B15D501-12CD-490C-ACA7-52AAAD00A98E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B15D501-12CD-490C-ACA7-52AAAD00A98E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B15D501-12CD-490C-ACA7-52AAAD00A98E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B74CD62-A714-4F97-98BC-731B5132EC98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B74CD62-A714-4F97-98BC-731B5132EC98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B74CD62-A714-4F97-98BC-731B5132EC98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B74CD62-A714-4F97-98BC-731B5132EC98}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
