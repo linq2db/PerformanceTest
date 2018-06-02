@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 using LinqToDB.Data;
 
@@ -7,50 +8,73 @@ namespace Tests.L2DB
 {
 	using DataModel;
 
-	class L2DBSqlTests : ITests
+	class L2DBSqlTests : TestsWithChangeTrackingBase
 	{
-		public string Name => "L2DB Sql" + (NoTracking ? "" : " CT");
+		public override string Name => "L2DB Sql";
 
-		public readonly bool NoTracking;
-
-		public L2DBSqlTests(bool noTracking)
+		public L2DBSqlTests(bool noTracking) : base(noTracking)
 		{
-			NoTracking = noTracking;
 		}
 
-		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
+		public override bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
 			using (var db = new L2DBContext(NoTracking))
 				for (var i = 0; i < repeatCount; i++)
-					db.Execute<int>("SELECT ID FROM Narrow WHERE ID = 1");
+					db.Execute<int>(GetSingleColumnSql);
 
 			watch.Stop();
 
 			return true;
 		}
 
-		public bool GetSingleColumnSlow(Stopwatch watch, int repeatCount, int takeCount)
+		public override async Task<bool> GetSingleColumnFastAsync(Stopwatch watch, int repeatCount, int takeCount)
+		{
+			watch.Start();
+
+			using (var db = new L2DBContext(NoTracking))
+				for (var i = 0; i < repeatCount; i++)
+					await db.ExecuteAsync<int>(GetSingleColumnSql);
+
+			watch.Stop();
+
+			return true;
+		}
+
+		public override bool GetSingleColumnSlow(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new L2DBContext(NoTracking))
-					db.Execute<int>("SELECT ID FROM Narrow WHERE ID = 1");
+					db.Execute<int>(GetSingleColumnSql);
 
 			watch.Stop();
 
 			return true;
 		}
 
-		public bool GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount)
+		public override async Task<bool> GetSingleColumnSlowAsync(Stopwatch watch, int repeatCount, int takeCount)
+		{
+			watch.Start();
+
+			for (var i = 0; i < repeatCount; i++)
+				using (var db = new L2DBContext(NoTracking))
+					await db.ExecuteAsync<int>(GetSingleColumnSql);
+
+			watch.Stop();
+
+			return true;
+		}
+
+		public override bool GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
 			using (var db = new L2DBContext(NoTracking))
 				for (var i = 0; i < repeatCount; i++)
-					db.Execute<int>("SELECT ID FROM Narrow WHERE ID = @id AND Field1 = @p",
+					db.Execute<int>(GetParamSql,
 						new DataParameter("@id", 1),
 						new DataParameter("@p",  2));
 
@@ -59,35 +83,75 @@ namespace Tests.L2DB
 			return true;
 		}
 
-		public bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
+		public override async Task<bool> GetSingleColumnParamAsync(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
-			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(NoTracking))
-					foreach (var item in db.Query<NarrowLong>($"SELECT TOP {takeCount} ID, Field1 FROM NarrowLong")) {}
+			using (var db = new L2DBContext(NoTracking))
+				for (var i = 0; i < repeatCount; i++)
+					await db.ExecuteAsync<int>(GetParamSql,
+						new DataParameter("@id", 1),
+						new DataParameter("@p",  2));
 
 			watch.Stop();
 
 			return true;
 		}
 
-		public bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
+		public override bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
 		{
+			var sql = GetNarrowListSql(takeCount);
+
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new L2DBContext(NoTracking))
-					foreach (var item in db.Query<WideLong>($@"
-SELECT TOP {takeCount}
-	ID,
-	Field1,
-	ShortValue,
-	IntValue,
-	LongValue,
-	StringValue,
-	DateTimeValue
-FROM WideLong")) {}
+					foreach (var item in db.Query<NarrowLong>(sql)) {}
+
+			watch.Stop();
+
+			return true;
+		}
+
+		public override async Task<bool> GetNarrowListAsync(Stopwatch watch, int repeatCount, int takeCount)
+		{
+			var sql = GetNarrowListSql(takeCount);
+
+			watch.Start();
+
+			for (var i = 0; i < repeatCount; i++)
+				using (var db = new L2DBContext(NoTracking))
+					foreach (var item in await db.QueryToListAsync<NarrowLong>(sql)) {}
+
+			watch.Stop();
+
+			return true;
+		}
+
+		public override bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
+		{
+			var sql = GetWideListSql(takeCount);
+
+			watch.Start();
+
+			for (var i = 0; i < repeatCount; i++)
+				using (var db = new L2DBContext(NoTracking))
+					foreach (var item in db.Query<WideLong>(sql)) {}
+
+			watch.Stop();
+
+			return true;
+		}
+
+		public override async Task<bool> GetWideListAsync(Stopwatch watch, int repeatCount, int takeCount)
+		{
+			var sql = GetWideListSql(takeCount);
+
+			watch.Start();
+
+			for (var i = 0; i < repeatCount; i++)
+				using (var db = new L2DBContext(NoTracking))
+					foreach (var item in await db.QueryToListAsync<WideLong>(sql)) {}
 
 			watch.Stop();
 

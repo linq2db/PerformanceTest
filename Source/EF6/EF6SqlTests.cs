@@ -2,47 +2,71 @@
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Tests.EF6
 {
-	class EF6SqlTests : ITests
+	class EF6SqlTests : TestsWithChangeTrackingBase
 	{
-		public string Name => "EF6 Sql" + (NoTracking ? "" : " CT");
+		public override string Name => "EF6 Sql";
 
-		public readonly bool NoTracking;
-
-		public EF6SqlTests(bool noTracking)
+		public EF6SqlTests(bool noTracking) : base(noTracking)
 		{
-			NoTracking = noTracking;
 		}
 
-		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
+		public override bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
 			using (var db = new EF6Context(NoTracking))
 				for (var i = 0; i < repeatCount; i++)
-					db.Database.SqlQuery<int>("SELECT ID FROM Narrow WHERE ID = 1").First();
+					db.Database.SqlQuery<int>(GetSingleColumnSql).First();
 
 			watch.Stop();
 
 			return true;
 		}
 
-		public bool GetSingleColumnSlow(Stopwatch watch, int repeatCount, int takeCount)
+		public override async Task<bool> GetSingleColumnFastAsync(Stopwatch watch, int repeatCount, int takeCount)
+		{
+			watch.Start();
+
+			using (var db = new EF6Context(NoTracking))
+				for (var i = 0; i < repeatCount; i++)
+					await db.Database.SqlQuery<int>(GetSingleColumnSql).FirstAsync();
+
+			watch.Stop();
+
+			return true;
+		}
+
+		public override bool GetSingleColumnSlow(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new EF6Context(NoTracking))
-					db.Database.SqlQuery<int>("SELECT ID FROM Narrow WHERE ID = 1").First();
+					db.Database.SqlQuery<int>(GetSingleColumnSql).First();
 
 			watch.Stop();
 
 			return true;
 		}
 
-		public bool GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount)
+		public override async Task<bool> GetSingleColumnSlowAsync(Stopwatch watch, int repeatCount, int takeCount)
+		{
+			watch.Start();
+
+			for (var i = 0; i < repeatCount; i++)
+				using (var db = new EF6Context(NoTracking))
+					await db.Database.SqlQuery<int>(GetSingleColumnSql).FirstAsync();
+
+			watch.Stop();
+
+			return true;
+		}
+
+		public override bool GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
@@ -50,7 +74,7 @@ namespace Tests.EF6
 			{
 				for (var i = 0; i < repeatCount; i++)
 					db.Database
-						.SqlQuery<int>("SELECT ID FROM Narrow WHERE ID = @id AND Field1 = @p",
+						.SqlQuery<int>(GetParamSql,
 							new SqlParameter("@id", 1),
 							new SqlParameter("@p",  2))
 						.First();
@@ -61,35 +85,79 @@ namespace Tests.EF6
 			return true;
 		}
 
-		public bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
+		public override async Task<bool> GetSingleColumnParamAsync(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
-			for (var i = 0; i < repeatCount; i++)
-				using (var db = new EF6Context(NoTracking))
-					foreach (var item in db.NarrowLong.SqlQuery($"SELECT TOP ({takeCount}) ID, Field1 FROM NarrowLong")) {}
+			using (var db = new EF6Context(NoTracking))
+			{
+				for (var i = 0; i < repeatCount; i++)
+					await db.Database
+						.SqlQuery<int>(GetParamSql,
+							new SqlParameter("@id", 1),
+							new SqlParameter("@p",  2))
+						.FirstAsync();
+			}
 
 			watch.Stop();
 
 			return true;
 		}
 
-		public bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
+		public override bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
 		{
+			var sql = GetNarrowListSql(takeCount);
+
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new EF6Context(NoTracking))
-					foreach (var item in db.WideLong.SqlQuery($@"
-SELECT TOP ({takeCount})
-	ID,
-	Field1,
-	ShortValue,
-	IntValue,
-	LongValue,
-	StringValue,
-	DateTimeValue
-FROM WideLong")) {}
+					foreach (var item in db.NarrowLong.SqlQuery(sql)) {}
+
+			watch.Stop();
+
+			return true;
+		}
+
+		public override async Task<bool> GetNarrowListAsync(Stopwatch watch, int repeatCount, int takeCount)
+		{
+			var sql = GetNarrowListSql(takeCount);
+
+			watch.Start();
+
+			for (var i = 0; i < repeatCount; i++)
+				using (var db = new EF6Context(NoTracking))
+					await db.NarrowLong.SqlQuery(sql).ForEachAsync(item => {});
+
+			watch.Stop();
+
+			return true;
+		}
+
+		public override bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
+		{
+			var sql = GetWideListSql(takeCount);
+
+			watch.Start();
+
+			for (var i = 0; i < repeatCount; i++)
+				using (var db = new EF6Context(NoTracking))
+					foreach (var item in db.WideLong.SqlQuery(sql)) {}
+
+			watch.Stop();
+
+			return true;
+		}
+
+		public override async Task<bool> GetWideListAsync(Stopwatch watch, int repeatCount, int takeCount)
+		{
+			var sql = GetWideListSql(takeCount);
+
+			watch.Start();
+
+			for (var i = 0; i < repeatCount; i++)
+				using (var db = new EF6Context(NoTracking))
+					await db.WideLong.SqlQuery(sql).ForEachAsync(item => {});
 
 			watch.Stop();
 

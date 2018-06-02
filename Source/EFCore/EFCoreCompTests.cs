@@ -1,23 +1,21 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
 
 namespace Tests.EFCore
 {
-	class EFCoreCompTests : ITests
+	class EFCoreCompTests : TestsWithChangeTrackingBase
 	{
-		public string Name => "EF Core Compiled" + (NoTracking ? "" : " CT");
+		public override string Name => "EF Core Compiled";
 
-		public readonly bool NoTracking;
-
-		public EFCoreCompTests(bool noTracking)
+		public EFCoreCompTests(bool noTracking) : base(noTracking)
 		{
-			NoTracking = noTracking;
 		}
 
-		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
+		public override bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var query = EF.CompileQuery((EFCoreContext db) =>
 				db.Narrow.Where(t => t.ID == 1).Select(t => t.ID).First());
@@ -33,7 +31,23 @@ namespace Tests.EFCore
 			return true;
 		}
 
-		public bool GetSingleColumnSlow(Stopwatch watch, int repeatCount, int takeCount)
+		public override async Task<bool> GetSingleColumnFastAsync(Stopwatch watch, int repeatCount, int takeCount)
+		{
+			var query = EF.CompileAsyncQuery((EFCoreContext db) =>
+				db.Narrow.Where(t => t.ID == 1).Select(t => t.ID).First());
+
+			watch.Start();
+
+			using (var db = new EFCoreContext(NoTracking))
+				for (var i = 0; i < repeatCount; i++)
+					await query(db);
+
+			watch.Stop();
+
+			return true;
+		}
+
+		public override bool GetSingleColumnSlow(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var query = EF.CompileQuery((EFCoreContext db) =>
 				db.Narrow.Where(t => t.ID == 1).Select(t => t.ID).First());
@@ -49,7 +63,23 @@ namespace Tests.EFCore
 			return true;
 		}
 
-		public bool GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount)
+		public override async Task<bool> GetSingleColumnSlowAsync(Stopwatch watch, int repeatCount, int takeCount)
+		{
+			var query = EF.CompileAsyncQuery((EFCoreContext db) =>
+				db.Narrow.Where(t => t.ID == 1).Select(t => t.ID).First());
+
+			watch.Start();
+
+			for (var i = 0; i < repeatCount; i++)
+				using (var db = new EFCoreContext(NoTracking))
+					await query(db);
+
+			watch.Stop();
+
+			return true;
+		}
+
+		public override bool GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var query = EF.CompileQuery((EFCoreContext db, int id, int p) =>
 				db.Narrow.Where(t => t.ID == id && t.Field1 == p).Select(t => t.ID).First());
@@ -65,7 +95,23 @@ namespace Tests.EFCore
 			return true;
 		}
 
-		public bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
+		public override async Task<bool> GetSingleColumnParamAsync(Stopwatch watch, int repeatCount, int takeCount)
+		{
+			var query = EF.CompileAsyncQuery((EFCoreContext db, int id, int p) =>
+				db.Narrow.Where(t => t.ID == id && t.Field1 == p).Select(t => t.ID).First());
+
+			watch.Start();
+
+			using (var db = new EFCoreContext(NoTracking))
+				for (var i = 0; i < repeatCount; i++)
+					await query(db, 1, 2);
+
+			watch.Stop();
+
+			return true;
+		}
+
+		public override bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var query = EF.CompileQuery((EFCoreContext db, int top) =>
 				db.NarrowLong.Take(top));
@@ -81,7 +127,23 @@ namespace Tests.EFCore
 			return true;
 		}
 
-		public bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
+		public override async Task<bool> GetNarrowListAsync(Stopwatch watch, int repeatCount, int takeCount)
+		{
+			var query = EF.CompileAsyncQuery((EFCoreContext db, int top) =>
+				db.NarrowLong.Take(top));
+
+			watch.Start();
+
+			for (var i = 0; i < repeatCount; i++)
+				using (var db = new EFCoreContext(NoTracking))
+					await query(db, takeCount).ForEachAsync(item => {});
+
+			watch.Stop();
+
+			return true;
+		}
+
+		public override bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var query = EF.CompileQuery((EFCoreContext db, int top) =>
 				db.WideLong.Take(top));
@@ -91,6 +153,22 @@ namespace Tests.EFCore
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new EFCoreContext(NoTracking))
 					foreach (var item in query(db, takeCount)) {}
+
+			watch.Stop();
+
+			return true;
+		}
+
+		public override async Task<bool> GetWideListAsync(Stopwatch watch, int repeatCount, int takeCount)
+		{
+			var query = EF.CompileAsyncQuery((EFCoreContext db, int top) =>
+				db.WideLong.Take(top));
+
+			watch.Start();
+
+			for (var i = 0; i < repeatCount; i++)
+				using (var db = new EFCoreContext(NoTracking))
+					await query(db, takeCount).ForEachAsync(item => {});
 
 			watch.Stop();
 

@@ -1,34 +1,31 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq;
 
 namespace Tests.L2S
 {
-	class L2SLinqTests : ITests
+	class L2SLinqTests : TestsWithChangeTrackingBase
 	{
-		public string Name => "L2S Linq" + (NoTracking ? "" : " CT");
+		public override string Name => "L2S Linq";
 
-		public readonly bool NoTracking;
-
-		public L2SLinqTests(bool noTracking)
+		public L2SLinqTests(bool noTracking) : base(noTracking)
 		{
-			NoTracking = noTracking;
 		}
 
-		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
+		public override bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
 			using (var db = new L2SContext(NoTracking))
 				for (var i = 0; i < repeatCount; i++)
-					db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).AsEnumerable().First();
+					db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).First();
 
 			watch.Stop();
 
 			return true;
 		}
 
-		public bool GetSingleColumnSlow(Stopwatch watch, int repeatCount, int takeCount)
+
+		public override bool GetSingleColumnSlow(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
@@ -41,7 +38,7 @@ namespace Tests.L2S
 			return true;
 		}
 
-		public bool GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount)
+		public override bool GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
@@ -58,7 +55,7 @@ namespace Tests.L2S
 			return true;
 		}
 
-		public bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
+		public override bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
@@ -71,7 +68,7 @@ namespace Tests.L2S
 			return true;
 		}
 
-		public bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
+		public override bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 

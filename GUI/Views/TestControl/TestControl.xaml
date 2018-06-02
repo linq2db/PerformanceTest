@@ -10,7 +10,7 @@
 	d:DesignWidth  = "600"
 	d:DataContext  = "{d:DesignInstance local:TestViewModel, IsDesignTimeCreatable=true}">
 
-	<Border BorderBrush="{StaticResource AccentColorBrush}" BorderThickness="1" Margin="3,1">
+	<Border BorderBrush="{StaticResource AccentColorBrush}" Background="White" BorderThickness="1" Margin="3,1">
 		<Grid HorizontalAlignment="Stretch" >
 			<Grid.RowDefinitions>
 				<RowDefinition Height="Auto" />
@@ -29,7 +29,9 @@
 					<ColumnDefinition Width="Auto"/>
 					<ColumnDefinition Width="Auto"/>
 					<ColumnDefinition Width="Auto"/>
-					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="*"   />
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
 					<ColumnDefinition Width="Auto"/>
 				</Grid.ColumnDefinitions>
 
@@ -37,10 +39,16 @@
 				<Label Grid.Column="1" Content="{Binding Platform}" Margin="0" FontSize="14" FontWeight="Bold" />
 				<Label Grid.Column="2" Content="Test:"              Margin="0" FontSize="14" />
 				<Label Grid.Column="3" Content="{Binding Name}"     Margin="0" FontSize="14" FontWeight="Bold" />
-				<Button Grid.Column="4" ToolTip="Delete best and worst" Command="{Binding DeleteBestWorstCommand}" Style="{DynamicResource MetroCircleButtonStyle}" Height="33" Width="33" HorizontalAlignment="Right">
+				<Button Grid.Column="4" ToolTip="Save as image"  Style="{DynamicResource MetroCircleButtonStyle}" Height="33" Width="33" HorizontalAlignment="Right" Click="SaveButton_Click">
+					<Image Margin="0" Height="15" Source="{StaticResource DownloadIcon}" />
+				</Button>
+				<Button Grid.Column="5" ToolTip="Copy to clipboard"  Style="{DynamicResource MetroCircleButtonStyle}" Height="33" Width="33" HorizontalAlignment="Right" Click="CopyButton_Click">
+					<Image Margin="0" Height="15" Source="{StaticResource CopyIcon}" />
+				</Button>
+				<Button Grid.Column="6" ToolTip="Delete best and worst" Command="{Binding DeleteBestWorstCommand}" Style="{DynamicResource MetroCircleButtonStyle}" Height="33" Width="33" HorizontalAlignment="Right">
 					<Image Margin="2,1,0,0" Height="15" Source="{StaticResource DeleteIcon}" />
 				</Button>
-				<Button Grid.Column="5" ToolTip="Kill everything (current test only)" Command="{Binding DeleteCommand}" Style="{DynamicResource MetroCircleButtonStyle}" Height="33" Width="33" HorizontalAlignment="Right">
+				<Button Grid.Column="7" ToolTip="Kill everything (current test only)" Command="{Binding DeleteCommand}" Style="{DynamicResource MetroCircleButtonStyle}" Height="33" Width="33" HorizontalAlignment="Right">
 					<Image Margin="0" Height="15" Source="{StaticResource SkullIcon}" />
 				</Button>
 			</Grid>

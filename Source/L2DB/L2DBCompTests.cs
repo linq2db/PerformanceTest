@@ -1,23 +1,21 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 
 using LinqToDB;
 
 namespace Tests.L2DB
 {
-	class L2DBCompTests : ITests
+	class L2DBCompTests : TestsWithChangeTrackingBase
 	{
-		public string Name => "L2DB Compiled" + (NoTracking ? "" : " CT");
+		public override string Name => "L2DB Compiled";
 
-		public readonly bool NoTracking;
-
-		public L2DBCompTests(bool noTracking)
+		public L2DBCompTests(bool noTracking) : base(noTracking)
 		{
-			NoTracking = noTracking;
 		}
 
-		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
+		public override bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var query = CompiledQuery.Compile((L2DBContext db) =>
 				db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).First());
@@ -33,7 +31,7 @@ namespace Tests.L2DB
 			return true;
 		}
 
-		public bool GetSingleColumnSlow(Stopwatch watch, int repeatCount, int takeCount)
+		public override bool GetSingleColumnSlow(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var query = CompiledQuery.Compile((L2DBContext db) =>
 				db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).First());
@@ -49,7 +47,7 @@ namespace Tests.L2DB
 			return true;
 		}
 
-		public bool GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount)
+		public override bool GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var query = CompiledQuery.Compile((L2DBContext db, int id, int p) =>
 				db.Narrows.Where(t => t.ID == id && t.Field1 == p).Select(t => t.ID).First());
@@ -65,7 +63,7 @@ namespace Tests.L2DB
 			return true;
 		}
 
-		public bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
+		public override bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var query = CompiledQuery.Compile((L2DBContext db, int top) =>
 				db.NarrowLongs.Take(top));
@@ -81,7 +79,7 @@ namespace Tests.L2DB
 			return true;
 		}
 
-		public bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
+		public override bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var query = CompiledQuery.Compile((L2DBContext db, int top) =>
 				db.WideLongs.Take(top));

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace Tests
 {
@@ -11,5 +12,11 @@ namespace Tests
 		bool   GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount);
 		bool   GetNarrowList       (Stopwatch watch, int repeatCount, int takeCount);
 		bool   GetWideList         (Stopwatch watch, int repeatCount, int takeCount);
+
+		Task<bool> GetSingleColumnFastAsync (Stopwatch watch, int repeatCount, int takeCount);
+		Task<bool> GetSingleColumnSlowAsync (Stopwatch watch, int repeatCount, int takeCount);
+		Task<bool> GetSingleColumnParamAsync(Stopwatch watch, int repeatCount, int takeCount);
+		Task<bool> GetNarrowListAsync       (Stopwatch watch, int repeatCount, int takeCount);
+		Task<bool> GetWideListAsync         (Stopwatch watch, int repeatCount, int takeCount);
 	}
 }

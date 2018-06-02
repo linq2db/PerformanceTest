@@ -2,21 +2,19 @@
 using System.Data.Linq;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Tests.L2S
 {
-	class L2SCompTests : ITests
+	class L2SCompTests : TestsWithChangeTrackingBase
 	{
-		public string Name => "L2S Compiled" + (NoTracking ? "" : " CT");
+		public override string Name => "L2S Compiled";
 
-		public readonly bool NoTracking;
-
-		public L2SCompTests(bool noTracking)
+		public L2SCompTests(bool noTracking) : base(noTracking)
 		{
-			NoTracking = noTracking;
 		}
 
-		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
+		public override bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var query = CompiledQuery.Compile((L2SContext db) =>
 				db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).First());
@@ -32,7 +30,7 @@ namespace Tests.L2S
 			return true;
 		}
 
-		public bool GetSingleColumnSlow(Stopwatch watch, int repeatCount, int takeCount)
+		public override bool GetSingleColumnSlow(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var query = CompiledQuery.Compile((L2SContext db) =>
 				db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).First());
@@ -48,7 +46,7 @@ namespace Tests.L2S
 			return true;
 		}
 
-		public bool GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount)
+		public override bool GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var query = CompiledQuery.Compile((L2SContext db, int id, int p) =>
 				db.Narrows.Where(t => t.ID == id && t.Field1 == p).Select(t => t.ID).First());
@@ -64,7 +62,7 @@ namespace Tests.L2S
 			return true;
 		}
 
-		public bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
+		public override bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var query = CompiledQuery.Compile((L2SContext db, int top) =>
 				db.NarrowLongs.Take(top));
@@ -80,7 +78,7 @@ namespace Tests.L2S
 			return true;
 		}
 
-		public bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
+		public override bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var query = CompiledQuery.Compile((L2SContext db, int top) =>
 				db.WideLongs.Take(top));

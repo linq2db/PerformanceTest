@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 using Dapper;
 
@@ -8,21 +9,20 @@ namespace Tests.Dapper
 {
 	using DataModel;
 
-	class DapperTests : ITests
+	class DapperTests : TestsBase
 	{
-		public string Name => "Dapper";
+		public override string Name => "Dapper";
 
-		readonly string _connectionString = LinqToDB.Data.DataConnection.GetConnectionString("Test");
 
-		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
+		public override bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
-			using (var con = new SqlConnection(_connectionString))
+			using (var con = new SqlConnection(ConnectionString))
 			{
 				con.Open();
 				for (var i = 0; i < repeatCount; i++)
-					con.Query<int>("SELECT ID FROM Narrow WHERE ID = 1");
+					con.Query<int>(GetSingleColumnSql);
 			}
 
 			watch.Stop();
@@ -30,15 +30,31 @@ namespace Tests.Dapper
 			return true;
 		}
 
-		public bool GetSingleColumnSlow(Stopwatch watch, int repeatCount, int takeCount)
+		public override async Task<bool> GetSingleColumnFastAsync(Stopwatch watch, int repeatCount, int takeCount)
+		{
+			watch.Start();
+
+			using (var con = new SqlConnection(ConnectionString))
+			{
+				await con.OpenAsync();
+				for (var i = 0; i < repeatCount; i++)
+					await con.QueryAsync<int>(GetSingleColumnSql);
+			}
+
+			watch.Stop();
+
+			return true;
+		}
+
+		public override bool GetSingleColumnSlow(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var con = new SqlConnection(_connectionString))
+				using (var con = new SqlConnection(ConnectionString))
 				{
 					con.Open();
-					con.Query<int>("SELECT ID FROM Narrow WHERE ID = 1");
+					con.Query<int>(GetSingleColumnSql);
 				}
 
 			watch.Stop();
@@ -46,15 +62,31 @@ namespace Tests.Dapper
 			return true;
 		}
 
-		public bool GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount)
+		public override async Task<bool> GetSingleColumnSlowAsync(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
-			using (var con = new SqlConnection(_connectionString))
+			for (var i = 0; i < repeatCount; i++)
+				using (var con = new SqlConnection(ConnectionString))
+				{
+					await con.OpenAsync();
+					await con.QueryAsync<int>(GetSingleColumnSql);
+				}
+
+			watch.Stop();
+
+			return true;
+		}
+
+		public override bool GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount)
+		{
+			watch.Start();
+
+			using (var con = new SqlConnection(ConnectionString))
 			{
 				con.Open();
 				for (var i = 0; i < repeatCount; i++)
-					con.Query<int>("SELECT ID FROM Narrow WHERE ID = @id AND Field1 = @p", new { id = 1, p = 2 });
+					con.Query<int>(GetParamSql, new { id = 1, p = 2 });
 			}
 
 			watch.Stop();
@@ -62,15 +94,15 @@ namespace Tests.Dapper
 			return true;
 		}
 
-		public bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
+		public override async Task<bool> GetSingleColumnParamAsync(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
-			for (var i = 0; i < repeatCount; i++)
-			using (var con = new SqlConnection(_connectionString))
+			using (var con = new SqlConnection(ConnectionString))
 			{
-				con.Open();
-				foreach (var item in con.Query<NarrowLong>($"SELECT TOP {takeCount} ID, Field1 FROM NarrowLong")) {}
+				await con.OpenAsync();
+				for (var i = 0; i < repeatCount; i++)
+					await con.QueryAsync<int>(GetParamSql, new { id = 1, p = 2 });
 			}
 
 			watch.Stop();
@@ -78,25 +110,71 @@ namespace Tests.Dapper
 			return true;
 		}
 
-		public bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
+		public override bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
 		{
+			var sql = GetNarrowListSql(takeCount);
+
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-			using (var con = new SqlConnection(_connectionString))
+			using (var con = new SqlConnection(ConnectionString))
 			{
 				con.Open();
+				foreach (var item in con.Query<NarrowLong>(sql)) {}
+			}
 
-				foreach (var item in con.Query<WideLong>($@"
-SELECT TOP {takeCount}
-	ID,
-	Field1,
-	ShortValue,
-	IntValue,
-	LongValue,
-	StringValue,
-	DateTimeValue
-FROM WideLong")) {}
+			watch.Stop();
+
+			return true;
+		}
+
+		public override async Task<bool> GetNarrowListAsync(Stopwatch watch, int repeatCount, int takeCount)
+		{
+			var sql = GetNarrowListSql(takeCount);
+
+			watch.Start();
+
+			for (var i = 0; i < repeatCount; i++)
+			using (var con = new SqlConnection(ConnectionString))
+			{
+				await con.OpenAsync();
+				foreach (var item in await con.QueryAsync<NarrowLong>(sql)) {}
+			}
+
+			watch.Stop();
+
+			return true;
+		}
+
+		public override bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
+		{
+			var sql = GetWideListSql(takeCount);
+
+			watch.Start();
+
+			for (var i = 0; i < repeatCount; i++)
+			using (var con = new SqlConnection(ConnectionString))
+			{
+				con.Open();
+				foreach (var item in con.Query<WideLong>(sql)) {}
+			}
+
+			watch.Stop();
+
+			return true;
+		}
+
+		public override async Task<bool> GetWideListAsync(Stopwatch watch, int repeatCount, int takeCount)
+		{
+			var sql = GetWideListSql(takeCount);
+
+			watch.Start();
+
+			for (var i = 0; i < repeatCount; i++)
+			using (var con = new SqlConnection(ConnectionString))
+			{
+				await con.OpenAsync();
+				foreach (var item in await con.QueryAsync<WideLong>(sql)) {}
 			}
 
 			watch.Stop();

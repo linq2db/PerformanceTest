@@ -8,23 +8,20 @@ namespace Tests.PetaPoco
 {
 	using DataModel;
 
-	class PetaPocoTests : ITests
+	class PetaPocoTests : TestsBase
 	{
-		public string Name => "PetaPoco";
+		public override string Name => "PetaPoco";
 
-		readonly string _connectionString = LinqToDB.Data.DataConnection.GetConnectionString("Test");
-
-		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
+		public override bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
-			using (var con = new SqlConnection(_connectionString))
+			using (var con = new SqlConnection(ConnectionString))
 			{
 				con.Open();
-
 				using (var db = new Database(con))
 					for (var i = 0; i < repeatCount; i++)
-						db.Query<int>("SELECT ID FROM Narrow WHERE ID = 1");
+						db.Query<int>(GetSingleColumnSql);
 			}
 
 			watch.Stop();
@@ -32,18 +29,18 @@ namespace Tests.PetaPoco
 			return true;
 		}
 
-		public bool GetSingleColumnSlow(Stopwatch watch, int repeatCount, int takeCount)
+		public override bool GetSingleColumnSlow(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
 			{
-				using (var con = new SqlConnection(_connectionString))
+				using (var con = new SqlConnection(ConnectionString))
 				{
 					con.Open();
 
 					using (var db = new Database(con))
-						db.Query<int>("SELECT ID FROM Narrow WHERE ID = 1");
+						db.Query<int>(GetSingleColumnSql);
 				}
 			}
 
@@ -52,17 +49,16 @@ namespace Tests.PetaPoco
 			return true;
 		}
 
-		public bool GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount)
+		public override bool GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
-			using (var con = new SqlConnection(_connectionString))
+			using (var con = new SqlConnection(ConnectionString))
 			{
 				con.Open();
-
 				using (var db = new Database(con))
 					for (var i = 0; i < repeatCount; i++)
-						db.Query<int>("SELECT ID FROM Narrow WHERE ID = @id AND Field1 = @p", new {id = 1, p = 2});
+						db.Query<int>(GetParamSql, new {id = 1, p = 2});
 			}
 
 			watch.Stop();
@@ -70,18 +66,19 @@ namespace Tests.PetaPoco
 			return true;
 		}
 
-		public bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
+		public override bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
 		{
+			var sql = GetNarrowListSql(takeCount);
+
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
 			{
-				using (var con = new SqlConnection(_connectionString))
+				using (var con = new SqlConnection(ConnectionString))
 				{
 					con.Open();
-
 					using (var db = new Database(con))
-						foreach (var item in db.Query<NarrowLong>($"SELECT TOP {takeCount} ID, Field1 FROM NarrowLong")) { }
+						foreach (var item in db.Query<NarrowLong>(sql)) {}
 				}
 			}
 
@@ -90,29 +87,19 @@ namespace Tests.PetaPoco
 			return true;
 		}
 
-		public bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
+		public override bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
 		{
+			var sql = GetWideListSql(takeCount);
+
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
 			{
-				using (var con = new SqlConnection(_connectionString))
+				using (var con = new SqlConnection(ConnectionString))
 				{
 					con.Open();
-
 					using (var db = new Database(con))
-					{
-						foreach (var item in db.Query<WideLong>($@"
-SELECT TOP {takeCount}
-	ID,
-	Field1,
-	ShortValue,
-	IntValue,
-	LongValue,
-	StringValue,
-	DateTimeValue
-FROM WideLong")) { }
-					}
+						foreach (var item in db.Query<WideLong>(sql)) {}
 				}
 			}
 

@@ -3,46 +3,41 @@ using System.Diagnostics;
 
 namespace Tests.L2S
 {
-	using DataModel;
-
-	class L2SSqlTests : ITests
+	class L2SSqlTests : TestsWithChangeTrackingBase
 	{
-		public string Name => "L2S Sql" + (NoTracking ? "" : " CT");
+		public override string Name => "L2S Sql";
 
-		public readonly bool NoTracking;
-
-		public L2SSqlTests(bool noTracking)
+		public L2SSqlTests(bool noTracking) : base(noTracking)
 		{
-			NoTracking = noTracking;
 		}
 
-		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
+		public override bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
 			using (var db = new L2SContext(NoTracking))
 				for (var i = 0; i < repeatCount; i++)
-					db.ExecuteQuery<int>("SELECT ID FROM Narrow WHERE ID = 1");
+					db.ExecuteQuery<int>(GetSingleColumnSql);
 
 			watch.Stop();
 
 			return true;
 		}
 
-		public bool GetSingleColumnSlow(Stopwatch watch, int repeatCount, int takeCount)
+		public override bool GetSingleColumnSlow(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new L2SContext(NoTracking))
-					db.ExecuteQuery<int>("SELECT ID FROM Narrow WHERE ID = 1");
+					db.ExecuteQuery<int>(GetSingleColumnSql);
 
 			watch.Stop();
 
 			return true;
 		}
 
-		public bool GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount)
+		public override bool GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
@@ -55,35 +50,30 @@ namespace Tests.L2S
 			return true;
 		}
 
-		public bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
+		public override bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
 		{
+			var sql = GetNarrowListSql(takeCount);
+
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new L2SContext(NoTracking))
-					foreach (var item in db.ExecuteQuery<NarrowLong>($"SELECT TOP {takeCount} ID, Field1 FROM NarrowLong")) {}
+					foreach (var item in db.ExecuteQuery<NarrowLong>(sql)) {}
 
 			watch.Stop();
 
 			return true;
 		}
 
-		public bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
+		public override bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
 		{
+			var sql = GetWideListSql(takeCount);
+
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new L2SContext(NoTracking))
-					foreach (var item in db.ExecuteQuery<WideLong>($@"
-SELECT TOP {takeCount}
-	ID,
-	Field1,
-	ShortValue,
-	IntValue,
-	LongValue,
-	StringValue,
-	DateTimeValue
-FROM WideLong")) {}
+					foreach (var item in db.ExecuteQuery<WideLong>(sql)) {}
 
 			watch.Stop();
 
