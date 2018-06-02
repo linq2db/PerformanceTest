@@ -202,6 +202,8 @@ namespace Tests
 
 		static void RunTests(string platform, string testName, ITests[] testProviders, Test<ITests>[] testMethods)
 		{
+			Console.WriteLine($"Testing {testName}...");
+
 			testProviders =
 			(
 				from p in testProviders
@@ -391,12 +393,15 @@ namespace Tests
 		static Test<T> CreateTest<T>(Expression<Func<T,Func<Stopwatch,int,int,Task<bool>>>> func, int repeat, int take = -1)
 		{
 			var cfunc = func.Compile();
+			var name  = ((MethodInfo)((ConstantExpression)func.Body
+				.Find(e => e is ConstantExpression c && c.Value is MethodInfo)).Value).Name;
+
+			name = name.Replace("Async", "");
 
 			return new Test<T>
 			{
 				Func   = p => (sw,r,t) => cfunc(p)(sw,r,t).Result,
-				Name   = ((MethodInfo)((ConstantExpression)func.Body
-					.Find(e => e is ConstantExpression c && c.Value is MethodInfo)).Value).Name,
+				Name   = name,
 				Repeat = repeat,
 				Take   = take > 0 ? take : (int?)null
 			};

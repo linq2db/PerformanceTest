@@ -30,27 +30,27 @@
 					<ColumnDefinition Width="Auto"/>
 					<ColumnDefinition Width="Auto"/>
 					<ColumnDefinition Width="*"   />
-					<ColumnDefinition Width="Auto"/>
-					<ColumnDefinition Width="Auto"/>
-					<ColumnDefinition Width="Auto"/>
 				</Grid.ColumnDefinitions>
 
 				<Label Grid.Column="0" Content="Platform:"          Margin="0" FontSize="14" />
 				<Label Grid.Column="1" Content="{Binding Platform}" Margin="0" FontSize="14" FontWeight="Bold" />
 				<Label Grid.Column="2" Content="Test:"              Margin="0" FontSize="14" />
 				<Label Grid.Column="3" Content="{Binding Name}"     Margin="0" FontSize="14" FontWeight="Bold" />
-				<Button Grid.Column="4" ToolTip="Save as image"  Style="{DynamicResource MetroCircleButtonStyle}" Height="33" Width="33" HorizontalAlignment="Right" Click="SaveButton_Click">
-					<Image Margin="0" Height="15" Source="{StaticResource DownloadIcon}" />
-				</Button>
-				<Button Grid.Column="5" ToolTip="Copy to clipboard"  Style="{DynamicResource MetroCircleButtonStyle}" Height="33" Width="33" HorizontalAlignment="Right" Click="CopyButton_Click">
-					<Image Margin="0" Height="15" Source="{StaticResource CopyIcon}" />
-				</Button>
-				<Button Grid.Column="6" ToolTip="Delete best and worst" Command="{Binding DeleteBestWorstCommand}" Style="{DynamicResource MetroCircleButtonStyle}" Height="33" Width="33" HorizontalAlignment="Right">
-					<Image Margin="2,1,0,0" Height="15" Source="{StaticResource DeleteIcon}" />
-				</Button>
-				<Button Grid.Column="7" ToolTip="Kill everything (current test only)" Command="{Binding DeleteCommand}" Style="{DynamicResource MetroCircleButtonStyle}" Height="33" Width="33" HorizontalAlignment="Right">
-					<Image Margin="0" Height="15" Source="{StaticResource SkullIcon}" />
-				</Button>
+
+				<StackPanel Name="ButtonPanel" Grid.Column="4" HorizontalAlignment="Right" Orientation="Horizontal">
+					<Button ToolTip="Save as image" Style="{DynamicResource MetroCircleButtonStyle}" Height="33" Width="33" HorizontalAlignment="Right" Click="SaveButton_Click" Name="SaveButton">
+						<Image Margin="9" Height="15" Source="{StaticResource SaveIcon}" />
+					</Button>
+					<Button ToolTip="Copy to clipboard" Style="{DynamicResource MetroCircleButtonStyle}" Height="33" Width="33" HorizontalAlignment="Right" Click="CopyButton_Click">
+						<Image Margin="0" Height="15" Source="{StaticResource CopyIcon}" />
+					</Button>
+					<Button ToolTip="Delete best and worst" Command="{Binding DeleteBestWorstCommand}" Style="{DynamicResource MetroCircleButtonStyle}" Height="33" Width="33" HorizontalAlignment="Right">
+						<Image Margin="2,1,0,0" Height="15" Source="{StaticResource DeleteIcon}" />
+					</Button>
+					<Button ToolTip="Kill everything (current test only)" Command="{Binding DeleteCommand}" Style="{DynamicResource MetroCircleButtonStyle}" Height="33" Width="33" HorizontalAlignment="Right">
+						<Image Margin="0" Height="15" Source="{StaticResource SkullIcon}" />
+					</Button>
+				</StackPanel>
 			</Grid>
 
 			<ItemsControl Grid.Row="1" Grid.Column="0" Grid.IsSharedSizeScope="True" ItemsSource="{Binding Methods}" Margin="5,0">

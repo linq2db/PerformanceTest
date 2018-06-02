@@ -38,6 +38,9 @@
 
 			<ToolBarTray Grid.Row="0">
 				<ToolBar Band="1" BandIndex="1">
+					<Button ToolTip="Save all as images" Style="{DynamicResource MetroCircleButtonStyle}" Height="44" Width="44" Click="SaveButton_Click">
+						<Image Margin="11" Source="{StaticResource SaveIcon}" />
+					</Button>
 					<Button ToolTip="Refresh (F5)" Command="{Binding RefreshCommand}" Style="{DynamicResource MetroCircleButtonStyle}" Height="44" Width="44">
 						<Image Margin="10" Source="{StaticResource RefreshIcon}" />
 					</Button>
@@ -48,7 +51,7 @@
 			</ToolBarTray>
 
 			<ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" >
-				<ItemsControl ItemsSource="{Binding Tests}" HorizontalAlignment="Stretch" Grid.IsSharedSizeScope="True" >
+				<ItemsControl Name="Tests" ItemsSource="{Binding Tests}" HorizontalAlignment="Stretch" Grid.IsSharedSizeScope="True" >
 					<ItemsControl.ItemTemplate>
 						<DataTemplate>
 							<test:TestControl HorizontalAlignment="Stretch" />

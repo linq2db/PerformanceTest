@@ -89,7 +89,7 @@ namespace PerformanceTest.Views.MainWindow
 					(
 						from r in runs
 						group r by new { r.Platform, r.Name } into g
-						orderby g.Key.Platform, g.Key.Name
+						//orderby g.Key.Platform, g.Key.Name
 						select new { g.Key, Items = g.Select(rt => new { Run = rt, Methods = ms[rt.ID] }).ToList() }
 					)
 					.ToDictionary(t => t.Key, t => t.Items);
@@ -105,12 +105,7 @@ namespace PerformanceTest.Views.MainWindow
 						Color.FromRgb(0x77, 0xB9, 0x00),
 						Color.FromRgb(0x00, 0xC1, 0x3F),
 						Color.FromRgb(0x19, 0x99, 0x00),
-						Color.FromRgb(0x00, 0xC1, 0x3F),
-						Color.FromRgb(0x19, 0x99, 0x00),
 
-						Color.FromRgb(0xE1, 0xB7, 0x00),
-						Color.FromRgb(0xF3, 0xB2, 0x00),
-						Color.FromRgb(0xFF, 0x98, 0x1D),
 						Color.FromRgb(0xE1, 0xB7, 0x00),
 						Color.FromRgb(0xF3, 0xB2, 0x00),
 						Color.FromRgb(0xFF, 0x98, 0x1D),
@@ -118,13 +113,7 @@ namespace PerformanceTest.Views.MainWindow
 						Color.FromRgb(0x1F, 0xAE, 0xFF),
 						Color.FromRgb(0x56, 0xC5, 0xFF),
 						Color.FromRgb(0x00, 0xD8, 0xCC),
-						Color.FromRgb(0x1F, 0xAE, 0xFF),
-						Color.FromRgb(0x56, 0xC5, 0xFF),
-						Color.FromRgb(0x00, 0xD8, 0xCC),
 
-						Color.FromRgb(0xAD, 0x10, 0x3C),
-						Color.FromRgb(0xB0, 0x1E, 0x00),
-						Color.FromRgb(0xC1, 0x00, 0x4F),
 						Color.FromRgb(0xAD, 0x10, 0x3C),
 						Color.FromRgb(0xB0, 0x1E, 0x00),
 						Color.FromRgb(0xC1, 0x00, 0x4F),
@@ -147,10 +136,10 @@ namespace PerformanceTest.Views.MainWindow
 							foreach (var name in new[]
 							{
 								"AdoNet", "Dapper", "PetaPoco",
-								"L2DB Sql", "L2DB Compiled", "L2DB Linq", "L2DB Compiled CT", "L2DB Linq CT",
-								"EF Core Sql", "EF Core Compiled", "EF Core Linq", "EF Core Sql CT", "EF Core Compiled CT", "EF Core Linq CT",
-								"L2S Sql", "L2S Compiled", "L2S Linq", "L2S Sql CT", "L2S Compiled CT", "L2S Linq CT",
-								"EF6 Sql", "EF6 Compiled", "EF6 Linq", "EF6 Sql CT", "EF6 Compiled CT", "EF6 Linq CT",
+								"L2DB Sql", "L2DB Compiled", "L2DB Linq",
+								"EF Core Sql", "EF Core Compiled", "EF Core Linq",
+								"L2S Sql", "L2S Compiled", "L2S Linq",
+								"EF6 Sql", "EF6 Compiled", "EF6 Linq",
 							})
 							{
 								ProviderBrushes[name] = new SolidColorBrush(colors[ProviderBrushes.Count]);

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
-
-using MahApps.Metro.Controls;
+using System.Windows.Media;
 
 namespace PerformanceTest.Views.MainWindow
 {
@@ -26,7 +26,6 @@ namespace PerformanceTest.Views.MainWindow
 
 			if (!App.IsInDesignMode)
 			{
-//				LoadAgents();
 				ViewModel.RefreshData();
 			}
 		}
@@ -41,6 +40,26 @@ namespace PerformanceTest.Views.MainWindow
 			}
 
 			SetBinding(WindowStateProperty, new Binding("WindowState") { Mode = BindingMode.TwoWay });
+		}
+
+		void SaveButton_Click(object sender, RoutedEventArgs e)
+		{
+			for (var i = 0; i < Tests.Items.Count; i++)
+			{
+				if (Tests.ItemContainerGenerator.ContainerFromIndex(i) is ContentPresenter container)
+				{
+					var childrenCount = VisualTreeHelper.GetChildrenCount(container);
+
+					for (var j = 0; j < childrenCount; j++)
+					{
+						if (VisualTreeHelper.GetChild(container, j) is TestControl.TestControl test)
+						{
+							test.SaveButton_Click(test.SaveButton, null);
+							break;
+						}
+					}
+				}
+			}
 		}
 	}
 }

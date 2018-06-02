@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -14,7 +15,7 @@ namespace PerformanceTest.Views.TestControl
 			InitializeComponent();
 		}
 
-		void CopyButton_Click(object sender, RoutedEventArgs e)
+		RenderTargetBitmap CreateBitmap()
 		{
 			var width  = ActualWidth;
 			var height = ActualHeight;
@@ -28,30 +29,31 @@ namespace PerformanceTest.Views.TestControl
 				dc.DrawRectangle(vb, null, new Rect(new Point(), new Size(width, height)));
 			}
 
+			ButtonPanel.Visibility = Visibility.Hidden;
 			bmp.Render(dv);
+			ButtonPanel.Visibility = Visibility.Visible;
 
-			Clipboard.SetImage(bmp);
+			return bmp;
 		}
 
-		void SaveButton_Click(object sender, RoutedEventArgs e)
+		void CopyButton_Click(object sender, RoutedEventArgs e)
 		{
+			Clipboard.SetImage(CreateBitmap());
+		}
+
+		internal void SaveButton_Click(object sender, RoutedEventArgs e)
+		{
+			var basePath = Path.GetDirectoryName(GetType().Assembly.Location);
+
+			while (!Directory.Exists(Path.Combine(basePath, "Result")))
+				basePath = Path.GetDirectoryName(basePath);
+
 			var viewModel = (TestViewModel)DataContext;
-			var fileName  = $"{viewModel.Platform}.{viewModel.Name}.bmp";
+			var fileName  = Path.Combine(basePath, "Result", $"{viewModel.Platform}.{viewModel.Name}.bmp");
 
 			App.Root.ViewModel.Status = $"Saving {fileName}...";
 
-			var width  = ActualWidth;
-			var height = ActualHeight;
-
-			var bmp = new RenderTargetBitmap((int)width, (int)height, 96, 96, PixelFormats.Default);
-			var dv  = new DrawingVisual();
-
-			using (var dc = dv.RenderOpen())
-				dc.DrawRectangle(new VisualBrush(this), null, new Rect(new Point(), new Size(width, height)));
-
-			bmp.Render(dv);
-
-			var frame   = BitmapFrame.Create(bmp);
+			var frame   = BitmapFrame.Create(CreateBitmap());
 			var encoder = new BmpBitmapEncoder();
 
 			encoder.Frames.Add(frame);
