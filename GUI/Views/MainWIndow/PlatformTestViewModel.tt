@@ -12,19 +12,13 @@
 	Model.Usings.AddRange(new[]
 	{
 		"System.Windows",
-//		"System.Windows.Media.Imaging",
 		"System.Collections.ObjectModel",
-		"PerformanceTest.Views.TestControl",
 	});
 
 	Model.Types.Add(
-		new Class("MainWindowViewModel", new[]
+		new Class("PlatformTestViewModel", new[]
 		{
-			new NotifyingProperty("WindowState", "WindowState"),
-			new NotifyingProperty("string",      "Status"),
-
-			new NotifyingProperty("ObservableCollection<TestViewModel>",     "Tests"),
-			new NotifyingProperty("ObservableCollection<PlatformViewModel>", "Platforms"),
+			new NotifyingProperty("string", "Name"),
 		}));
 
 	GenerateModel();

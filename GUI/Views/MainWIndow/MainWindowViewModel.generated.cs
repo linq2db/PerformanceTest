@@ -126,6 +126,43 @@ namespace PerformanceTest.Views.MainWindow
 
 		#endregion
 
+		#region Platforms : ObservableCollection<PlatformViewModel>
+
+		private ObservableCollection<PlatformViewModel> _platforms;
+		public  ObservableCollection<PlatformViewModel>  Platforms
+		{
+			get { return _platforms; }
+			set
+			{
+				if (_platforms != value)
+				{
+					BeforePlatformsChanged(value);
+					_platforms = value;
+					AfterPlatformsChanged();
+
+					OnPlatformsChanged();
+				}
+			}
+		}
+
+		#region INotifyPropertyChanged support
+
+		partial void BeforePlatformsChanged(ObservableCollection<PlatformViewModel> newValue);
+		partial void AfterPlatformsChanged ();
+
+		public const string NameOfPlatforms = "Platforms";
+
+		private static readonly PropertyChangedEventArgs _platformsChangedEventArgs = new PropertyChangedEventArgs(NameOfPlatforms);
+
+		private void OnPlatformsChanged()
+		{
+			OnPropertyChanged(_platformsChangedEventArgs);
+		}
+
+		#endregion
+
+		#endregion
+
 		#region INotifyPropertyChanged support
 
 #if !SILVERLIGHT

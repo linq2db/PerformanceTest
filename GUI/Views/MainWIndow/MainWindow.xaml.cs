@@ -61,5 +61,17 @@ namespace PerformanceTest.Views.MainWindow
 				}
 			}
 		}
+
+		void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+		{
+			if (e.NewValue is PlatformTestViewModel platformTest &&
+				Tests.ItemContainerGenerator.ContainerFromItem(platformTest.Test) is ContentPresenter container)
+			{
+				var containerTransform = container.TransformToAncestor(TestsScrollViewer);
+				var rectangle          = containerTransform.TransformBounds(new Rect(new Point(0, 0), container.RenderSize));
+
+				TestsScrollViewer.ScrollToVerticalOffset(rectangle.Top + TestsScrollViewer.VerticalOffset);
+			}
+		}
 	}
 }

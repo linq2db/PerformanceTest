@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
@@ -19,7 +20,8 @@ namespace PerformanceTest.Views.MainWindow
 	{
 		public MainWindowViewModel()
 		{
-			Tests = new ObservableCollection<TestViewModel>();
+			Tests     = new ObservableCollection<TestViewModel>();
+			Platforms = new ObservableCollection<PlatformViewModel>();
 		}
 
 		partial void AfterWindowStateChanged()
@@ -150,6 +152,10 @@ namespace PerformanceTest.Views.MainWindow
 								ProviderBrushes[item] = new SolidColorBrush(colors[ProviderBrushes.Count]);
 					});
 
+					foreach (var platform in Platforms)
+						foreach (var test in platform.Tests)
+							test.Test = null;
+
 					var tests = rs
 						.Select(r => new TestViewModel
 						{
@@ -184,16 +190,41 @@ namespace PerformanceTest.Views.MainWindow
 							.Select(t => (int?)t.n)
 							.FirstOrDefault();
 
+						var platform = Platforms.FirstOrDefault(p => p.Name == test.Platform);
+
+						if (platform == null)
+							Application.Current.Dispatcher.Invoke(() => Platforms.Add(platform = new PlatformViewModel { Name = test.Platform }));
+
+						var platformTest = platform.Tests.FirstOrDefault(t => t.Name == test.Name);
+
+						if (platformTest == null)
+						{
+							platformTest = new PlatformTestViewModel { Name = test.Name };
+							Application.Current.Dispatcher.Invoke(() => platform.Tests.Add(platformTest));
+						}
+
 						if (idx == null)
 						{
+							platformTest.Test = test;
 							Application.Current.Dispatcher.Invoke(() => Tests.Insert(i, test));
 						}
 						else
 						{
 							if (i != idx)
 								Application.Current.Dispatcher.Invoke(() => Tests.Move(idx.Value, i));
+							platformTest.Test = Tests[i];
 							Tests[i].Merge(test);
 						}
+					}
+
+					foreach (var platform in Platforms.ToList())
+					{
+						foreach (var test in platform.Tests.ToList())
+							if (test.Test == null)
+								Application.Current.Dispatcher.Invoke(() => platform.Tests.Remove(test));
+
+						if (platform.Tests.Count == 0)
+							Application.Current.Dispatcher.Invoke(() => Platforms.Remove(platform));
 					}
 
 					while (Tests.Count > tests.Count)

@@ -78,12 +78,24 @@
       <DependentUpon>PerformanceTestDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\Settings.Extension.cs" />
+    <Compile Include="Views\MainWIndow\PlatformTestViewModel.generated.cs">
+      <DependentUpon>PlatformTestViewModel.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Views\MainWIndow\MainWindowViewModel.cs" />
     <Compile Include="Views\MainWIndow\MainWindowViewModel.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>MainWindowViewModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Views\MainWIndow\PlatformTestViewModel.cs" />
+    <Compile Include="Views\MainWIndow\PlatformViewModel.generated.cs">
+      <DependentUpon>PlatformViewModel.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Views\MainWIndow\PlatformViewModel.cs" />
     <Compile Include="Views\TestControl\ProviderViewModel.generated.cs">
       <DependentUpon>ProviderViewModel.tt</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -178,9 +190,17 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>PerformanceTestDB.generated.cs</LastGenOutput>
     </Content>
+    <Content Include="Views\MainWIndow\PlatformTestViewModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>PlatformTestViewModel.generated.cs</LastGenOutput>
+    </Content>
     <Content Include="Views\MainWIndow\MainWindowViewModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>MainWindowViewModel.generated.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\MainWIndow\PlatformViewModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>PlatformViewModel.generated.cs</LastGenOutput>
     </Content>
     <Content Include="Views\TestControl\ProviderViewModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

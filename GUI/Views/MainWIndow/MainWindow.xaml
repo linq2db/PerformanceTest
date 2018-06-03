@@ -35,8 +35,12 @@
 				<RowDefinition Height="*"    />
 				<RowDefinition Height="24"   />
 			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
 
-			<ToolBarTray Grid.Row="0">
+			<ToolBarTray Grid.Row="0" Grid.ColumnSpan="2">
 				<ToolBar Band="1" BandIndex="1">
 					<Button ToolTip="Save all as images" Style="{DynamicResource MetroCircleButtonStyle}" Height="44" Width="44" Click="SaveButton_Click">
 						<Image Margin="11" Source="{StaticResource SaveIcon}" />
@@ -50,7 +54,24 @@
 				</ToolBar>
 			</ToolBarTray>
 
-			<ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" >
+			<TreeView Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Platforms}"
+					BorderBrush="{StaticResource AccentColorBrush}" BorderThickness="1" Margin="2,1,0,2" SelectedItemChanged="TreeView_SelectedItemChanged">
+				<TreeView.ItemContainerStyle>
+					<Style TargetType="{x:Type TreeViewItem}">
+						<Setter Property="IsExpanded" Value="True" />
+					</Style>
+				</TreeView.ItemContainerStyle>
+				<TreeView.Resources>
+					<HierarchicalDataTemplate DataType="{x:Type vm:PlatformViewModel}" ItemsSource="{Binding Tests}">
+						<Label Content="{Binding Name}" FontSize="14" Margin="0" Padding="3,1" />
+					</HierarchicalDataTemplate>
+					<DataTemplate DataType="{x:Type vm:PlatformTestViewModel}">
+						<Label Content="{Binding Name}" FontSize="14" Margin="0" Padding="5,1" />
+					</DataTemplate>
+				</TreeView.Resources>
+			</TreeView>
+
+			<ScrollViewer Name="TestsScrollViewer" Grid.Row="1" Grid.Column="1" VerticalScrollBarVisibility="Auto" Margin="0,0,0,1" >
 				<ItemsControl Name="Tests" ItemsSource="{Binding Tests}" HorizontalAlignment="Stretch" Grid.IsSharedSizeScope="True" >
 					<ItemsControl.ItemTemplate>
 						<DataTemplate>
@@ -60,7 +81,7 @@
 				</ItemsControl>
 			</ScrollViewer>
 
-			<StatusBar Grid.Row="2" Background="{StaticResource AccentColorBrush}">
+			<StatusBar Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Background="{StaticResource AccentColorBrush}">
 				<StatusBarItem  Margin="5,0" Content="{Binding Status}" Width="Auto" />
 			</StatusBar>
 		</Grid>
