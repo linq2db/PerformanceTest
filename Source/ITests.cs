@@ -12,6 +12,9 @@ namespace Tests
 		bool   GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount);
 		bool   GetNarrowList       (Stopwatch watch, int repeatCount, int takeCount);
 		bool   GetWideList         (Stopwatch watch, int repeatCount, int takeCount);
+		bool   SimpleLinqQuery     (Stopwatch watch, int repeatCount, int takeCount);
+		bool   ComplicatedLinqFast(Stopwatch watch, int repeatCount, int takeCount);
+		bool   ComplicatedLinqSlow (Stopwatch watch, int repeatCount, int takeCount);
 
 		Task<bool> GetSingleColumnFastAsync (Stopwatch watch, int repeatCount, int takeCount);
 		Task<bool> GetSingleColumnSlowAsync (Stopwatch watch, int repeatCount, int takeCount);

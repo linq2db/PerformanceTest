@@ -174,5 +174,98 @@ namespace Tests.EFCore
 
 			return true;
 		}
+
+		public override bool SimpleLinqQuery(Stopwatch watch, int repeatCount, int takeCount)
+		{
+			var query = EF.CompileQuery((EFCoreContext db, int top) =>
+				(
+					from n1 in db.Narrow
+					where n1.ID < 100
+					select n1.ID
+				)
+				.Take(top));
+
+			watch.Start();
+
+			for (var i = 0; i < repeatCount; i++)
+				using (var db = new EFCoreContext(NoTracking))
+					foreach (var item in query(db, takeCount)) {}
+
+			watch.Stop();
+
+			return true;
+		}
+
+		public override bool ComplicatedLinqFast(Stopwatch watch, int repeatCount, int takeCount)
+		{
+			var query = EF.CompileQuery((EFCoreContext db, int top) =>
+				(
+					from n1 in db.Narrow
+					join n2 in db.Narrow on new { n1.ID, n1.Field1 } equals new { n2.ID, n2.Field1 }
+					where n1.ID < 100 && n2.Field1 <= 50
+					group n1 by n1.ID into gr
+					select new
+					{
+						gr.Key,
+						Count = gr.Count()
+					}
+				)
+				.OrderBy(n1 => n1.Key)
+				.Skip(1)
+				.Take(top));
+
+			watch.Start();
+
+			for (var i = 0; i < repeatCount; i++)
+				using (var db = new EFCoreContext(NoTracking))
+					foreach (var item in query(db, takeCount)) {}
+
+			watch.Stop();
+
+			return true;
+		}
+
+		public override bool ComplicatedLinqSlow(Stopwatch watch, int repeatCount, int takeCount)
+		{
+			var query = EF.CompileQuery((EFCoreContext db, int top) =>
+				(
+					from n in db.NarrowLong
+					join w in db.WideLong on n.Field1 equals w.Field1
+					where
+						n.ID >= 0 && n.ID <= 1000000 &&
+						!new[] { 0, 20, 50, 187635 }.Contains(w.Field1)
+					select new
+					{
+						n.ID,
+						w.Field1
+					}
+				)
+				.Union
+				(
+					from n in db.NarrowLong
+					join w in db.WideLong on n.Field1 equals w.Field1
+					where
+						n.ID >= 0 && n.ID <= 1000000 &&
+						!new[] { 0, 240, 500, 18635 }.Contains(w.Field1)
+					select new
+					{
+						n.ID,
+						w.Field1
+					}
+				)
+				.OrderByDescending(n1 => n1.Field1)
+				.Skip(1000)
+				.Take(top));
+
+			watch.Start();
+
+			for (var i = 0; i < repeatCount; i++)
+				using (var db = new EFCoreContext(NoTracking))
+					foreach (var item in query(db, takeCount)) {}
+
+			watch.Stop();
+
+			return true;
+		}
 	}
 }

@@ -196,6 +196,13 @@ namespace Tests
 				CreateTest<ITests>(t => t.GetWideListAsync,     10, 100000),
 				CreateTest<ITests>(t => t.GetWideListAsync,     1, 1000000),
 			});
+
+			RunTests(platform, "Linq Query", testProviders, new[]
+			{
+				CreateTest<ITests>(t => t.SimpleLinqQuery,     1000,  1),
+				CreateTest<ITests>(t => t.ComplicatedLinqFast, 1000,  1),
+				CreateTest<ITests>(t => t.ComplicatedLinqSlow,   10, 10),
+			});
 		}
 
 		static readonly Random _random = new Random();

@@ -73,5 +73,20 @@ FROM WideLong";
 		{
 			return await Task.FromResult(false);
 		}
+
+		public virtual bool SimpleLinqQuery(Stopwatch watch, int repeatCount, int takeCount)
+		{
+			return false;
+		}
+
+		public virtual bool ComplicatedLinqFast(Stopwatch watch, int repeatCount, int takeCount)
+		{
+			return false;
+		}
+
+		public virtual bool ComplicatedLinqSlow(Stopwatch watch, int repeatCount, int takeCount)
+		{
+			return false;
+		}
 	}
 }
