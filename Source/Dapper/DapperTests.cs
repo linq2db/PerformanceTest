@@ -11,6 +11,11 @@ namespace Tests.Dapper
 
 	class DapperTests : TestsBase
 	{
+		public DapperTests()
+		{
+			ConnectionString = ConnectionString.Replace("LinqToDB", "Dapper");
+		}
+
 		public override string Name => "Dapper";
 
 

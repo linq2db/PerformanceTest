@@ -11,16 +11,22 @@ namespace Tests.EF6
 
 	public class EF6Context : DbContext
 	{
-		public EF6Context(bool noTracking)
-			//: base(new EF6ObjectContext(), true)
-			//: base("name=Test")
-			: base("Server=.;Database=PerformanceTest;Trusted_Connection=True")
+		public EF6Context(bool noTracking) : base(GetConnectionString())
 		{
 			_noTracking = noTracking;
 			Configuration.AutoDetectChangesEnabled = _noTracking;
 		}
 
 		readonly bool _noTracking;
+
+		static string _connectionString;
+
+		static string GetConnectionString()
+		{
+			if (_connectionString == null)
+				_connectionString = LinqToDB.Data.DataConnection.GetConnectionString("Test").Replace("LinqToDB", "EF6");
+			return _connectionString;
+		}
 
 		public virtual DbSet<Narrow>     Narrow     { get; set; }
 		public virtual DbSet<NarrowLong> NarrowLong { get; set; }

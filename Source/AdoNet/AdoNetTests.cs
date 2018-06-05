@@ -9,6 +9,11 @@ namespace Tests.AdoNet
 
 	class AdoNetTests : TestsBase
 	{
+		public AdoNetTests()
+		{
+			ConnectionString = ConnectionString.Replace("LinqToDB", "AdoNet");
+		}
+
 		public override string Name => "AdoNet";
 
 		public override bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
@@ -356,7 +361,7 @@ OFFSET 1 ROWS FETCH NEXT {takeCount} ROWS ONLY";
 			return true;
 		}
 
-		public override bool ComplicatedLinqSlow(Stopwatch watch, int repeatCount, int takeCount)
+		public override bool ComplicatedLinqSlow(Stopwatch watch, int repeatCount, int takeCount, int nRows)
 		{
 			var sql = $@"
 SELECT
@@ -371,7 +376,7 @@ FROM
 			[NarrowLong] [n]
 				INNER JOIN [WideLong] [w] ON [n].[Field1] = [w].[Field1]
 		WHERE
-			[n].[ID] >= 0 AND [n].[ID] <= 1000000 AND [w].[Field1] NOT IN (0, 20, 50, 187635)
+			[n].[ID] >= 0 AND [n].[ID] <= {nRows} AND [w].[Field1] NOT IN (0, 20, 50, 187635)
 		UNION
 		SELECT
 			[n1].[ID],
@@ -380,7 +385,7 @@ FROM
 			[NarrowLong] [n1]
 				INNER JOIN [WideLong] [w1] ON [n1].[Field1] = [w1].[Field1]
 		WHERE
-			[n1].[ID] >= 0 AND [n1].[ID] <= 1000000 AND [w1].[Field1] NOT IN (0, 240, 500, 18635)
+			[n1].[ID] >= 0 AND [n1].[ID] <= {nRows} AND [w1].[Field1] NOT IN (0, 240, 500, 18635)
 	) [t1]
 ORDER BY
 	[t1].[Field1] DESC

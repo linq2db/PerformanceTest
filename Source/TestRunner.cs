@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime;
 using System.Threading.Tasks;
+
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider.SqlServer;
@@ -29,7 +30,7 @@ namespace Tests
 
 			DataConnection.AddConfiguration(
 				"Test",
-				$"Server={serverName};Database=PerformanceTest;Trusted_Connection=True",
+				$"Server={serverName};Database=PerformanceTest;Trusted_Connection=True;Application Name=LinqToDB Test;",
 				SqlServerTools.GetDataProvider(SqlServerVersion.v2012));
 
 			DataConnection.DefaultConfiguration = "Test";
@@ -53,6 +54,10 @@ namespace Tests
 				new EFCore.EFCoreCompTests (true),
 #if NETCOREAPP2_0
 #else
+//				new L2DB.LoWcfLinqTests    (true),
+				new BLT.BLTSqlTests        (),
+				new BLT.BLTLinqTests       (),
+				new BLT.BLTCompTests       (),
 				new EF6.EF6SqlTests        (true),
 				new EF6.EF6LinqTests       (true),
 //				new EF6.EF6CompTests       (true),
@@ -155,9 +160,9 @@ namespace Tests
 
 			RunTests(platform, "Wide List", testProviders, new[]
 			{
-				CreateTest<ITests>(t => t.GetWideList,          10000,   1),
-				CreateTest<ITests>(t => t.GetWideList,          10000,  10),
-				CreateTest<ITests>(t => t.GetWideList,          10000, 100),
+				CreateTest<ITests>(t => t.GetWideList,          1000,    1),
+				CreateTest<ITests>(t => t.GetWideList,          1000,   10),
+				CreateTest<ITests>(t => t.GetWideList,          1000,  100),
 				CreateTest<ITests>(t => t.GetWideList,          1000, 1000),
 				CreateTest<ITests>(t => t.GetWideList,          100, 10000),
 				CreateTest<ITests>(t => t.GetWideList,          10, 100000),
@@ -166,9 +171,9 @@ namespace Tests
 
 			RunTests(platform, "Wide List with Change Tracking", testProvidersWithChangeTracking, new[]
 			{
-				CreateTest<ITests>(t => t.GetWideList,          10000,   1),
-				CreateTest<ITests>(t => t.GetWideList,          10000,  10),
-				CreateTest<ITests>(t => t.GetWideList,          10000, 100),
+				CreateTest<ITests>(t => t.GetWideList,          1000,    1),
+				CreateTest<ITests>(t => t.GetWideList,          1000,   10),
+				CreateTest<ITests>(t => t.GetWideList,          1000,  100),
 				CreateTest<ITests>(t => t.GetWideList,          1000, 1000),
 				CreateTest<ITests>(t => t.GetWideList,          100, 10000),
 				CreateTest<ITests>(t => t.GetWideList,          10, 100000),
@@ -177,20 +182,20 @@ namespace Tests
 
 			RunTests(platform, "Wide List Async", testProviders, new[]
 			{
-				CreateTest<ITests>(t => t.GetWideListAsync,     10000,   1),
-				CreateTest<ITests>(t => t.GetWideListAsync,     10000,  10),
-				CreateTest<ITests>(t => t.GetWideListAsync,     10000, 100),
+				CreateTest<ITests>(t => t.GetWideListAsync,     1000,    1),
+				CreateTest<ITests>(t => t.GetWideListAsync,     1000,   10),
+				CreateTest<ITests>(t => t.GetWideListAsync,     1000,  100),
 				CreateTest<ITests>(t => t.GetWideListAsync,     1000, 1000),
 				CreateTest<ITests>(t => t.GetWideListAsync,     100, 10000),
 				CreateTest<ITests>(t => t.GetWideListAsync,     10, 100000),
 				CreateTest<ITests>(t => t.GetWideListAsync,     1, 1000000),
 			});
 
-			RunTests(platform, "Wide List with Change TrackingAsync", testProvidersWithChangeTracking, new[]
+			RunTests(platform, "Wide List with Change Tracking Async", testProvidersWithChangeTracking, new[]
 			{
-				CreateTest<ITests>(t => t.GetWideListAsync,     10000,   1),
-				CreateTest<ITests>(t => t.GetWideListAsync,     10000,  10),
-				CreateTest<ITests>(t => t.GetWideListAsync,     10000, 100),
+				CreateTest<ITests>(t => t.GetWideListAsync,     1000,    1),
+				CreateTest<ITests>(t => t.GetWideListAsync,     1000,   10),
+				CreateTest<ITests>(t => t.GetWideListAsync,     1000,  100),
 				CreateTest<ITests>(t => t.GetWideListAsync,     1000, 1000),
 				CreateTest<ITests>(t => t.GetWideListAsync,     100, 10000),
 				CreateTest<ITests>(t => t.GetWideListAsync,     10, 100000),
@@ -201,7 +206,8 @@ namespace Tests
 			{
 				CreateTest<ITests>(t => t.SimpleLinqQuery,     1000,  1),
 				CreateTest<ITests>(t => t.ComplicatedLinqFast, 1000,  1),
-				CreateTest<ITests>(t => t.ComplicatedLinqSlow,   10, 10),
+				CreateTest<ITests>(t => t.ComplicatedLinqSlow,   20, 10, 250000),
+				CreateTest<ITests>(t => t.ComplicatedLinqSlow,   10, 10, 500000),
 			});
 		}
 
@@ -347,6 +353,10 @@ namespace Tests
 				EF_Comp      = t.Stopwatch.SingleOrDefault(w => w?.p is EFCore.EFCoreCompTests)?.time,
 #if NETCOREAPP2_0
 #else
+				BLT_Sql      = t.Stopwatch.SingleOrDefault(w => w?.p is BLT.BLTLinqTests)?.time,
+				BLT_Linq     = t.Stopwatch.SingleOrDefault(w => w?.p is BLT.BLTLinqTests)?.time,
+				BLT_Comp     = t.Stopwatch.SingleOrDefault(w => w?.p is BLT.BLTCompTests)?.time,
+
 				EG6_Sql      = t.Stopwatch.SingleOrDefault(w => w?.p is EF6.EF6SqlTests) ?.time,
 				EG6_Linq     = t.Stopwatch.SingleOrDefault(w => w?.p is EF6.EF6LinqTests)?.time,
 				EG6_Comp     = t.Stopwatch.SingleOrDefault(w => w?.p is EF6.EF6CompTests)?.time,
@@ -397,18 +407,31 @@ namespace Tests
 			};
 		}
 
+		static Test<T> CreateTest<T>(Expression<Func<T,Func<Stopwatch,int,int,int,bool>>> func, int repeat, int take, int parm)
+		{
+			var cfunc = func.Compile();
+			var name  = ((MethodInfo)((ConstantExpression)func.Body
+				.Find(e => e is ConstantExpression c && c.Value is MethodInfo)).Value).Name;
+
+			return new Test<T>
+			{
+				Func   = p => (sw,r,t) => cfunc(p)(sw, r, t, parm),
+				Name   = $"{name}({parm})",
+				Repeat = repeat,
+				Take   = take > 0 ? take : (int?)null
+			};
+		}
+
 		static Test<T> CreateTest<T>(Expression<Func<T,Func<Stopwatch,int,int,Task<bool>>>> func, int repeat, int take = -1)
 		{
 			var cfunc = func.Compile();
 			var name  = ((MethodInfo)((ConstantExpression)func.Body
 				.Find(e => e is ConstantExpression c && c.Value is MethodInfo)).Value).Name;
 
-			name = name.Replace("Async", "");
-
 			return new Test<T>
 			{
-				Func   = p => (sw,r,t) => cfunc(p)(sw,r,t).Result,
-				Name   = name,
+				Func   = p => (sw,r,t) => cfunc(p)(sw, r, t).Result,
+				Name   = name.Replace("Async", ""),
 				Repeat = repeat,
 				Take   = take > 0 ? take : (int?)null
 			};

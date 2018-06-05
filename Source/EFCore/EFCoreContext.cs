@@ -16,7 +16,16 @@ namespace Tests.EFCore
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
-			optionsBuilder.UseSqlServer($"Server=.;Database=PerformanceTest;Trusted_Connection=True");
+			optionsBuilder.UseSqlServer(GetConnectionString());
+		}
+
+		static string _connectionString;
+
+		static string GetConnectionString()
+		{
+			if (_connectionString == null)
+				_connectionString = LinqToDB.Data.DataConnection.GetConnectionString("Test").Replace("LinqToDB", "EFCore");
+			return _connectionString;
 		}
 
 		public DbSet<Narrow>     Narrow     { get; set; }

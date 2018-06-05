@@ -1,40 +1,22 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 
-using LinqToDB;
+// ReSharper disable ReturnValueOfPureMethodIsNotUsed
 
-namespace Tests.L2DB
+namespace Tests.BLT
 {
-	class L2DBLinqTests : TestsWithChangeTrackingBase
+	class BLTLinqTests : TestsBase
 	{
-		public override string Name => "L2DB Linq";
-
-		public L2DBLinqTests(bool noTracking) : base(noTracking)
-		{
-		}
+		public override string Name => "BLT Linq";
 
 		public override bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
-			using (var db = new L2DBContext(NoTracking))
+			using (var db = new BLTContext())
 				for (var i = 0; i < repeatCount; i++)
 					db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).AsEnumerable().First();
-
-			watch.Stop();
-
-			return true;
-		}
-
-		public override async Task<bool> GetSingleColumnFastAsync(Stopwatch watch, int repeatCount, int takeCount)
-		{
-			watch.Start();
-
-			using (var db = new L2DBContext(NoTracking))
-				for (var i = 0; i < repeatCount; i++)
-					await db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).FirstAsync();
 
 			watch.Stop();
 
@@ -46,21 +28,8 @@ namespace Tests.L2DB
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(NoTracking))
+				using (var db = new BLTContext())
 					db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).AsEnumerable().First();
-
-			watch.Stop();
-
-			return true;
-		}
-
-		public override async Task<bool> GetSingleColumnSlowAsync(Stopwatch watch, int repeatCount, int takeCount)
-		{
-			watch.Start();
-
-			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(NoTracking))
-					await db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).FirstAsync();
 
 			watch.Stop();
 
@@ -71,7 +40,7 @@ namespace Tests.L2DB
 		{
 			watch.Start();
 
-			using (var db = new L2DBContext(NoTracking))
+			using (var db = new BLTContext())
 				for (var i = 0; i < repeatCount; i++)
 				{
 					var id = 1;
@@ -84,43 +53,13 @@ namespace Tests.L2DB
 			return true;
 		}
 
-		public override async Task<bool> GetSingleColumnParamAsync(Stopwatch watch, int repeatCount, int takeCount)
-		{
-			watch.Start();
-
-			using (var db = new L2DBContext(NoTracking))
-				for (var i = 0; i < repeatCount; i++)
-				{
-					var id = 1;
-					var p  = 2;
-					await db.Narrows.Where(t => t.ID == id && t.Field1 == p).Select(t => t.ID).FirstAsync();
-				}
-
-			watch.Stop();
-
-			return true;
-		}
-
 		public override bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(NoTracking))
+				using (var db = new BLTContext())
 					foreach (var item in db.NarrowLongs.Take(takeCount)) {}
-
-			watch.Stop();
-
-			return true;
-		}
-
-		public override async Task<bool> GetNarrowListAsync(Stopwatch watch, int repeatCount, int takeCount)
-		{
-			watch.Start();
-
-			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(NoTracking))
-					await db.NarrowLongs.Take(takeCount).ForEachAsync(item => {});
 
 			watch.Stop();
 
@@ -132,21 +71,8 @@ namespace Tests.L2DB
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(NoTracking))
+				using (var db = new BLTContext())
 					foreach (var item in db.WideLongs.Take(takeCount)) {}
-
-			watch.Stop();
-
-			return true;
-		}
-
-		public override async Task<bool> GetWideListAsync(Stopwatch watch, int repeatCount, int takeCount)
-		{
-			watch.Start();
-
-			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(NoTracking))
-					await db.WideLongs.Take(takeCount).ForEachAsync(item => {});
 
 			watch.Stop();
 
@@ -158,7 +84,7 @@ namespace Tests.L2DB
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(NoTracking))
+				using (var db = new BLTContext())
 				{
 					var q =
 					(
@@ -181,7 +107,7 @@ namespace Tests.L2DB
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(NoTracking))
+				using (var db = new BLTContext())
 				{
 					var q =
 					(
@@ -212,7 +138,7 @@ namespace Tests.L2DB
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(NoTracking))
+				using (var db = new BLTContext())
 				{
 					var q =
 					(

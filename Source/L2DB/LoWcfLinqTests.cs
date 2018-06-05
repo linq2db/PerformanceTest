@@ -3,15 +3,15 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
-using Microsoft.EntityFrameworkCore;
+using LinqToDB;
 
-namespace Tests.EFCore
+namespace Tests.L2DB
 {
-	class EFCoreLinqTests : TestsWithChangeTrackingBase
+	class LoWcfLinqTests : TestsWithChangeTrackingBase
 	{
-		public override string Name => "EF Core Linq";
+		public override string Name => "LoWcf Linq";
 
-		public EFCoreLinqTests(bool noTracking) : base(noTracking)
+		public LoWcfLinqTests(bool noTracking) : base(noTracking)
 		{
 		}
 
@@ -19,9 +19,9 @@ namespace Tests.EFCore
 		{
 			watch.Start();
 
-			using (var db = new EFCoreContext(NoTracking))
+			using (var db = new LoWcfContext(NoTracking))
 				for (var i = 0; i < repeatCount; i++)
-					db.Narrow.Where(t => t.ID == 1).Select(t => t.ID).AsEnumerable().First();
+					db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).AsEnumerable().First();
 
 			watch.Stop();
 
@@ -32,9 +32,9 @@ namespace Tests.EFCore
 		{
 			watch.Start();
 
-			using (var db = new EFCoreContext(NoTracking))
+			using (var db = new LoWcfContext(NoTracking))
 				for (var i = 0; i < repeatCount; i++)
-					await db.Narrow.Where(t => t.ID == 1).Select(t => t.ID).FirstAsync();
+					await db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).FirstAsync();
 
 			watch.Stop();
 
@@ -46,8 +46,8 @@ namespace Tests.EFCore
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new EFCoreContext(NoTracking))
-					db.Narrow.Where(t => t.ID == 1).Select(t => t.ID).AsEnumerable().First();
+				using (var db = new LoWcfContext(NoTracking))
+					db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).AsEnumerable().First();
 
 			watch.Stop();
 
@@ -59,8 +59,8 @@ namespace Tests.EFCore
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new EFCoreContext(NoTracking))
-					await db.Narrow.Where(t => t.ID == 1).Select(t => t.ID).FirstAsync();
+				using (var db = new LoWcfContext(NoTracking))
+					await db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).FirstAsync();
 
 			watch.Stop();
 
@@ -71,12 +71,12 @@ namespace Tests.EFCore
 		{
 			watch.Start();
 
-			using (var db = new EFCoreContext(NoTracking))
+			using (var db = new LoWcfContext(NoTracking))
 				for (var i = 0; i < repeatCount; i++)
 				{
 					var id = 1;
 					var p  = 2;
-					db.Narrow.Where(t => t.ID == id && t.Field1 == p).Select(t => t.ID).AsEnumerable().First();
+					db.Narrows.Where(t => t.ID == id && t.Field1 == p).Select(t => t.ID).AsEnumerable().First();
 				}
 
 			watch.Stop();
@@ -88,12 +88,12 @@ namespace Tests.EFCore
 		{
 			watch.Start();
 
-			using (var db = new EFCoreContext(NoTracking))
+			using (var db = new LoWcfContext(NoTracking))
 				for (var i = 0; i < repeatCount; i++)
 				{
 					var id = 1;
 					var p  = 2;
-					await db.Narrow.Where(t => t.ID == id && t.Field1 == p).Select(t => t.ID).FirstAsync();
+					await db.Narrows.Where(t => t.ID == id && t.Field1 == p).Select(t => t.ID).FirstAsync();
 				}
 
 			watch.Stop();
@@ -106,8 +106,8 @@ namespace Tests.EFCore
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new EFCoreContext(NoTracking))
-					foreach (var item in db.NarrowLong.Take(takeCount)) {}
+				using (var db = new LoWcfContext(NoTracking))
+					foreach (var item in db.NarrowLongs.Take(takeCount)) {}
 
 			watch.Stop();
 
@@ -119,8 +119,8 @@ namespace Tests.EFCore
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new EFCoreContext(NoTracking))
-					await db.NarrowLong.Take(takeCount).ForEachAsync(item => {});
+				using (var db = new LoWcfContext(NoTracking))
+					await db.NarrowLongs.Take(takeCount).ForEachAsync(item => {});
 
 			watch.Stop();
 
@@ -132,8 +132,8 @@ namespace Tests.EFCore
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new EFCoreContext(NoTracking))
-					foreach (var item in db.WideLong.Take(takeCount)) {}
+				using (var db = new LoWcfContext(NoTracking))
+					foreach (var item in db.WideLongs.Take(takeCount)) {}
 
 			watch.Stop();
 
@@ -145,8 +145,8 @@ namespace Tests.EFCore
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new EFCoreContext(NoTracking))
-					await db.WideLong.Take(takeCount).ForEachAsync(item => {});
+				using (var db = new LoWcfContext(NoTracking))
+					await db.WideLongs.Take(takeCount).ForEachAsync(item => {});
 
 			watch.Stop();
 
@@ -158,11 +158,11 @@ namespace Tests.EFCore
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new EFCoreContext(NoTracking))
+				using (var db = new LoWcfContext(NoTracking))
 				{
 					var q =
 					(
-						from n1 in db.Narrow
+						from n1 in db.Narrows
 						where n1.ID < 100
 						select n1.ID
 					)
@@ -181,12 +181,12 @@ namespace Tests.EFCore
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new EFCoreContext(NoTracking))
+				using (var db = new LoWcfContext(NoTracking))
 				{
 					var q =
 					(
-						from n1 in db.Narrow
-						join n2 in db.Narrow on new { n1.ID, n1.Field1 } equals new { n2.ID, n2.Field1 }
+						from n1 in db.Narrows
+						join n2 in db.Narrows on new { n1.ID, n1.Field1 } equals new { n2.ID, n2.Field1 }
 						where n1.ID < 100 && n2.Field1 <= 50
 						group n1 by n1.ID into gr
 						select new
@@ -212,12 +212,12 @@ namespace Tests.EFCore
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new EFCoreContext(NoTracking))
+				using (var db = new LoWcfContext(NoTracking))
 				{
 					var q =
 					(
-						from n in db.NarrowLong
-						join w in db.WideLong on n.Field1 equals w.Field1
+						from n in db.NarrowLongs
+						join w in db.WideLongs on n.Field1 equals w.Field1
 						where
 							n.ID >= 0 && n.ID <= nRows &&
 							!new[] { 0, 20, 50, 187635 }.Contains(w.Field1)
@@ -229,8 +229,8 @@ namespace Tests.EFCore
 					)
 					.Union
 					(
-						from n in db.NarrowLong
-						join w in db.WideLong on n.Field1 equals w.Field1
+						from n in db.NarrowLongs
+						join w in db.WideLongs on n.Field1 equals w.Field1
 						where
 							n.ID >= 0 && n.ID <= nRows &&
 							!new[] { 0, 240, 500, 18635 }.Contains(w.Field1)

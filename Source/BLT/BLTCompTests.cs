@@ -1,27 +1,23 @@
 ﻿using System;
-using System.Data.Linq;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 
-namespace Tests.L2S
+using BLToolkit.Data.Linq;
+
+namespace Tests.BLT
 {
-	class L2SCompTests : TestsWithChangeTrackingBase
+	class BLTCompTests : TestsBase
 	{
-		public override string Name => "L2S Compiled";
-
-		public L2SCompTests(bool noTracking) : base(noTracking)
-		{
-		}
+		public override string Name => "BLT Compiled";
 
 		public override bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
 		{
-			var query = CompiledQuery.Compile((L2SContext db) =>
+			var query = CompiledQuery.Compile((BLTContext db) =>
 				db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).First());
 
 			watch.Start();
 
-			using (var db = new L2SContext(NoTracking))
+			using (var db = new BLTContext())
 				for (var i = 0; i < repeatCount; i++)
 					query(db);
 
@@ -32,13 +28,13 @@ namespace Tests.L2S
 
 		public override bool GetSingleColumnSlow(Stopwatch watch, int repeatCount, int takeCount)
 		{
-			var query = CompiledQuery.Compile((L2SContext db) =>
+			var query = CompiledQuery.Compile((BLTContext db) =>
 				db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).First());
 
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2SContext(NoTracking))
+				using (var db = new BLTContext())
 					query(db);
 
 			watch.Stop();
@@ -48,12 +44,12 @@ namespace Tests.L2S
 
 		public override bool GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount)
 		{
-			var query = CompiledQuery.Compile((L2SContext db, int id, int p) =>
+			var query = CompiledQuery.Compile((BLTContext db, int id, int p) =>
 				db.Narrows.Where(t => t.ID == id && t.Field1 == p).Select(t => t.ID).First());
 
 			watch.Start();
 
-			using (var db = new L2SContext(NoTracking))
+			using (var db = new BLTContext())
 				for (var i = 0; i < repeatCount; i++)
 					query(db, 1, 2);
 
@@ -64,13 +60,13 @@ namespace Tests.L2S
 
 		public override bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
 		{
-			var query = CompiledQuery.Compile((L2SContext db, int top) =>
+			var query = CompiledQuery.Compile((BLTContext db, int top) =>
 				db.NarrowLongs.Take(top));
 
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2SContext(NoTracking))
+				using (var db = new BLTContext())
 					foreach (var item in query(db, takeCount)) {}
 
 			watch.Stop();
@@ -80,13 +76,13 @@ namespace Tests.L2S
 
 		public override bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
 		{
-			var query = CompiledQuery.Compile((L2SContext db, int top) =>
+			var query = CompiledQuery.Compile((BLTContext db, int top) =>
 				db.WideLongs.Take(top));
 
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2SContext(NoTracking))
+				using (var db = new BLTContext())
 					foreach (var item in query(db, takeCount)) {}
 
 			watch.Stop();
@@ -94,10 +90,9 @@ namespace Tests.L2S
 			return true;
 		}
 
-
 		public override bool SimpleLinqQuery(Stopwatch watch, int repeatCount, int takeCount)
 		{
-			var query = CompiledQuery.Compile((L2SContext db, int top) =>
+			var query = CompiledQuery.Compile((BLTContext db, int top) =>
 				(
 					from n1 in db.Narrows
 					where n1.ID < 100
@@ -108,7 +103,7 @@ namespace Tests.L2S
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2SContext(NoTracking))
+				using (var db = new BLTContext())
 					foreach (var item in query(db, takeCount)) {}
 
 			watch.Stop();
@@ -118,7 +113,7 @@ namespace Tests.L2S
 
 		public override bool ComplicatedLinqFast(Stopwatch watch, int repeatCount, int takeCount)
 		{
-			var query = CompiledQuery.Compile((L2SContext db, int top) =>
+			var query = CompiledQuery.Compile((BLTContext db, int top) =>
 				(
 					from n1 in db.Narrows
 					join n2 in db.Narrows on new { n1.ID, n1.Field1 } equals new { n2.ID, n2.Field1 }
@@ -137,7 +132,7 @@ namespace Tests.L2S
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2SContext(NoTracking))
+				using (var db = new BLTContext())
 					foreach (var item in query(db, takeCount)) {}
 
 			watch.Stop();
@@ -147,7 +142,7 @@ namespace Tests.L2S
 
 		public override bool ComplicatedLinqSlow(Stopwatch watch, int repeatCount, int takeCount, int nRows)
 		{
-			var query = CompiledQuery.Compile((L2SContext db, int top) =>
+			var query = CompiledQuery.Compile((BLTContext db, int top) =>
 				(
 					from n in db.NarrowLongs
 					join w in db.WideLongs on n.Field1 equals w.Field1
@@ -180,7 +175,7 @@ namespace Tests.L2S
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2SContext(NoTracking))
+				using (var db = new BLTContext())
 					foreach (var item in query(db, takeCount)) {}
 
 			watch.Stop();

@@ -135,7 +135,7 @@ namespace Tests.L2S
 			return true;
 		}
 
-		public override bool ComplicatedLinqSlow(Stopwatch watch, int repeatCount, int takeCount)
+		public override bool ComplicatedLinqSlow(Stopwatch watch, int repeatCount, int takeCount, int nRows)
 		{
 			watch.Start();
 
@@ -147,7 +147,7 @@ namespace Tests.L2S
 						from n in db.NarrowLongs
 						join w in db.WideLongs on n.Field1 equals w.Field1
 						where
-							n.ID >= 0 && n.ID <= 1000000 &&
+							n.ID >= 0 && n.ID <= nRows &&
 							!new[] { 0, 20, 50, 187635 }.Contains(w.Field1)
 						select new
 						{
@@ -160,7 +160,7 @@ namespace Tests.L2S
 						from n in db.NarrowLongs
 						join w in db.WideLongs on n.Field1 equals w.Field1
 						where
-							n.ID >= 0 && n.ID <= 1000000 &&
+							n.ID >= 0 && n.ID <= nRows &&
 							!new[] { 0, 240, 500, 18635 }.Contains(w.Field1)
 						select new
 						{

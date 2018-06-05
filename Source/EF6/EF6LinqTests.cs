@@ -173,7 +173,7 @@ namespace Tests.EF6
 				using (var db = new EF6Context(NoTracking))
 				{
 					var q = NoTracking ? db.WideLong.AsNoTracking() : db.WideLong;
-					foreach (var item in db.WideLong.Take(takeCount)) {}
+					foreach (var item in q.Take(takeCount)) {}
 				}
 			}
 
@@ -191,7 +191,7 @@ namespace Tests.EF6
 				using (var db = new EF6Context(NoTracking))
 				{
 					var q = NoTracking ? db.WideLong.AsNoTracking() : db.WideLong;
-					await db.WideLong.Take(takeCount).ForEachAsync(item => {});
+					await q.Take(takeCount).ForEachAsync(item => {});
 				}
 			}
 
@@ -255,7 +255,7 @@ namespace Tests.EF6
 			return true;
 		}
 
-		public override bool ComplicatedLinqSlow(Stopwatch watch, int repeatCount, int takeCount)
+		public override bool ComplicatedLinqSlow(Stopwatch watch, int repeatCount, int takeCount, int nRows)
 		{
 			watch.Start();
 
@@ -267,7 +267,7 @@ namespace Tests.EF6
 						from n in db.NarrowLong
 						join w in db.WideLong on n.Field1 equals w.Field1
 						where
-							n.ID >= 0 && n.ID <= 1000000 &&
+							n.ID >= 0 && n.ID <= nRows &&
 							!new[] { 0, 20, 50, 187635 }.Contains(w.Field1)
 						select new
 						{
@@ -280,7 +280,7 @@ namespace Tests.EF6
 						from n in db.NarrowLong
 						join w in db.WideLong on n.Field1 equals w.Field1
 						where
-							n.ID >= 0 && n.ID <= 1000000 &&
+							n.ID >= 0 && n.ID <= nRows &&
 							!new[] { 0, 240, 500, 18635 }.Contains(w.Field1)
 						select new
 						{

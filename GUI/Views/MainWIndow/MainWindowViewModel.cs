@@ -120,16 +120,17 @@ namespace PerformanceTest.Views.MainWindow
 						Color.FromRgb(0xB0, 0x1E, 0x00),
 						Color.FromRgb(0xC1, 0x00, 0x4F),
 
+						Color.FromRgb(0x00, 0x82, 0x87),
+						Color.FromRgb(0x00, 0xA3, 0xA3),
+						Color.FromRgb(0x00, 0x6A, 0xC1),
+
 						Color.FromRgb(0x25, 0x72, 0xEB),
 						Color.FromRgb(0x46, 0x17, 0xB4),
 						Color.FromRgb(0x72, 0x00, 0xAC),
-						Color.FromRgb(0x00, 0x6A, 0xC1),
-						Color.FromRgb(0x00, 0x82, 0x87),
 						Color.FromRgb(0xFE, 0x7C, 0x22),
 						Color.FromRgb(0xFF, 0x2E, 0x12),
 						Color.FromRgb(0xFF, 0x1D, 0x77),
 						Color.FromRgb(0x91, 0xD1, 0x00),
-						Color.FromRgb(0x00, 0xA3, 0xA3),
 					};
 
 					Application.Current.Dispatcher.Invoke(() =>
@@ -142,6 +143,7 @@ namespace PerformanceTest.Views.MainWindow
 								"EF Core Sql", "EF Core Compiled", "EF Core Linq",
 								"L2S Sql", "L2S Compiled", "L2S Linq",
 								"EF6 Sql", "EF6 Compiled", "EF6 Linq",
+								"BLT Sql", "BLT Compiled", "BLT Linq",
 							})
 							{
 								ProviderBrushes[name] = new SolidColorBrush(colors[ProviderBrushes.Count]);

@@ -10,6 +10,11 @@ namespace Tests.PetaPoco
 
 	class PetaPocoTests : TestsBase
 	{
+		public PetaPocoTests()
+		{
+			ConnectionString = ConnectionString.Replace("LinqToDB", "PetaPoco");
+		}
+
 		public override string Name => "PetaPoco";
 
 		public override bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)

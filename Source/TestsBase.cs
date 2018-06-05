@@ -23,7 +23,7 @@ FROM WideLong";
 
 		public abstract string Name { get; }
 
-		protected readonly string ConnectionString = LinqToDB.Data.DataConnection.GetConnectionString("Test");
+		protected string ConnectionString = LinqToDB.Data.DataConnection.GetConnectionString("Test");
 
 		public virtual bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
 		{
@@ -84,7 +84,7 @@ FROM WideLong";
 			return false;
 		}
 
-		public virtual bool ComplicatedLinqSlow(Stopwatch watch, int repeatCount, int takeCount)
+		public virtual bool ComplicatedLinqSlow(Stopwatch watch, int repeatCount, int takeCount, int nRows)
 		{
 			return false;
 		}

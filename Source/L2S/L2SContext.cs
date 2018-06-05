@@ -10,9 +10,18 @@ namespace Tests.L2S
 		private static MappingSource mappingSource = new AttributeMappingSource();
 
 		public L2SContext(bool noTracking)
-			: base($"Server=.;Database=PerformanceTest;Trusted_Connection=True", mappingSource)
+			: base(GetConnectionString(), mappingSource)
 		{
 			ObjectTrackingEnabled = !noTracking;
+		}
+
+		static string _connectionString;
+
+		static string GetConnectionString()
+		{
+			if (_connectionString == null)
+				_connectionString = LinqToDB.Data.DataConnection.GetConnectionString("Test").Replace("LinqToDB", "LinqToSql");
+			return _connectionString;
 		}
 
 		public Table<Narrow>     Narrows     { get => GetTable<Narrow>(); }
