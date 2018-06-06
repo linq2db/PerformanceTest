@@ -49,7 +49,7 @@ namespace PerformanceTest.Views.MainWindow
 			Task.Run(RefreshDataAsync);
 		}
 
-		public static Dictionary<string,Brush> ProviderBrushes = new Dictionary<string,Brush>();
+		public static Dictionary<string,Brush> ProviderBrushes;
 
 		public async Task RefreshDataAsync()
 		{
@@ -98,56 +98,64 @@ namespace PerformanceTest.Views.MainWindow
 
 					var providers = ws.Values.SelectMany(w => w).Select(w => w.Provider).Distinct().OrderBy(p => p);
 
-					var colors = new[]
+					SolidColorBrush GetBrush(Color color, int delta)
 					{
-						Color.FromRgb(0xAA, 0x40, 0xFF),
-						Color.FromRgb(0x63, 0x2F, 0x00),
-						Color.FromRgb(0xFF, 0x76, 0xBC),
-
-						Color.FromRgb(0x77, 0xB9, 0x00),
-						Color.FromRgb(0x00, 0xC1, 0x3F),
-						Color.FromRgb(0x19, 0x99, 0x00),
-
-						Color.FromRgb(0xE1, 0xB7, 0x00),
-						Color.FromRgb(0xF3, 0xB2, 0x00),
-						Color.FromRgb(0xFF, 0x98, 0x1D),
-
-						Color.FromRgb(0x1F, 0xAE, 0xFF),
-						Color.FromRgb(0x56, 0xC5, 0xFF),
-						Color.FromRgb(0x00, 0xD8, 0xCC),
-
-						Color.FromRgb(0xAD, 0x10, 0x3C),
-						Color.FromRgb(0xB0, 0x1E, 0x00),
-						Color.FromRgb(0xC1, 0x00, 0x4F),
-
-						Color.FromRgb(0x00, 0x82, 0x87),
-						Color.FromRgb(0x00, 0xA3, 0xA3),
-						Color.FromRgb(0x00, 0x6A, 0xC1),
-
-						Color.FromRgb(0x25, 0x72, 0xEB),
-						Color.FromRgb(0x46, 0x17, 0xB4),
-						Color.FromRgb(0x72, 0x00, 0xAC),
-						Color.FromRgb(0xFE, 0x7C, 0x22),
-						Color.FromRgb(0xFF, 0x2E, 0x12),
-						Color.FromRgb(0xFF, 0x1D, 0x77),
-						Color.FromRgb(0x91, 0xD1, 0x00),
-					};
+						return new SolidColorBrush(Color.FromRgb(
+							(byte)Math.Min(Math.Max(color.R + delta, 0), 255),
+							(byte)Math.Min(Math.Max(color.G + delta, 0), 255),
+							(byte)Math.Min(Math.Max(color.B + delta, 0), 255)));
+					}
 
 					Application.Current.Dispatcher.Invoke(() =>
 					{
-						if (ProviderBrushes.Count == 0)
-							foreach (var name in new[]
-							{
-								"AdoNet", "Dapper", "PetaPoco",
-								"L2DB Sql", "L2DB Compiled", "L2DB Linq",
-								"EF Core Sql", "EF Core Compiled", "EF Core Linq",
-								"L2S Sql", "L2S Compiled", "L2S Linq",
-								"EF6 Sql", "EF6 Compiled", "EF6 Linq",
-								"BLT Sql", "BLT Compiled", "BLT Linq",
-							})
-							{
-								ProviderBrushes[name] = new SolidColorBrush(colors[ProviderBrushes.Count]);
-							}
+						ProviderBrushes = new Dictionary<string, Brush>
+						{
+							["AdoNet"]           = new SolidColorBrush(Color.FromRgb(0xAA, 0x40, 0xFF)),
+							["Dapper"]           = new SolidColorBrush(Color.FromRgb(0x63, 0x2F, 0x00)),
+							["PetaPoco"]         = new SolidColorBrush(Color.FromRgb(0xFF, 0x76, 0xBC)),
+
+							["L2DB Sql"]         = GetBrush(Color.FromRgb(0x19, 0x99, 0x00),  0x1A),
+							["L2DB Compiled"]    = GetBrush(Color.FromRgb(0x19, 0x99, 0x00),  0x00),
+							["L2DB Linq"]        = GetBrush(Color.FromRgb(0x19, 0x99, 0x00), -0x1A),
+
+							["EF Core Sql"]      = GetBrush(Color.FromRgb(0xFF, 0x98, 0x1D),  0x1A),
+							["EF Core Compiled"] = GetBrush(Color.FromRgb(0xFF, 0x98, 0x1D),  0x00),
+							["EF Core Linq"]     = GetBrush(Color.FromRgb(0xFF, 0x98, 0x1D), -0x1A),
+
+							["L2S Sql"]          = GetBrush(Color.FromRgb(0x1F, 0xAE, 0xFF),  0x1A),
+							["L2S Compiled"]     = GetBrush(Color.FromRgb(0x1F, 0xAE, 0xFF),  0x00),
+							["L2S Linq"]         = GetBrush(Color.FromRgb(0x1F, 0xAE, 0xFF), -0x1A),
+
+							["EF6 Sql"]          = GetBrush(Color.FromRgb(0xC1, 0x00, 0x4F),  0x1A),
+							["EF6 Compiled"]     = GetBrush(Color.FromRgb(0xC1, 0x00, 0x4F),  0x00),
+							["EF6 Linq"]         = GetBrush(Color.FromRgb(0xC1, 0x00, 0x4F), -0x1A),
+
+							["BLT Sql"]          = GetBrush(Color.FromRgb(0x7F, 0x6E, 0x94),  0x1A),
+							["BLT Compiled"]     = GetBrush(Color.FromRgb(0x7F, 0x6E, 0x94),  0x00),
+							["BLT Linq"]         = GetBrush(Color.FromRgb(0x7F, 0x6E, 0x94), -0x1A),
+						};
+
+						var colors = new[]
+						{
+							Color.FromRgb(0xFF, 0x2E, 0x12),
+							Color.FromRgb(0x25, 0x72, 0xEB),
+							Color.FromRgb(0x46, 0x17, 0xB4),
+							Color.FromRgb(0x72, 0x00, 0xAC),
+							Color.FromRgb(0xFE, 0x7C, 0x22),
+							Color.FromRgb(0xFF, 0x1D, 0x77),
+							Color.FromRgb(0x91, 0xD1, 0x00),
+							Color.FromRgb(0x77, 0xB9, 0x00),
+							Color.FromRgb(0x00, 0xC1, 0x3F),
+							Color.FromRgb(0xE1, 0xB7, 0x00),
+							Color.FromRgb(0xF3, 0xB2, 0x00),
+							Color.FromRgb(0xFF, 0x98, 0x1D),
+							Color.FromRgb(0x56, 0xC5, 0xFF),
+							Color.FromRgb(0x00, 0xD8, 0xCC),
+							Color.FromRgb(0x00, 0x82, 0x87),
+							Color.FromRgb(0x00, 0xA3, 0xA3),
+							Color.FromRgb(0x00, 0x6A, 0xC1),
+							Color.FromRgb(0x00, 0xA3, 0xA3),
+						};
 
 						foreach (var item in providers)
 							if (!ProviderBrushes.ContainsKey(item))
