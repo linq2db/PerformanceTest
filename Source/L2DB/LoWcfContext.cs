@@ -26,24 +26,21 @@ namespace Tests.L2DB
 			},
 			new EndpointAddress("net.tcp://localhost:" + IP + "/LinqOverWCF"))
 		{
-			((NetTcpBinding)Binding).ReaderQuotas.MaxStringContentLength = 1000000;
+			((NetTcpBinding)Binding).ReaderQuotas.MaxStringContentLength = 10000000;
 
 			NoTracking = noTracking;
-
-			OpenHost();
 		}
 
-		const int IP = 23654;
-		static bool _isHostOpen;
+		static int IP = 23654;
 
-		static void OpenHost()
+		public static ServiceHost Host;
+
+		public static void OpenHost()
 		{
-			if (_isHostOpen)
+			if (Host != null)
 				return;
 
-			_isHostOpen = true;
-
-			var host = new ServiceHost(new LinqService { AllowUpdates = true }, new Uri("net.tcp://localhost:" + IP));
+			ServiceHost host = new ServiceHost(new LinqService { AllowUpdates = true }, new Uri("net.tcp://localhost:" + ++IP));
 
 			host.Description.Behaviors.Add(new ServiceMetadataBehavior());
 			host.Description.Behaviors.Find<ServiceDebugBehavior>().IncludeExceptionDetailInFaults = true;
@@ -63,8 +60,9 @@ namespace Tests.L2DB
 				"LinqOverWCF");
 
 			host.Open();
-		}
 
+			Host = host;
+		}
 
 		public ITable<Narrow>        Narrows         => this.GetTable<Narrow>();
 		public ITable<NarrowLong>    NarrowLongs     => this.GetTable<NarrowLong>();

@@ -157,9 +157,11 @@ namespace PerformanceTest.Views.MainWindow
 							Color.FromRgb(0x00, 0xA3, 0xA3),
 						};
 
+						var count = ProviderBrushes.Count;
+
 						foreach (var item in providers)
 							if (!ProviderBrushes.ContainsKey(item))
-								ProviderBrushes[item] = new SolidColorBrush(colors[ProviderBrushes.Count]);
+								ProviderBrushes[item] = new SolidColorBrush(colors[ProviderBrushes.Count - count]);
 					});
 
 					foreach (var platform in Platforms)

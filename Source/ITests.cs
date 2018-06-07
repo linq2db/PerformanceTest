@@ -7,6 +7,10 @@ namespace Tests
 	interface ITests
 	{
 		string Name { get; }
+
+		void   SetUp   ();
+		void   TearDown();
+
 		bool   GetSingleColumnFast (Stopwatch watch, int repeatCount, int takeCount);
 		bool   GetSingleColumnSlow (Stopwatch watch, int repeatCount, int takeCount);
 		bool   GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount);

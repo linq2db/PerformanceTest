@@ -41,6 +41,9 @@ namespace Tests
 
 		static void RunTests(string platform)
 		{
+			new L2DB.L2DBLinqTests     (true).ComplicatedLinqFast(new Stopwatch(), 100000, 1);
+			return;
+
 			var testProviders = new ITests[]
 			{
 				new AdoNet.AdoNetTests     (),
@@ -84,6 +87,7 @@ namespace Tests
 				new L2S.L2SLinqTests       (false),
 				new L2S.L2SCompTests       (false),
 #endif
+
 			};
 
 			RunTests(platform, "Single Column", testProviders, new[]
@@ -209,6 +213,50 @@ namespace Tests
 				CreateTest<ITests>(t => t.ComplicatedLinqSlow,   20, 10, 250000),
 				CreateTest<ITests>(t => t.ComplicatedLinqSlow,   10, 10, 500000),
 			});
+
+#if !NETCOREAPP2_0
+			var wcfTestProviders = new ITests[]
+			{
+				new AdoNet.AdoNetTests     (),
+				new L2DB.L2DBLinqTests     (true),
+				new EF6.EF6LinqTests       (false),
+				new L2DB.LoWcfLinqTests    (true),
+			};
+
+			RunTests(platform, "Linq over WCF Single Column", wcfTestProviders, new[]
+			{
+				CreateTest<ITests>(t => t.GetSingleColumnFast,  1000),
+				CreateTest<ITests>(t => t.GetSingleColumnSlow,  1000),
+				CreateTest<ITests>(t => t.GetSingleColumnParam, 1000),
+			});
+
+			RunTests(platform, "Linq over WCF Narrow List", wcfTestProviders, new[]
+			{
+				CreateTest<ITests>(t => t.GetNarrowList,        1000,   1),
+				CreateTest<ITests>(t => t.GetNarrowList,        1000,  10),
+				CreateTest<ITests>(t => t.GetNarrowList,        1000, 100),
+				CreateTest<ITests>(t => t.GetNarrowList,        100, 1000),
+				CreateTest<ITests>(t => t.GetNarrowList,        10, 10000),
+				CreateTest<ITests>(t => t.GetNarrowList,        1, 100000),
+			});
+
+			RunTests(platform, "Linq over WCF Wide List", wcfTestProviders, new[]
+			{
+				CreateTest<ITests>(t => t.GetWideList,          1000,   1),
+				CreateTest<ITests>(t => t.GetWideList,          1000,  10),
+				CreateTest<ITests>(t => t.GetWideList,          1000, 100),
+				CreateTest<ITests>(t => t.GetWideList,          100, 1000),
+				CreateTest<ITests>(t => t.GetWideList,          10, 10000),
+			});
+
+			RunTests(platform, "Linq over WCF Linq Query", wcfTestProviders, new[]
+			{
+				CreateTest<ITests>(t => t.SimpleLinqQuery,      1000,  1),
+				CreateTest<ITests>(t => t.ComplicatedLinqFast,  1000,  1),
+				CreateTest<ITests>(t => t.ComplicatedLinqSlow,    20, 10, 250000),
+				CreateTest<ITests>(t => t.ComplicatedLinqSlow,    10, 10, 500000),
+			});
+#endif
 		}
 
 		static readonly Random _random = new Random();
@@ -235,6 +283,8 @@ namespace Tests
 				var func  = m.Func;
 				var watch = testProviders.Select(p =>
 				{
+					p.SetUp();
+
 					// Warmup
 					if (func(p)(new Stopwatch(), 1, 1) == false)
 					{
@@ -253,6 +303,8 @@ namespace Tests
 					var time = new TimeSpan(stopwatch.ElapsedTicks);
 
 					Console.Write('.');
+
+					p.TearDown();
 
 					return new { time, stopwatch, p, m.Repeat };
 				}).ToArray();
@@ -353,17 +405,19 @@ namespace Tests
 				EF_Comp      = t.Stopwatch.SingleOrDefault(w => w?.p is EFCore.EFCoreCompTests)?.time,
 #if NETCOREAPP2_0
 #else
-				BLT_Sql      = t.Stopwatch.SingleOrDefault(w => w?.p is BLT.BLTLinqTests)?.time,
-				BLT_Linq     = t.Stopwatch.SingleOrDefault(w => w?.p is BLT.BLTLinqTests)?.time,
-				BLT_Comp     = t.Stopwatch.SingleOrDefault(w => w?.p is BLT.BLTCompTests)?.time,
+				BLT_Sql      = t.Stopwatch.SingleOrDefault(w => w?.p is BLT.BLTLinqTests)   ?.time,
+				BLT_Linq     = t.Stopwatch.SingleOrDefault(w => w?.p is BLT.BLTLinqTests)   ?.time,
+				BLT_Comp     = t.Stopwatch.SingleOrDefault(w => w?.p is BLT.BLTCompTests)   ?.time,
 
-				EG6_Sql      = t.Stopwatch.SingleOrDefault(w => w?.p is EF6.EF6SqlTests) ?.time,
-				EG6_Linq     = t.Stopwatch.SingleOrDefault(w => w?.p is EF6.EF6LinqTests)?.time,
-				EG6_Comp     = t.Stopwatch.SingleOrDefault(w => w?.p is EF6.EF6CompTests)?.time,
+				EG6_Sql      = t.Stopwatch.SingleOrDefault(w => w?.p is EF6.EF6SqlTests)    ?.time,
+				EG6_Linq     = t.Stopwatch.SingleOrDefault(w => w?.p is EF6.EF6LinqTests)   ?.time,
+				EG6_Comp     = t.Stopwatch.SingleOrDefault(w => w?.p is EF6.EF6CompTests)   ?.time,
 
-				L2S_Sql      = t.Stopwatch.SingleOrDefault(w => w?.p is L2S.L2SSqlTests)? .time,
-				L2S_Linq     = t.Stopwatch.SingleOrDefault(w => w?.p is L2S.L2SLinqTests)?.time,
-				L2S_Comp     = t.Stopwatch.SingleOrDefault(w => w?.p is L2S.L2SCompTests)?.time,
+				L2S_Sql      = t.Stopwatch.SingleOrDefault(w => w?.p is L2S.L2SSqlTests)    ?.time,
+				L2S_Linq     = t.Stopwatch.SingleOrDefault(w => w?.p is L2S.L2SLinqTests)   ?.time,
+				L2S_Comp     = t.Stopwatch.SingleOrDefault(w => w?.p is L2S.L2SCompTests)   ?.time,
+
+				LoWCF_Linq   = t.Stopwatch.SingleOrDefault(w => w?.p is L2DB.LoWcfLinqTests)?.time,
 #endif
 			})
 			.ToArray();

@@ -23,6 +23,14 @@ FROM WideLong";
 
 		public abstract string Name { get; }
 
+		public virtual void SetUp()
+		{
+		}
+
+		public virtual void TearDown()
+		{
+		}
+
 		protected string ConnectionString = LinqToDB.Data.DataConnection.GetConnectionString("Test");
 
 		public virtual bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)

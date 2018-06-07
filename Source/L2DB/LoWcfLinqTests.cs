@@ -11,6 +11,17 @@ namespace Tests.L2DB
 	{
 		public override string Name => "LoWcf Linq";
 
+		public override void SetUp()
+		{
+			LoWcfContext.OpenHost();
+		}
+
+		public override void TearDown()
+		{
+			LoWcfContext.Host.Close();
+			LoWcfContext.Host = null;
+		}
+
 		public LoWcfLinqTests(bool noTracking) : base(noTracking)
 		{
 		}
