@@ -1,0 +1,1 @@
+GUI\bin\Release\linq2db.PerformanceTest.GUI.exe 

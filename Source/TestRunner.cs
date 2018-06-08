@@ -41,8 +41,8 @@ namespace Tests
 
 		static void RunTests(string platform)
 		{
-			new L2DB.L2DBLinqTests     (true).ComplicatedLinqFast(new Stopwatch(), 100000, 1);
-			return;
+//			new L2DB.L2DBLinqTests     (true).ComplicatedLinqFast(new Stopwatch(), 100000, 1);
+//			return;
 
 			var testProviders = new ITests[]
 			{
