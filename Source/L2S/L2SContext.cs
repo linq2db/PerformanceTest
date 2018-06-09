@@ -9,10 +9,10 @@ namespace Tests.L2S
 	{
 		private static MappingSource mappingSource = new AttributeMappingSource();
 
-		public L2SContext(bool noTracking)
+		public L2SContext(bool trackChanges)
 			: base(GetConnectionString(), mappingSource)
 		{
-			ObjectTrackingEnabled = !noTracking;
+			ObjectTrackingEnabled = trackChanges;
 		}
 
 		static string _connectionString;

@@ -11,9 +11,7 @@ namespace Tests.L2DB
 
 	public class LoWcfContext : ServiceModelDataContext
 	{
-		public readonly bool NoTracking;
-
-		public LoWcfContext(bool noTracking = true) : base(
+		public LoWcfContext(bool trackChanges) : base(
 			new NetTcpBinding(SecurityMode.None)
 			{
 				MaxReceivedMessageSize = 10000000,
@@ -27,8 +25,6 @@ namespace Tests.L2DB
 			new EndpointAddress("net.tcp://localhost:" + IP + "/LinqOverWCF"))
 		{
 			((NetTcpBinding)Binding).ReaderQuotas.MaxStringContentLength = 10000000;
-
-			NoTracking = noTracking;
 		}
 
 		static int IP = 23654;

@@ -6,11 +6,13 @@ using BLToolkit.Data.Linq;
 
 namespace Tests.BLT
 {
-	class BLTCompTests : TestsBase
+	using Tests;
+
+	class BLTCompTests : TestsBase, ISingleColumnTests, IGetListTests, ILinqQueryTests
 	{
 		public override string Name => "BLT Compiled";
 
-		public override bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var query = CompiledQuery.Compile((BLTContext db) =>
 				db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).First());
@@ -26,7 +28,7 @@ namespace Tests.BLT
 			return true;
 		}
 
-		public override bool GetSingleColumnSlow(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetSingleColumnSlow(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var query = CompiledQuery.Compile((BLTContext db) =>
 				db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).First());
@@ -42,7 +44,7 @@ namespace Tests.BLT
 			return true;
 		}
 
-		public override bool GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var query = CompiledQuery.Compile((BLTContext db, int id, int p) =>
 				db.Narrows.Where(t => t.ID == id && t.Field1 == p).Select(t => t.ID).First());
@@ -58,7 +60,7 @@ namespace Tests.BLT
 			return true;
 		}
 
-		public override bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var query = CompiledQuery.Compile((BLTContext db, int top) =>
 				db.NarrowLongs.Take(top));
@@ -74,7 +76,7 @@ namespace Tests.BLT
 			return true;
 		}
 
-		public override bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var query = CompiledQuery.Compile((BLTContext db, int top) =>
 				db.WideLongs.Take(top));
@@ -90,7 +92,7 @@ namespace Tests.BLT
 			return true;
 		}
 
-		public override bool SimpleLinqQuery(Stopwatch watch, int repeatCount, int takeCount)
+		public bool SimpleLinqQuery(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var query = CompiledQuery.Compile((BLTContext db, int top) =>
 				(
@@ -111,7 +113,7 @@ namespace Tests.BLT
 			return true;
 		}
 
-		public override bool ComplicatedLinqFast(Stopwatch watch, int repeatCount, int takeCount)
+		public bool ComplicatedLinqFast(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var query = CompiledQuery.Compile((BLTContext db, int top) =>
 				(
@@ -140,7 +142,7 @@ namespace Tests.BLT
 			return true;
 		}
 
-		public override bool ComplicatedLinqSlow(Stopwatch watch, int repeatCount, int takeCount, int nRows)
+		public bool ComplicatedLinqSlow(Stopwatch watch, int repeatCount, int takeCount, int nRows)
 		{
 			var query = CompiledQuery.Compile((BLTContext db, int top) =>
 				(

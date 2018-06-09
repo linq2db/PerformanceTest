@@ -15,13 +15,9 @@ namespace Tests.L2DB
 
 	public class L2DBContext : DataConnection
 	{
-		public readonly bool NoTracking;
-
-		public L2DBContext(bool noTracking = true)
+		public L2DBContext(bool trackChanges = false)
 		{
-			NoTracking = noTracking;
-
-			if (!NoTracking)
+			if (trackChanges)
 				OnEntityCreated = new ObjectIdentityTracker().EntityCreated;
 		}
 

@@ -1,15 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Tests.BLT
 {
 	using DataModel;
+	using Tests;
 
-	class BLTSqlTests : TestsBase
+	class BLTSqlTests : TestsBase, ISingleColumnTests, IGetListTests
 	{
 		public override string Name => "BLT Sql";
 
-		public override bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
@@ -22,7 +24,7 @@ namespace Tests.BLT
 			return true;
 		}
 
-		public override bool GetSingleColumnSlow(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetSingleColumnSlow(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
@@ -35,7 +37,7 @@ namespace Tests.BLT
 			return true;
 		}
 
-		public override bool GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
@@ -51,7 +53,7 @@ namespace Tests.BLT
 			return true;
 		}
 
-		public override bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var sql = GetNarrowListSql(takeCount);
 
@@ -59,14 +61,14 @@ namespace Tests.BLT
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new BLTContext())
-					foreach (var item in db.SetCommand(sql).ExecuteList<NarrowLong>(sql)) {}
+					foreach (var item in db.SetCommand(sql).ExecuteList(new List<NarrowLong>(takeCount))) {}
 
 			watch.Stop();
 
 			return true;
 		}
 
-		public override bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var sql = GetWideListSql(takeCount);
 
@@ -74,7 +76,7 @@ namespace Tests.BLT
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new BLTContext())
-					foreach (var item in db.SetCommand(sql).ExecuteList<WideLong>(sql)) {}
+					foreach (var item in db.SetCommand(sql).ExecuteList(new List<WideLong>(takeCount))) {}
 
 			watch.Stop();
 

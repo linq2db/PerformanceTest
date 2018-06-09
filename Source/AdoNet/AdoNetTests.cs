@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 namespace Tests.AdoNet
 {
 	using DataModel;
+	using Tests;
 
-	class AdoNetTests : TestsBase
+	class AdoNetTests : TestsBase,
+		ISingleColumnTests, ISingleColumnAsyncTests, IGetListTests, IGetListAsyncTests, ILinqQueryTests
 	{
 		public AdoNetTests()
 		{
@@ -16,7 +18,7 @@ namespace Tests.AdoNet
 
 		public override string Name => "AdoNet";
 
-		public override bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
@@ -37,7 +39,7 @@ namespace Tests.AdoNet
 			return true;
 		}
 
-		public override async Task<bool> GetSingleColumnFastAsync(Stopwatch watch, int repeatCount, int takeCount)
+		public async Task<bool> GetSingleColumnFastAsync(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
@@ -58,7 +60,7 @@ namespace Tests.AdoNet
 			return true;
 		}
 
-		public override bool GetSingleColumnSlow(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetSingleColumnSlow(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
@@ -78,7 +80,7 @@ namespace Tests.AdoNet
 			return true;
 		}
 
-		public override async Task<bool> GetSingleColumnSlowAsync(Stopwatch watch, int repeatCount, int takeCount)
+		public async Task<bool> GetSingleColumnSlowAsync(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
@@ -98,7 +100,7 @@ namespace Tests.AdoNet
 			return true;
 		}
 
-		public override bool GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
@@ -124,7 +126,7 @@ namespace Tests.AdoNet
 			return true;
 		}
 
-		public override async Task<bool> GetSingleColumnParamAsync(Stopwatch watch, int repeatCount, int takeCount)
+		public async Task<bool> GetSingleColumnParamAsync(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
@@ -150,7 +152,7 @@ namespace Tests.AdoNet
 			return true;
 		}
 
-		public override bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var sql = GetNarrowListSql(takeCount);
 
@@ -180,7 +182,7 @@ namespace Tests.AdoNet
 			return true;
 		}
 
-		public override async Task<bool> GetNarrowListAsync(Stopwatch watch, int repeatCount, int takeCount)
+		public async Task<bool> GetNarrowListAsync(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var sql = GetNarrowListSql(takeCount);
 
@@ -210,7 +212,7 @@ namespace Tests.AdoNet
 			return true;
 		}
 
-		public override bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var sql = GetWideListSql(takeCount);
 
@@ -245,7 +247,7 @@ namespace Tests.AdoNet
 			return true;
 		}
 
-		public override async Task<bool> GetWideListAsync(Stopwatch watch, int repeatCount, int takeCount)
+		public async Task<bool> GetWideListAsync(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var sql = GetWideListSql(takeCount);
 
@@ -280,7 +282,7 @@ namespace Tests.AdoNet
 			return true;
 		}
 
-		public override bool SimpleLinqQuery(Stopwatch watch, int repeatCount, int takeCount)
+		public bool SimpleLinqQuery(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var sql = $@"
 SELECT TOP ({takeCount})
@@ -317,7 +319,7 @@ WHERE
 			return true;
 		}
 
-		public override bool ComplicatedLinqFast(Stopwatch watch, int repeatCount, int takeCount)
+		public bool ComplicatedLinqFast(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var sql = $@"
 SELECT
@@ -361,7 +363,7 @@ OFFSET 1 ROWS FETCH NEXT {takeCount} ROWS ONLY";
 			return true;
 		}
 
-		public override bool ComplicatedLinqSlow(Stopwatch watch, int repeatCount, int takeCount, int nRows)
+		public bool ComplicatedLinqSlow(Stopwatch watch, int repeatCount, int takeCount, int nRows)
 		{
 			var sql = $@"
 SELECT

@@ -3,19 +3,18 @@ using System.Linq;
 
 namespace Tests.L2S
 {
-	class L2SLinqTests : TestsWithChangeTrackingBase
+	using Tests;
+
+	class L2SLinqTests : TestsBase, IWithChangeTracking, ISingleColumnTests, IGetListTests, ILinqQueryTests
 	{
 		public override string Name => "L2S Linq";
+		public          bool   TrackChanges { get; set; }
 
-		public L2SLinqTests(bool noTracking) : base(noTracking)
-		{
-		}
-
-		public override bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
-			using (var db = new L2SContext(NoTracking))
+			using (var db = new L2SContext(TrackChanges))
 				for (var i = 0; i < repeatCount; i++)
 					db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).First();
 
@@ -25,12 +24,12 @@ namespace Tests.L2S
 		}
 
 
-		public override bool GetSingleColumnSlow(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetSingleColumnSlow(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2SContext(NoTracking))
+				using (var db = new L2SContext(TrackChanges))
 					db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).AsEnumerable().First();
 
 			watch.Stop();
@@ -38,11 +37,11 @@ namespace Tests.L2S
 			return true;
 		}
 
-		public override bool GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
-			using (var db = new L2SContext(NoTracking))
+			using (var db = new L2SContext(TrackChanges))
 				for (var i = 0; i < repeatCount; i++)
 				{
 					var id = 1;
@@ -55,12 +54,12 @@ namespace Tests.L2S
 			return true;
 		}
 
-		public override bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2SContext(NoTracking))
+				using (var db = new L2SContext(TrackChanges))
 					foreach (var item in db.NarrowLongs.Take(takeCount)) {}
 
 			watch.Stop();
@@ -68,12 +67,12 @@ namespace Tests.L2S
 			return true;
 		}
 
-		public override bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2SContext(NoTracking))
+				using (var db = new L2SContext(TrackChanges))
 					foreach (var item in db.WideLongs.Take(takeCount)) {}
 
 			watch.Stop();
@@ -81,12 +80,12 @@ namespace Tests.L2S
 			return true;
 		}
 
-		public override bool SimpleLinqQuery(Stopwatch watch, int repeatCount, int takeCount)
+		public bool SimpleLinqQuery(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2SContext(NoTracking))
+				using (var db = new L2SContext(TrackChanges))
 				{
 					var q =
 					(
@@ -104,12 +103,12 @@ namespace Tests.L2S
 			return true;
 		}
 
-		public override bool ComplicatedLinqFast(Stopwatch watch, int repeatCount, int takeCount)
+		public bool ComplicatedLinqFast(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2SContext(NoTracking))
+				using (var db = new L2SContext(TrackChanges))
 				{
 					var q =
 					(
@@ -135,12 +134,12 @@ namespace Tests.L2S
 			return true;
 		}
 
-		public override bool ComplicatedLinqSlow(Stopwatch watch, int repeatCount, int takeCount, int nRows)
+		public bool ComplicatedLinqSlow(Stopwatch watch, int repeatCount, int takeCount, int nRows)
 		{
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2SContext(NoTracking))
+				using (var db = new L2SContext(TrackChanges))
 				{
 					var q =
 					(

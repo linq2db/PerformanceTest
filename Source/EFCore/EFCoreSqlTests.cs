@@ -8,19 +8,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Tests.EFCore
 {
-	class EFCoreSqlTests : TestsWithChangeTrackingBase
+	using Tests;
+
+	class EFCoreSqlTests : TestsBase, IWithChangeTracking,
+		ISingleColumnTests, ISingleColumnAsyncTests,
+		IGetListTests, IGetListAsyncTests
 	{
 		public override string Name => "EF Core Sql";
+		public          bool   TrackChanges { get; set; }
 
-		public EFCoreSqlTests(bool noTracking) : base(noTracking)
-		{
-		}
-
-		public override bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
-			using (var db = new EFCoreContext(NoTracking))
+			using (var db = new EFCoreContext(TrackChanges))
 				for (var i = 0; i < repeatCount; i++)
 					db.Narrow.FromSql(GetSingleColumnSql).Select(t => t.ID).AsEnumerable().First();
 
@@ -29,11 +30,11 @@ namespace Tests.EFCore
 			return true;
 		}
 
-		public override async Task<bool> GetSingleColumnFastAsync(Stopwatch watch, int repeatCount, int takeCount)
+		public async Task<bool> GetSingleColumnFastAsync(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
-			using (var db = new EFCoreContext(NoTracking))
+			using (var db = new EFCoreContext(TrackChanges))
 				for (var i = 0; i < repeatCount; i++)
 					await db.Narrow.FromSql(GetSingleColumnSql).Select(t => t.ID).FirstAsync();
 
@@ -42,12 +43,12 @@ namespace Tests.EFCore
 			return true;
 		}
 
-		public override bool GetSingleColumnSlow(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetSingleColumnSlow(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new EFCoreContext(NoTracking))
+				using (var db = new EFCoreContext(TrackChanges))
 					db.Narrow.FromSql(GetSingleColumnSql).Select(t => t.ID).AsEnumerable().First();
 
 			watch.Stop();
@@ -55,12 +56,12 @@ namespace Tests.EFCore
 			return true;
 		}
 
-		public override async Task<bool> GetSingleColumnSlowAsync(Stopwatch watch, int repeatCount, int takeCount)
+		public async Task<bool> GetSingleColumnSlowAsync(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new EFCoreContext(NoTracking))
+				using (var db = new EFCoreContext(TrackChanges))
 					await db.Narrow.FromSql(GetSingleColumnSql).Select(t => t.ID).FirstAsync();
 
 			watch.Stop();
@@ -68,11 +69,11 @@ namespace Tests.EFCore
 			return true;
 		}
 
-		public override bool GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
-			using (var db = new EFCoreContext(NoTracking))
+			using (var db = new EFCoreContext(TrackChanges))
 			{
 				for (var i = 0; i < repeatCount; i++)
 					db.Narrow
@@ -87,11 +88,11 @@ namespace Tests.EFCore
 			return true;
 		}
 
-		public override async Task<bool> GetSingleColumnParamAsync(Stopwatch watch, int repeatCount, int takeCount)
+		public async Task<bool> GetSingleColumnParamAsync(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
-			using (var db = new EFCoreContext(NoTracking))
+			using (var db = new EFCoreContext(TrackChanges))
 			{
 				for (var i = 0; i < repeatCount; i++)
 					await db.Narrow
@@ -106,14 +107,14 @@ namespace Tests.EFCore
 			return true;
 		}
 
-		public override bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var sql = GetNarrowListSql(takeCount);
 
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new EFCoreContext(NoTracking))
+				using (var db = new EFCoreContext(TrackChanges))
 					foreach (var item in db.NarrowLong.FromSql(sql)) {}
 
 			watch.Stop();
@@ -121,14 +122,14 @@ namespace Tests.EFCore
 			return true;
 		}
 
-		public override async Task<bool> GetNarrowListAsync(Stopwatch watch, int repeatCount, int takeCount)
+		public async Task<bool> GetNarrowListAsync(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var sql = GetNarrowListSql(takeCount);
 
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new EFCoreContext(NoTracking))
+				using (var db = new EFCoreContext(TrackChanges))
 					await db.NarrowLong.FromSql(sql).ForEachAsync(item => {});
 
 			watch.Stop();
@@ -136,14 +137,14 @@ namespace Tests.EFCore
 			return true;
 		}
 
-		public override bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var sql = GetWideListSql(takeCount);
 
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new EFCoreContext(NoTracking))
+				using (var db = new EFCoreContext(TrackChanges))
 					foreach (var item in db.WideLong.FromSql(sql)) {}
 
 			watch.Stop();
@@ -151,14 +152,14 @@ namespace Tests.EFCore
 			return true;
 		}
 
-		public override async Task<bool> GetWideListAsync(Stopwatch watch, int repeatCount, int takeCount)
+		public async Task<bool> GetWideListAsync(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var sql = GetWideListSql(takeCount);
 
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new EFCoreContext(NoTracking))
+				using (var db = new EFCoreContext(TrackChanges))
 					await db.WideLong.FromSql(sql).ForEachAsync(item => {});
 
 			watch.Stop();

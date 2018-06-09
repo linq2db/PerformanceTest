@@ -8,10 +8,10 @@ namespace Tests.EFCore
 
 	public class EFCoreContext : DbContext
 	{
-		public EFCoreContext(bool noTracking)
+		public EFCoreContext(bool trackChanges)
 		{
-			if (noTracking)
-				ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+			ChangeTracker.QueryTrackingBehavior =
+				trackChanges ? QueryTrackingBehavior.TrackAll : QueryTrackingBehavior.NoTracking;
 		}
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -49,7 +49,7 @@ namespace PerformanceTest.Views.TestControl
 				basePath = Path.GetDirectoryName(basePath);
 
 			var viewModel = (TestViewModel)DataContext;
-			var fileName  = Path.Combine(basePath, "Result", $"{viewModel.Platform}.{viewModel.Name}.bmp");
+			var fileName  = Path.Combine(basePath, "Result", $"{viewModel.Platform}.{viewModel.Name}.png");
 
 			App.Root.ViewModel.Status = $"Saving {fileName}...";
 

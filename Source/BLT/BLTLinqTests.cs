@@ -6,11 +6,13 @@ using System.Linq;
 
 namespace Tests.BLT
 {
-	class BLTLinqTests : TestsBase
+	using Tests;
+
+	class BLTLinqTests : TestsBase, ISingleColumnTests, IGetListTests, ILinqQueryTests
 	{
 		public override string Name => "BLT Linq";
 
-		public override bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
@@ -23,7 +25,7 @@ namespace Tests.BLT
 			return true;
 		}
 
-		public override bool GetSingleColumnSlow(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetSingleColumnSlow(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
@@ -36,7 +38,7 @@ namespace Tests.BLT
 			return true;
 		}
 
-		public override bool GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
@@ -53,7 +55,7 @@ namespace Tests.BLT
 			return true;
 		}
 
-		public override bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
@@ -66,7 +68,7 @@ namespace Tests.BLT
 			return true;
 		}
 
-		public override bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
@@ -79,7 +81,7 @@ namespace Tests.BLT
 			return true;
 		}
 
-		public override bool SimpleLinqQuery(Stopwatch watch, int repeatCount, int takeCount)
+		public bool SimpleLinqQuery(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
@@ -102,7 +104,7 @@ namespace Tests.BLT
 			return true;
 		}
 
-		public override bool ComplicatedLinqFast(Stopwatch watch, int repeatCount, int takeCount)
+		public bool ComplicatedLinqFast(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
@@ -133,7 +135,7 @@ namespace Tests.BLT
 			return true;
 		}
 
-		public override bool ComplicatedLinqSlow(Stopwatch watch, int repeatCount, int takeCount, int nRows)
+		public bool ComplicatedLinqSlow(Stopwatch watch, int repeatCount, int takeCount, int nRows)
 		{
 			watch.Start();
 

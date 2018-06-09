@@ -43,7 +43,7 @@ namespace Tests.Tools
 					else if (type == typeof(TimeSpan))
 					{
 						values[i] = new string(((TimeSpan)value).ToString().SkipWhile(c => c == '0' || c == ':').ToArray());
-						if (values[i][0] == '.')
+						if (values[i].Length > 0 && values[i][0] == '.')
 							values[i] = "0" + values[i];
 					}
 					else values[i] = value.ToString();

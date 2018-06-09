@@ -7,19 +7,21 @@ using LinqToDB;
 
 namespace Tests.L2DB
 {
-	class L2DBLinqTests : TestsWithChangeTrackingBase
+	using Tests;
+
+	class L2DBLinqTests : TestsBase, IWithChangeTracking,
+		ISingleColumnTests, ISingleColumnAsyncTests,
+		IGetListTests, IGetListAsyncTests,
+		ILinqQueryTests
 	{
 		public override string Name => "L2DB Linq";
+		public          bool   TrackChanges { get; set; }
 
-		public L2DBLinqTests(bool noTracking) : base(noTracking)
-		{
-		}
-
-		public override bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
-			using (var db = new L2DBContext(NoTracking))
+			using (var db = new L2DBContext(TrackChanges))
 				for (var i = 0; i < repeatCount; i++)
 					db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).AsEnumerable().First();
 
@@ -28,11 +30,11 @@ namespace Tests.L2DB
 			return true;
 		}
 
-		public override async Task<bool> GetSingleColumnFastAsync(Stopwatch watch, int repeatCount, int takeCount)
+		public async Task<bool> GetSingleColumnFastAsync(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
-			using (var db = new L2DBContext(NoTracking))
+			using (var db = new L2DBContext(TrackChanges))
 				for (var i = 0; i < repeatCount; i++)
 					await db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).FirstAsync();
 
@@ -41,12 +43,12 @@ namespace Tests.L2DB
 			return true;
 		}
 
-		public override bool GetSingleColumnSlow(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetSingleColumnSlow(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(NoTracking))
+				using (var db = new L2DBContext(TrackChanges))
 					db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).AsEnumerable().First();
 
 			watch.Stop();
@@ -54,12 +56,12 @@ namespace Tests.L2DB
 			return true;
 		}
 
-		public override async Task<bool> GetSingleColumnSlowAsync(Stopwatch watch, int repeatCount, int takeCount)
+		public async Task<bool> GetSingleColumnSlowAsync(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(NoTracking))
+				using (var db = new L2DBContext(TrackChanges))
 					await db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).FirstAsync();
 
 			watch.Stop();
@@ -67,11 +69,11 @@ namespace Tests.L2DB
 			return true;
 		}
 
-		public override bool GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
-			using (var db = new L2DBContext(NoTracking))
+			using (var db = new L2DBContext(TrackChanges))
 				for (var i = 0; i < repeatCount; i++)
 				{
 					var id = 1;
@@ -84,11 +86,11 @@ namespace Tests.L2DB
 			return true;
 		}
 
-		public override async Task<bool> GetSingleColumnParamAsync(Stopwatch watch, int repeatCount, int takeCount)
+		public async Task<bool> GetSingleColumnParamAsync(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
-			using (var db = new L2DBContext(NoTracking))
+			using (var db = new L2DBContext(TrackChanges))
 				for (var i = 0; i < repeatCount; i++)
 				{
 					var id = 1;
@@ -101,12 +103,12 @@ namespace Tests.L2DB
 			return true;
 		}
 
-		public override bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(NoTracking))
+				using (var db = new L2DBContext(TrackChanges))
 					foreach (var item in db.NarrowLongs.Take(takeCount)) {}
 
 			watch.Stop();
@@ -114,12 +116,12 @@ namespace Tests.L2DB
 			return true;
 		}
 
-		public override async Task<bool> GetNarrowListAsync(Stopwatch watch, int repeatCount, int takeCount)
+		public async Task<bool> GetNarrowListAsync(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(NoTracking))
+				using (var db = new L2DBContext(TrackChanges))
 					await db.NarrowLongs.Take(takeCount).ForEachAsync(item => {});
 
 			watch.Stop();
@@ -127,12 +129,12 @@ namespace Tests.L2DB
 			return true;
 		}
 
-		public override bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(NoTracking))
+				using (var db = new L2DBContext(TrackChanges))
 					foreach (var item in db.WideLongs.Take(takeCount)) {}
 
 			watch.Stop();
@@ -140,12 +142,12 @@ namespace Tests.L2DB
 			return true;
 		}
 
-		public override async Task<bool> GetWideListAsync(Stopwatch watch, int repeatCount, int takeCount)
+		public async Task<bool> GetWideListAsync(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(NoTracking))
+				using (var db = new L2DBContext(TrackChanges))
 					await db.WideLongs.Take(takeCount).ForEachAsync(item => {});
 
 			watch.Stop();
@@ -153,12 +155,12 @@ namespace Tests.L2DB
 			return true;
 		}
 
-		public override bool SimpleLinqQuery(Stopwatch watch, int repeatCount, int takeCount)
+		public bool SimpleLinqQuery(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(NoTracking))
+				using (var db = new L2DBContext(TrackChanges))
 				{
 					var q =
 					(
@@ -176,12 +178,12 @@ namespace Tests.L2DB
 			return true;
 		}
 
-		public override bool ComplicatedLinqFast(Stopwatch watch, int repeatCount, int takeCount)
+		public bool ComplicatedLinqFast(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(NoTracking))
+				using (var db = new L2DBContext(TrackChanges))
 				{
 					var q =
 					(
@@ -207,12 +209,12 @@ namespace Tests.L2DB
 			return true;
 		}
 
-		public override bool ComplicatedLinqSlow(Stopwatch watch, int repeatCount, int takeCount, int nRows)
+		public bool ComplicatedLinqSlow(Stopwatch watch, int repeatCount, int takeCount, int nRows)
 		{
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(NoTracking))
+				using (var db = new L2DBContext(TrackChanges))
 				{
 					var q =
 					(
@@ -227,7 +229,7 @@ namespace Tests.L2DB
 							w.Field1
 						}
 					)
-					.Union
+					.Concat
 					(
 						from n in db.NarrowLongs
 						join w in db.WideLongs on n.Field1 equals w.Field1
@@ -240,7 +242,9 @@ namespace Tests.L2DB
 							w.Field1
 						}
 					)
-					.OrderByDescending(n1 => n1.Field1)
+					.Distinct()
+					.OrderBy(n1 => Sql.Ext.RowNumber().Over().OrderByDesc(n1.Field1))
+					//.OrderByDescending(n1 => n1.Field1)
 					.Skip(1000)
 					.Take(takeCount);
 

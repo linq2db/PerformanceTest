@@ -33,7 +33,7 @@ namespace PerformanceTest.Views.TestControl
 				});
 		}
 
-		bool Confirm()
+		static bool Confirm()
 		{
 			var mbResult = MessageBoxResult.Cancel;
 

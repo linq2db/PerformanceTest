@@ -7,8 +7,9 @@ using PetaPoco;
 namespace Tests.PetaPoco
 {
 	using DataModel;
+	using Tests;
 
-	class PetaPocoTests : TestsBase
+	class PetaPocoTests : TestsBase, ISingleColumnTests, IGetListTests
 	{
 		public PetaPocoTests()
 		{
@@ -17,7 +18,7 @@ namespace Tests.PetaPoco
 
 		public override string Name => "PetaPoco";
 
-		public override bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
@@ -34,7 +35,7 @@ namespace Tests.PetaPoco
 			return true;
 		}
 
-		public override bool GetSingleColumnSlow(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetSingleColumnSlow(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
@@ -54,7 +55,7 @@ namespace Tests.PetaPoco
 			return true;
 		}
 
-		public override bool GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetSingleColumnParam(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
@@ -71,7 +72,7 @@ namespace Tests.PetaPoco
 			return true;
 		}
 
-		public override bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var sql = GetNarrowListSql(takeCount);
 
@@ -92,7 +93,7 @@ namespace Tests.PetaPoco
 			return true;
 		}
 
-		public override bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
+		public bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var sql = GetWideListSql(takeCount);
 

@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
-using System.Data.Entity.Infrastructure;
 
 namespace Tests.EF6
 {
@@ -11,13 +10,13 @@ namespace Tests.EF6
 
 	public class EF6Context : DbContext
 	{
-		public EF6Context(bool noTracking) : base(GetConnectionString())
+		public EF6Context(bool TrackChanges) : base(GetConnectionString())
 		{
-			_noTracking = noTracking;
-			Configuration.AutoDetectChangesEnabled = _noTracking;
+			_trackChanges = TrackChanges;
+			Configuration.AutoDetectChangesEnabled = _trackChanges;
 		}
 
-		readonly bool _noTracking;
+		readonly bool _trackChanges;
 
 		static string _connectionString;
 
@@ -34,7 +33,7 @@ namespace Tests.EF6
 
 		protected override void OnModelCreating(DbModelBuilder modelBuilder)
 		{
-			Configuration.AutoDetectChangesEnabled = _noTracking;
+			Configuration.AutoDetectChangesEnabled = _trackChanges;
 		}
 	}
 

@@ -13,10 +13,10 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">
-		<Compile Remove="**\L2S*.cs" />
-		<Compile Remove="**\EF6*.cs" />
-		<Compile Remove="**\LoWcf*.cs" />
-		<Compile Remove="**\BLT*.cs" />
+		<Compile Remove="L2S\*" />
+		<Compile Remove="EF6\*" />
+		<Compile Remove="BLT\*" />
+		<Compile Remove="L2DB\LoWcf*.cs" />
 	</ItemGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net461'">
@@ -24,5 +24,6 @@
 		<PackageReference Include="BLToolkit" Version="4.3.9" />
 		<Reference Include="System.Data.Linq" />
 		<Reference Include="System.ServiceModel" />
+		<Compile Remove="Core\*" />
 	</ItemGroup>
 </Project>
