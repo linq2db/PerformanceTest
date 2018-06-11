@@ -14,7 +14,7 @@ namespace Tests.EFCore
 		IGetListTests, IGetListAsyncTests,
 		ILinqQueryTests
 	{
-		public override string Name => "EF Core Linq";
+		public override string Name         { get; set; } = "EF Core Linq";
 		public          bool   TrackChanges { get; set; }
 
 		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)

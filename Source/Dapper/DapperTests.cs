@@ -17,7 +17,7 @@ namespace Tests.Dapper
 			ConnectionString = ConnectionString.Replace("LinqToDB", "Dapper");
 		}
 
-		public override string Name => "Dapper";
+		public override string Name { get; set; } = "Dapper";
 
 
 		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)

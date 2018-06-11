@@ -14,7 +14,7 @@ namespace Tests.L2DB
 		IGetListTests, IGetListAsyncTests,
 		ILinqQueryTests
 	{
-		public override string Name => "L2DB Linq";
+		public override string Name         { get; set; } = "L2DB Linq";
 		public          bool   TrackChanges { get; set; }
 
 		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
@@ -229,7 +229,8 @@ namespace Tests.L2DB
 							w.Field1
 						}
 					)
-					.Concat
+					//.Concat
+					.Union
 					(
 						from n in db.NarrowLongs
 						join w in db.WideLongs on n.Field1 equals w.Field1
@@ -242,9 +243,9 @@ namespace Tests.L2DB
 							w.Field1
 						}
 					)
-					.Distinct()
-					.OrderBy(n1 => Sql.Ext.RowNumber().Over().OrderByDesc(n1.Field1))
-					//.OrderByDescending(n1 => n1.Field1)
+					//.Distinct()
+					//.OrderBy(n1 => Sql.Ext.RowNumber().Over().OrderByDesc(n1.Field1))
+					.OrderByDescending(n1 => n1.Field1)
 					.Skip(1000)
 					.Take(takeCount);
 

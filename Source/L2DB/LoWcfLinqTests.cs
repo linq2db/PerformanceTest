@@ -14,7 +14,7 @@ namespace Tests.L2DB
 		IGetListTests, IGetListAsyncTests,
 		ILinqQueryTests
 	{
-		public override string Name => "LoWcf Linq";
+		public override string Name         { get; set; } = "LoWcf Linq";
 		public          bool   TrackChanges { get; set; }
 
 		public override void SetUp()

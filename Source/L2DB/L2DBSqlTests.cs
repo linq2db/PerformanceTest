@@ -13,7 +13,7 @@ namespace Tests.L2DB
 		ISingleColumnTests, ISingleColumnAsyncTests,
 		IGetListTests, IGetListAsyncTests
 	{
-		public override string Name => "L2DB Sql";
+		public override string Name         { get; set; } = "L2DB Sql";
 		public          bool   TrackChanges { get; set; }
 
 		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)

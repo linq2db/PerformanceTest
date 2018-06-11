@@ -13,7 +13,7 @@ namespace Tests.EF6
 		IGetListTests, IGetListAsyncTests,
 		ILinqQueryTests
 	{
-		public override string Name => "EF6 Linq";
+		public override string Name         { get; set; } = "EF6 Linq";
 		public          bool   TrackChanges { get; set; }
 
 		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)

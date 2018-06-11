@@ -12,14 +12,19 @@ namespace Tests.Tests
 SELECT TOP ({takeCount})
 	ID,
 	Field1,
+	ByteValue,
 	ShortValue,
 	IntValue,
 	LongValue,
 	StringValue,
-	DateTimeValue
+	DateTimeValue,
+	TimeValue,
+	DecimalValue,
+	DoubleValue,
+	FloatValue
 FROM WideLong";
 
-		public abstract string Name { get; }
+		public abstract string Name { get; set; }
 
 		public virtual void SetUp()
 		{

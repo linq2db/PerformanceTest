@@ -21,7 +21,7 @@ namespace Tests
 
 	public static class TestRunner
 	{
-		const string DatabaseVersion = "1e";
+		const string DatabaseVersion = "1";
 
 		public static void Run(string platform)
 		{
@@ -111,96 +111,98 @@ namespace Tests
 
 			RunTests(platform, "Narrow List", testProviders.OfType<IGetListTests>(), new[]
 			{
-				CreateTest<IGetListTests>(t => t.GetNarrowList,        10000,   1),
-				CreateTest<IGetListTests>(t => t.GetNarrowList,        10000,  10),
-				CreateTest<IGetListTests>(t => t.GetNarrowList,        10000, 100),
-				CreateTest<IGetListTests>(t => t.GetNarrowList,        1000, 1000),
-				CreateTest<IGetListTests>(t => t.GetNarrowList,        100, 10000),
-				CreateTest<IGetListTests>(t => t.GetNarrowList,        10, 100000),
-				CreateTest<IGetListTests>(t => t.GetNarrowList,        1, 1000000),
+				CreateTest<IGetListTests>(t => t.GetNarrowList,           10000,   1),
+				CreateTest<IGetListTests>(t => t.GetNarrowList,           10000,  10),
+				CreateTest<IGetListTests>(t => t.GetNarrowList,           10000, 100),
+				CreateTest<IGetListTests>(t => t.GetNarrowList,           1000, 1000),
+				CreateTest<IGetListTests>(t => t.GetNarrowList,           100, 10000),
+				CreateTest<IGetListTests>(t => t.GetNarrowList,           10, 100000),
+				CreateTest<IGetListTests>(t => t.GetNarrowList,           1, 1000000),
 			});
 
 			RunTests(platform, "Narrow List with Change Tracking", testProvidersWithChangeTracking.OfType<IGetListTests>(), new[]
 			{
-				CreateTest<IGetListTests>(t => t.GetNarrowList,        10000,  1),
-				CreateTest<IGetListTests>(t => t.GetNarrowList,        10000, 10),
-				CreateTest<IGetListTests>(t => t.GetNarrowList,        1000, 100),
-				CreateTest<IGetListTests>(t => t.GetNarrowList,        100, 1000),
-				CreateTest<IGetListTests>(t => t.GetNarrowList,        10, 10000),
-				CreateTest<IGetListTests>(t => t.GetNarrowList,        1, 100000),
-//				CreateTest<IGetListTests>(t => t.GetNarrowList,        1, 1000000),
+				CreateTest<IGetListTests>(t => t.GetNarrowList,           10000,  1),
+				CreateTest<IGetListTests>(t => t.GetNarrowList,           10000, 10),
+				CreateTest<IGetListTests>(t => t.GetNarrowList,           1000, 100),
+				CreateTest<IGetListTests>(t => t.GetNarrowList,           100, 1000),
+				CreateTest<IGetListTests>(t => t.GetNarrowList,           10, 10000),
+				CreateTest<IGetListTests>(t => t.GetNarrowList,           1, 100000),
+//				CreateTest<IGetListTests>(t => t.GetNarrowList,           1, 1000000),
 			});
 
 			RunTests(platform, "Narrow List Async", testProviders.OfType<IGetListAsyncTests>(), new[]
 			{
-				CreateTest<IGetListAsyncTests>(t => t.GetNarrowListAsync,   10000,   1),
-				CreateTest<IGetListAsyncTests>(t => t.GetNarrowListAsync,   10000,  10),
-				CreateTest<IGetListAsyncTests>(t => t.GetNarrowListAsync,   10000, 100),
-				CreateTest<IGetListAsyncTests>(t => t.GetNarrowListAsync,   1000, 1000),
-				CreateTest<IGetListAsyncTests>(t => t.GetNarrowListAsync,   100, 10000),
-				CreateTest<IGetListAsyncTests>(t => t.GetNarrowListAsync,   10, 100000),
-				CreateTest<IGetListAsyncTests>(t => t.GetNarrowListAsync,   1, 1000000),
+				CreateTest<IGetListAsyncTests>(t => t.GetNarrowListAsync, 10000,   1),
+				CreateTest<IGetListAsyncTests>(t => t.GetNarrowListAsync, 10000,  10),
+				CreateTest<IGetListAsyncTests>(t => t.GetNarrowListAsync, 10000, 100),
+				CreateTest<IGetListAsyncTests>(t => t.GetNarrowListAsync, 1000, 1000),
+				CreateTest<IGetListAsyncTests>(t => t.GetNarrowListAsync, 100, 10000),
+				CreateTest<IGetListAsyncTests>(t => t.GetNarrowListAsync, 10, 100000),
+				CreateTest<IGetListAsyncTests>(t => t.GetNarrowListAsync, 1, 1000000),
 			});
 
 			RunTests(platform, "Narrow List Async with Change Tracking", testProvidersWithChangeTracking.OfType<IGetListAsyncTests>(), new[]
 			{
-				CreateTest<IGetListAsyncTests>(t => t.GetNarrowListAsync,   10000,  1),
-				CreateTest<IGetListAsyncTests>(t => t.GetNarrowListAsync,   10000, 10),
-				CreateTest<IGetListAsyncTests>(t => t.GetNarrowListAsync,   1000, 100),
-				CreateTest<IGetListAsyncTests>(t => t.GetNarrowListAsync,   100, 1000),
-				CreateTest<IGetListAsyncTests>(t => t.GetNarrowListAsync,   10, 10000),
-				CreateTest<IGetListAsyncTests>(t => t.GetNarrowListAsync,   1, 100000),
-//				CreateTest<IGetListAsyncTests>(t => t.GetNarrowListAsync,   1, 1000000),
+				CreateTest<IGetListAsyncTests>(t => t.GetNarrowListAsync, 10000,  1),
+				CreateTest<IGetListAsyncTests>(t => t.GetNarrowListAsync, 10000, 10),
+				CreateTest<IGetListAsyncTests>(t => t.GetNarrowListAsync, 1000, 100),
+				CreateTest<IGetListAsyncTests>(t => t.GetNarrowListAsync, 100, 1000),
+				CreateTest<IGetListAsyncTests>(t => t.GetNarrowListAsync, 10, 10000),
+				CreateTest<IGetListAsyncTests>(t => t.GetNarrowListAsync, 1, 100000),
+//				CreateTest<IGetListAsyncTests>(t => t.GetNarrowListAsync, 1, 1000000),
 			});
 
 			RunTests(platform, "Wide List", testProviders.OfType<IGetListTests>(), new[]
 			{
-				CreateTest<IGetListTests>(t => t.GetWideList,          1000,    1),
-				CreateTest<IGetListTests>(t => t.GetWideList,          1000,   10),
-				CreateTest<IGetListTests>(t => t.GetWideList,          1000,  100),
-				CreateTest<IGetListTests>(t => t.GetWideList,          1000, 1000),
-				CreateTest<IGetListTests>(t => t.GetWideList,          100, 10000),
-				CreateTest<IGetListTests>(t => t.GetWideList,          10, 100000),
-				CreateTest<IGetListTests>(t => t.GetWideList,          1, 1000000),
+				CreateTest<IGetListTests>(t => t.GetWideList,             10000,   1),
+				CreateTest<IGetListTests>(t => t.GetWideList,             10000,  10),
+				CreateTest<IGetListTests>(t => t.GetWideList,             10000, 100),
+				CreateTest<IGetListTests>(t => t.GetWideList,             1000, 1000),
+				CreateTest<IGetListTests>(t => t.GetWideList,             100, 10000),
+				CreateTest<IGetListTests>(t => t.GetWideList,             10, 100000),
+				CreateTest<IGetListTests>(t => t.GetWideList,             1, 1000000),
 			});
 
 			RunTests(platform, "Wide List with Change Tracking", testProvidersWithChangeTracking.OfType<IGetListTests>(), new[]
 			{
-				CreateTest<IGetListTests>(t => t.GetWideList,          1000,   1),
-				CreateTest<IGetListTests>(t => t.GetWideList,          1000,  10),
-				CreateTest<IGetListTests>(t => t.GetWideList,          1000, 100),
-				CreateTest<IGetListTests>(t => t.GetWideList,          100, 1000),
-				CreateTest<IGetListTests>(t => t.GetWideList,          10, 10000),
-				CreateTest<IGetListTests>(t => t.GetWideList,          1, 100000),
-//				CreateTest<IGetListTests>(t => t.GetWideList,          1, 1000000),
+				CreateTest<IGetListTests>(t => t.GetWideList,             1000,   1),
+				CreateTest<IGetListTests>(t => t.GetWideList,             1000,  10),
+				CreateTest<IGetListTests>(t => t.GetWideList,             1000, 100),
+				CreateTest<IGetListTests>(t => t.GetWideList,             100, 1000),
+				CreateTest<IGetListTests>(t => t.GetWideList,             10, 10000),
+				CreateTest<IGetListTests>(t => t.GetWideList,             1, 100000),
+//				CreateTest<IGetListTests>(t => t.GetWideList,             1, 1000000),
 			});
 
 			RunTests(platform, "Wide List Async", testProviders.OfType<IGetListAsyncTests>(), new[]
 			{
-				CreateTest<IGetListAsyncTests>(t => t.GetWideListAsync,     1000,    1),
-				CreateTest<IGetListAsyncTests>(t => t.GetWideListAsync,     1000,   10),
-				CreateTest<IGetListAsyncTests>(t => t.GetWideListAsync,     1000,  100),
-				CreateTest<IGetListAsyncTests>(t => t.GetWideListAsync,     1000, 1000),
-				CreateTest<IGetListAsyncTests>(t => t.GetWideListAsync,     100, 10000),
-				CreateTest<IGetListAsyncTests>(t => t.GetWideListAsync,     10, 100000),
-				CreateTest<IGetListAsyncTests>(t => t.GetWideListAsync,     1, 1000000),
+				CreateTest<IGetListAsyncTests>(t => t.GetWideListAsync,   10000,   1),
+				CreateTest<IGetListAsyncTests>(t => t.GetWideListAsync,   10000,  10),
+				CreateTest<IGetListAsyncTests>(t => t.GetWideListAsync,   10000, 100),
+				CreateTest<IGetListAsyncTests>(t => t.GetWideListAsync,   1000, 1000),
+				CreateTest<IGetListAsyncTests>(t => t.GetWideListAsync,   100, 10000),
+				CreateTest<IGetListAsyncTests>(t => t.GetWideListAsync,   10, 100000),
+				CreateTest<IGetListAsyncTests>(t => t.GetWideListAsync,   1, 1000000),
 			});
 
 			RunTests(platform, "Wide List Async with Change Tracking", testProvidersWithChangeTracking.OfType<IGetListAsyncTests>(), new[]
 			{
-				CreateTest<IGetListAsyncTests>(t => t.GetWideListAsync,     1000,   1),
-				CreateTest<IGetListAsyncTests>(t => t.GetWideListAsync,     1000,  10),
-				CreateTest<IGetListAsyncTests>(t => t.GetWideListAsync,     1000, 100),
-				CreateTest<IGetListAsyncTests>(t => t.GetWideListAsync,     100, 1000),
-				CreateTest<IGetListAsyncTests>(t => t.GetWideListAsync,     10, 10000),
-				CreateTest<IGetListAsyncTests>(t => t.GetWideListAsync,     1, 100000),
-//				CreateTest<IGetListAsyncTests>(t => t.GetWideListAsync,     1, 1000000),
+				CreateTest<IGetListAsyncTests>(t => t.GetWideListAsync,   1000,   1),
+				CreateTest<IGetListAsyncTests>(t => t.GetWideListAsync,   1000,  10),
+				CreateTest<IGetListAsyncTests>(t => t.GetWideListAsync,   1000, 100),
+				CreateTest<IGetListAsyncTests>(t => t.GetWideListAsync,   100, 1000),
+				CreateTest<IGetListAsyncTests>(t => t.GetWideListAsync,   10, 10000),
+				CreateTest<IGetListAsyncTests>(t => t.GetWideListAsync,   1, 100000),
+//				CreateTest<IGetListAsyncTests>(t => t.GetWideListAsync,   1, 1000000),
 			});
 
 			RunTests(platform, "Linq Query", testProviders.OfType<ILinqQueryTests>(), new[]
 			{
 				CreateTest<ILinqQueryTests>(t => t.SimpleLinqQuery,     1000,  1),
 				CreateTest<ILinqQueryTests>(t => t.ComplicatedLinqFast, 1000,  1),
+				CreateTest<ILinqQueryTests>(t => t.ComplicatedLinqSlow,  100, 10, 100),
+				CreateTest<ILinqQueryTests>(t => t.ComplicatedLinqSlow,  100, 10, 1000),
 				CreateTest<ILinqQueryTests>(t => t.ComplicatedLinqSlow,   20, 10, 250000),
 				CreateTest<ILinqQueryTests>(t => t.ComplicatedLinqSlow,   10, 10, 500000),
 			});
@@ -248,6 +250,20 @@ namespace Tests
 				CreateTest<ILinqQueryTests>(t => t.ComplicatedLinqSlow,    10, 10, 500000),
 			});
 #endif
+
+			RunTests("All", "LinqToDB Compare",
+			new[]
+			{
+				new L2DB.L2DBAllTests(platform, L2DB.TestType.AdoNet),
+				new L2DB.L2DBAllTests(platform, L2DB.TestType.Linq),
+				new L2DB.L2DBAllTests(platform, L2DB.TestType.Async),
+				new L2DB.L2DBAllTests(platform, L2DB.TestType.ChangeTracking),
+				new L2DB.L2DBAllTests(platform, L2DB.TestType.ChangeTrackingAsync),
+			},
+			new[]
+			{
+				CreateTest<L2DB.L2DBAllTests>(t => t.GetList, 1000, 1000),
+			});
 		}
 
 		static readonly Random _random = new Random();
@@ -511,11 +527,16 @@ namespace Tests
 				{
 					ID            = i,
 					Field1        = -i,
+					ByteValue     = i % 2 == 0 ? null : (byte?)    (i % Byte.MaxValue  / 2),
 					ShortValue    = i % 2 == 0 ? null : (short?)   (i % Int16.MaxValue / 2),
 					IntValue      = i % 2 == 1 ? null : (int?)     (i % Int32.MaxValue - 1),
 					LongValue     = i % 2 == 0 ? null : (long?)    (i * 2),
-					DateTimeValue = i % 2 == 1 ? null : (DateTime?)new DateTime(i),
 					StringValue   = i % 2 == 0 ? null : new string(Enumerable.Range(0, 95).Select(n => (char)(n % 30 + (int)' ')).ToArray()),
+					DateTimeValue = i % 2 == 1 ? null : (DateTime?)new DateTime(i),
+					TimeValue     = i % 2 == 1 ? null : (TimeSpan?)new TimeSpan(i),
+					DecimalValue  = i % 2 == 0 ? null : (decimal?)i,
+					DoubleValue   = i % 2 == 1 ? null : (double?)i,
+					FloatValue    = i % 2 == 0 ? null : (float?)i,
 				}));
 				db.CreateTable<TestRun>();
 				db.CreateTable<TestMethod>();

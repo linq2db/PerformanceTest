@@ -12,7 +12,7 @@ namespace Tests.EF6
 		ISingleColumnTests, ISingleColumnAsyncTests,
 		IGetListTests, IGetListAsyncTests
 	{
-		public override string Name => "EF6 Sql";
+		public override string Name         { get; set; } = "EF6 Sql";
 		public          bool   TrackChanges { get; set; }
 
 		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)

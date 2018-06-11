@@ -7,7 +7,7 @@ namespace Tests.L2S
 
 	class L2SLinqTests : TestsBase, IWithChangeTracking, ISingleColumnTests, IGetListTests, ILinqQueryTests
 	{
-		public override string Name => "L2S Linq";
+		public override string Name         { get; set; } = "L2S Linq";
 		public          bool   TrackChanges { get; set; }
 
 		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)

@@ -16,7 +16,7 @@ namespace Tests.AdoNet
 			ConnectionString = ConnectionString.Replace("LinqToDB", "AdoNet");
 		}
 
-		public override string Name => "AdoNet";
+		public override string Name { get; set; } = "AdoNet";
 
 		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
 		{
@@ -232,13 +232,18 @@ namespace Tests.AdoNet
 						while (rd.Read())
 							new WideLong
 							{
-								ID            = rd.GetInt32(0),
-								Field1        = rd.GetInt32(1),
-								ShortValue    = rd.IsDBNull(2) ? null : (short?)   rd.GetInt16   (2),
-								IntValue      = rd.IsDBNull(3) ? null : (int?)     rd.GetInt32   (3),
-								LongValue     = rd.IsDBNull(4) ? null : (long?)    rd.GetInt64   (4),
-								StringValue   = rd.IsDBNull(5) ? null :            rd.GetString  (5),
-								DateTimeValue =	rd.IsDBNull(6) ? null : (DateTime?)rd.GetDateTime(6)
+								ID            = rd.GetInt32( 0),
+								Field1        = rd.GetInt32( 1),
+								ByteValue     = rd.IsDBNull( 2) ? null : (byte?)    rd.GetByte    ( 2),
+								ShortValue    = rd.IsDBNull( 3) ? null : (short?)   rd.GetInt16   ( 3),
+								IntValue      = rd.IsDBNull( 4) ? null : (int?)     rd.GetInt32   ( 4),
+								LongValue     = rd.IsDBNull( 5) ? null : (long?)    rd.GetInt64   ( 5),
+								StringValue   = rd.IsDBNull( 6) ? null :            rd.GetString  ( 6),
+								DateTimeValue = rd.IsDBNull( 7) ? null : (DateTime?)rd.GetDateTime( 7),
+								TimeValue     = rd.IsDBNull( 8) ? null : (TimeSpan?)rd.GetTimeSpan( 8),
+								DecimalValue  = rd.IsDBNull( 9) ? null : (decimal?) rd.GetDecimal ( 9),
+								DoubleValue   = rd.IsDBNull(10) ? null : (double?)  rd.GetDouble  (10),
+								FloatValue    = rd.IsDBNull(11) ? null : (float?)   rd.GetFloat   (11)
 							};
 			}
 
@@ -267,13 +272,18 @@ namespace Tests.AdoNet
 						while (await rd.ReadAsync())
 							new WideLong
 							{
-								ID            = rd.GetInt32(0),
-								Field1        = rd.GetInt32(1),
-								ShortValue    = rd.IsDBNull(2) ? null : (short?)   rd.GetInt16   (2),
-								IntValue      = rd.IsDBNull(3) ? null : (int?)     rd.GetInt32   (3),
-								LongValue     = rd.IsDBNull(4) ? null : (long?)    rd.GetInt64   (4),
-								StringValue   = rd.IsDBNull(5) ? null :            rd.GetString  (5),
-								DateTimeValue =	rd.IsDBNull(6) ? null : (DateTime?)rd.GetDateTime(6)
+								ID            = rd.GetInt32( 0),
+								Field1        = rd.GetInt32( 1),
+								ByteValue     = rd.IsDBNull( 2) ? null : (byte?)    rd.GetByte    ( 2),
+								ShortValue    = rd.IsDBNull( 3) ? null : (short?)   rd.GetInt16   ( 3),
+								IntValue      = rd.IsDBNull( 4) ? null : (int?)     rd.GetInt32   ( 4),
+								LongValue     = rd.IsDBNull( 5) ? null : (long?)    rd.GetInt64   ( 5),
+								StringValue   = rd.IsDBNull( 6) ? null :            rd.GetString  ( 6),
+								DateTimeValue = rd.IsDBNull( 7) ? null : (DateTime?)rd.GetDateTime( 7),
+								TimeValue     = rd.IsDBNull( 8) ? null : (TimeSpan?)rd.GetTimeSpan( 8),
+								DecimalValue  = rd.IsDBNull( 9) ? null : (decimal?) rd.GetDecimal ( 9),
+								DoubleValue   = rd.IsDBNull(10) ? null : (double?)  rd.GetDouble  (10),
+								FloatValue    = rd.IsDBNull(11) ? null : (float?)   rd.GetFloat   (11)
 							};
 			}
 
@@ -391,8 +401,7 @@ FROM
 	) [t1]
 ORDER BY
 	[t1].[Field1] DESC
-OFFSET 1000 ROWS FETCH NEXT {takeCount} ROWS ONLY
-";
+OFFSET 1000 ROWS FETCH NEXT {takeCount} ROWS ONLY";
 
 			watch.Start();
 

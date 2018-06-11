@@ -72,20 +72,20 @@ namespace Tests.EF6
 	public partial class WideLong
 	{
 		[DatabaseGenerated(DatabaseGeneratedOption.None)]
-		public int ID     { get; set; }
+		public int ID                  { get; set; }
 
-		public int Field1 { get; set; }
-
-		public short? ShortValue { get; set; }
-
-		public int? IntValue { get; set; }
-
-		public long? LongValue { get; set; }
-
+		public int       Field1        { get; set; }
+		public byte?     ByteValue     { get; set; }
+		public short?    ShortValue    { get; set; }
+		public int?      IntValue      { get; set; }
+		public long?     LongValue     { get; set; }
 		[StringLength(100)]
-		public string StringValue { get; set; }
-
+		public string    StringValue   { get; set; }
 		[Column(TypeName = "datetime2")]
 		public DateTime? DateTimeValue { get; set; }
+		public TimeSpan? TimeValue     { get; set; }
+		public decimal?  DecimalValue  { get; set; }
+		public double?   DoubleValue   { get; set; }
+		public float?    FloatValue    { get; set; }
 	}
 }

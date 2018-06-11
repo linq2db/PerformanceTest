@@ -16,7 +16,7 @@ namespace Tests.PetaPoco
 			ConnectionString = ConnectionString.Replace("LinqToDB", "PetaPoco");
 		}
 
-		public override string Name => "PetaPoco";
+		public override string Name { get; set; } = "PetaPoco";
 
 		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
 		{

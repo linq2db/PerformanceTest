@@ -5,7 +5,7 @@ namespace Tests.Tests
 {
 	interface ITests
 	{
-		string Name { get; }
+		string Name { get; set; }
 
 		void   SetUp   ();
 		void   TearDown();

@@ -48,10 +48,15 @@ namespace Tests.L2S
 	{
 		[Column(DbType="Int NOT NULL", IsPrimaryKey=true)] public int       ID            { get; set; }
 		[Column(DbType="Int NOT NULL")]                    public int       Field1        { get; set; }
+		[Column(DbType="TinyInt",       CanBeNull=true)]   public byte?     ByteValue     { get; set; }
 		[Column(DbType="SmallInt",      CanBeNull=true)]   public short?    ShortValue    { get; set; }
 		[Column(DbType="Int",           CanBeNull=true)]   public int?      IntValue      { get; set; }
 		[Column(DbType="BigInt",        CanBeNull=true)]   public long?     LongValue     { get; set; }
 		[Column(DbType="NVarChar(100)", CanBeNull=true)]   public string    StringValue   { get; set; }
 		[Column(DbType="DateTime2",     CanBeNull=true)]   public DateTime? DateTimeValue { get; set; }
+		[Column(DbType="Time",          CanBeNull=true)]   public TimeSpan? TimeValue     { get; set; }
+		[Column(DbType="Decimal",       CanBeNull=true)]   public decimal?  DecimalValue  { get; set; }
+		[Column(DbType="Float",         CanBeNull=true)]   public double?   DoubleValue   { get; set; }
+		[Column(DbType="Real",          CanBeNull=true)]   public float?    FloatValue    { get; set; }
 	}
 }

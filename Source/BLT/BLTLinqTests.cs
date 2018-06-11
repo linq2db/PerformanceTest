@@ -10,7 +10,7 @@ namespace Tests.BLT
 
 	class BLTLinqTests : TestsBase, ISingleColumnTests, IGetListTests, ILinqQueryTests
 	{
-		public override string Name => "BLT Linq";
+		public override string Name { get; set; } = "BLT Linq";
 
 		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
 		{

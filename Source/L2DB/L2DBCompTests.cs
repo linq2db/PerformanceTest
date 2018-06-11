@@ -10,7 +10,7 @@ namespace Tests.L2DB
 
 	class L2DBCompTests : TestsBase, IWithChangeTracking, ISingleColumnTests, IGetListTests, ILinqQueryTests
 	{
-		public override string Name => "L2DB Compiled";
+		public override string Name         { get; set; } = "L2DB Compiled";
 		public          bool   TrackChanges { get; set; }
 
 		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)

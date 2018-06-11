@@ -9,7 +9,7 @@ namespace Tests.BLT
 
 	class BLTSqlTests : TestsBase, ISingleColumnTests, IGetListTests
 	{
-		public override string Name => "BLT Sql";
+		public override string Name { get; set; } = "BLT Sql";
 
 		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
 		{
