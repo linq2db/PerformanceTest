@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Linq;
 
 using PetaPoco;
 
@@ -27,7 +28,7 @@ namespace Tests.PetaPoco
 				con.Open();
 				using (var db = new Database(con))
 					for (var i = 0; i < repeatCount; i++)
-						db.Query<int>(GetSingleColumnSql);
+						db.Query<int>(GetSingleColumnSql).First();
 			}
 
 			watch.Stop();
@@ -46,7 +47,7 @@ namespace Tests.PetaPoco
 					con.Open();
 
 					using (var db = new Database(con))
-						db.Query<int>(GetSingleColumnSql);
+						db.Query<int>(GetSingleColumnSql).First();
 				}
 			}
 
@@ -64,7 +65,7 @@ namespace Tests.PetaPoco
 				con.Open();
 				using (var db = new Database(con))
 					for (var i = 0; i < repeatCount; i++)
-						db.Query<int>(GetParamSql, new {id = 1, p = 2});
+						db.Query<int>(GetParamSql, new {id = 1, p = 2}).First();
 			}
 
 			watch.Stop();
