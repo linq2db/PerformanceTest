@@ -170,7 +170,7 @@ namespace TestRunner.Tools
 
 				foreach (var item in itemValues.Values)
 					if (item.list.Count == max)
-						item.list.Add(null);
+						item.list.Add("");
 			}
 
 			stringBuilder
@@ -182,7 +182,7 @@ namespace TestRunner.Tools
 			var k = 0;
 			foreach (var values in itemValues)
 			{
-				lens[k] = Math.Max(lens[k], values.Value.list.Max(s => s.Length));
+				lens[k] = Math.Max(lens[k], values.Value.list.Max(s => s?.Length ?? 0));
 				k++;
 			}
 

@@ -4,8 +4,8 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ output extension=".generated.cs" #>
-<#@ include file="..\..\LinqToDB.Templates\T4Model.ttinclude"               #>
-<#@ include file="..\..\LinqToDB.Templates\NotifyPropertyChanged.ttinclude" #>
+<#@ include file="$(ProjectDir)LinqToDB.Templates\T4Model.ttinclude"               #>
+<#@ include file="$(ProjectDir)LinqToDB.Templates\NotifyPropertyChanged.ttinclude" #>
 <#
 	Model.Namespace.Name = "PerformanceTest.Views.TestControl";
 
@@ -18,8 +18,8 @@
 		new Class("MethodViewModel", new[]
 		{
 			new NotifyingProperty("string", "Name",   "DisplayName"),
-			new NotifyingProperty("int",    "Repeat", "DisplayName"),
-			new NotifyingProperty("int?",   "Take",   "DisplayName"),
+			new NotifyingProperty("long",   "Repeat", "DisplayName"),
+			new NotifyingProperty("long?",  "Take",   "DisplayName"),
 			new NotifyingProperty("string", "DisplayName").InitGetter("Name + \" / \" + Repeat + (Take.HasValue ? \" / \" + Take : \"\")"),
 
 			new NotifyingProperty("ObservableCollection<TimeViewModel>", "Times"),

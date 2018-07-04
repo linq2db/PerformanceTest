@@ -49,10 +49,10 @@ namespace PerformanceTest.Views.TestControl
 
 		#endregion
 
-		#region Repeat : int
+		#region Repeat : long
 
-		private int _repeat;
-		public  int  Repeat
+		private long _repeat;
+		public  long  Repeat
 		{
 			get { return _repeat; }
 			set
@@ -70,7 +70,7 @@ namespace PerformanceTest.Views.TestControl
 
 		#region INotifyPropertyChanged support
 
-		partial void BeforeRepeatChanged(int newValue);
+		partial void BeforeRepeatChanged(long newValue);
 		partial void AfterRepeatChanged ();
 
 		public const string NameOfRepeat = "Repeat";
@@ -86,10 +86,10 @@ namespace PerformanceTest.Views.TestControl
 
 		#endregion
 
-		#region Take : int?
+		#region Take : long?
 
-		private int? _take;
-		public  int?  Take
+		private long? _take;
+		public  long?  Take
 		{
 			get { return _take; }
 			set
@@ -107,7 +107,7 @@ namespace PerformanceTest.Views.TestControl
 
 		#region INotifyPropertyChanged support
 
-		partial void BeforeTakeChanged(int? newValue);
+		partial void BeforeTakeChanged(long? newValue);
 		partial void AfterTakeChanged ();
 
 		public const string NameOfTake = "Take";

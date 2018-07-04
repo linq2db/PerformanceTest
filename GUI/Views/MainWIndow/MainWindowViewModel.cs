@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
 using LinqToDB;
 
+using TestRunner.DataModel;
+
 namespace PerformanceTest.Views.MainWindow
 {
 	using Components.Controls;
-	using DataModel;
 	using Properties;
 	using TestControl;
 
@@ -55,7 +55,7 @@ namespace PerformanceTest.Views.MainWindow
 		{
 			try
 			{
-				using (var db = new PerformanceTestDB())
+				using (var db = new ResultDB())
 				{
 					Application.Current.Dispatcher.Invoke(() => Status = "Loading...");
 
@@ -267,7 +267,7 @@ namespace PerformanceTest.Views.MainWindow
 
 			try
 			{
-				using (var db = new PerformanceTestDB())
+				using (var db = new ResultDB())
 				{
 					Application.Current.Dispatcher.Invoke(() => Status = "Loading...");
 

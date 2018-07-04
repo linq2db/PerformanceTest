@@ -4,8 +4,8 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ output extension=".generated.cs" #>
-<#@ include file="..\..\LinqToDB.Templates\T4Model.ttinclude"               #>
-<#@ include file="..\..\LinqToDB.Templates\NotifyPropertyChanged.ttinclude" #>
+<#@ include file="$(ProjectDir)LinqToDB.Templates\T4Model.ttinclude"               #>
+<#@ include file="$(ProjectDir)LinqToDB.Templates\NotifyPropertyChanged.ttinclude" #>
 <#
 	Model.Namespace.Name = "PerformanceTest.Views.TestControl";
 

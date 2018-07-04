@@ -6,10 +6,11 @@ using System.Windows;
 
 using LinqToDB;
 
+using TestRunner.DataModel;
+
 namespace PerformanceTest.Views.TestControl
 {
 	using Components.Controls;
-	using DataModel;
 	using MainWindow;
 
 	public partial class TestViewModel
@@ -58,7 +59,7 @@ namespace PerformanceTest.Views.TestControl
 
 			try
 			{
-				using (var db = new PerformanceTestDB())
+				using (var db = new ResultDB())
 				{
 					var runs =
 						from r in db.TestRuns
@@ -117,7 +118,7 @@ namespace PerformanceTest.Views.TestControl
 
 			try
 			{
-				using (var db = new PerformanceTestDB())
+				using (var db = new ResultDB())
 				// Need CreateTempTableAsync
 				using (var tmp = db.CreateTempTable("#tmp", dataToDelete))
 				{

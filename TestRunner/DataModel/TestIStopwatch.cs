@@ -7,10 +7,11 @@ namespace TestRunner.DataModel
 	[Table]
 	public class TestStopwatch
 	{
-		[PrimaryKey, Identity] public int      ID;
-		[Column]               public int      TestMethodID;
-		[Column]               public TimeSpan Time;
-		[Column]               public long     Ticks;
-		[Column(Length=50)]    public string   Provider;
+		[PrimaryKey, Identity] public int      ID           { get; set; }
+		[Column]               public int      TestMethodID { get; set; }
+		[Column]               public TimeSpan Time         { get; set; }
+		[Column]               public long     Ticks        { get; set; }
+		[Column(Length=50)]    public string   Provider     { get; set; }
+		[Column]               public DateTime CreatedOn    { get; set; }
 	}
 }

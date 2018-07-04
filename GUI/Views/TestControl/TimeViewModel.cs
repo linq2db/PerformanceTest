@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 
+using TestRunner.DataModel;
+
 namespace PerformanceTest.Views.TestControl
 {
-	using DataModel;
 	using MainWindow;
 
 	public partial class TimeViewModel
@@ -15,6 +16,9 @@ namespace PerformanceTest.Views.TestControl
 			Watches   = times.OrderBy(t => t.Ticks).ToArray();
 			var ts    = Watches.Select(t => t.Ticks).ToList();
 			var count = ts.Count;
+
+			foreach (var w in Watches)
+				w.Time = new TimeSpan(w.Ticks);
 
 			var ticks =
 				count ==  1 ? ts[0] :
@@ -47,7 +51,7 @@ namespace PerformanceTest.Views.TestControl
 
 			var n = count <=  5 ? 1 : count <= 10 ? 2 : count / 5;
 
-			return Watches.Take(n).Concat(Watches.Skip(count - n)).Select(w => w.ID);
+			return Watches.Take(n).Concat(Watches.Skip(count - n)).Select(w => (int)w.ID);
 		}
 	}
 }

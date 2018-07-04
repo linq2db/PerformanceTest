@@ -13,8 +13,6 @@ using LinqToDB.Data;
 using LinqToDB.DataProvider.SQLite;
 using LinqToDB.Expressions;
 
-using Microsoft.Data.Sqlite;
-
 namespace TestRunner
 {
 	using DataModel;
@@ -25,11 +23,6 @@ namespace TestRunner
 		const string DatabaseVersion = "1";
 
 		static readonly Random _random = new Random();
-
-		public void Init()
-		{
-
-		}
 
 		public static void RunTests<T>(string platform, string testName, IEnumerable<T> testProviders, Test<T>[] testMethods)
 			where T : class, ITests
@@ -111,6 +104,7 @@ namespace TestRunner
 							.Value(t => t.Name,      test.Test)
 							.Value(t => t.Repeat,    test.Repeat)
 							.Value(t => t.Take,      test.Take)
+							.Value(t => t.CreatedOn, () => Sql.CurrentTimestamp)
 						.InsertWithIdentity();
 
 					foreach (var watch in test.Stopwatch.Where(w => w != null))
@@ -120,10 +114,12 @@ namespace TestRunner
 								.Value(t => t.Time,         watch.time)
 								.Value(t => t.Ticks,        watch.stopwatch.ElapsedTicks)
 								.Value(t => t.Provider,     watch.p.Name)
+								.Value(t => t.CreatedOn,    () => Sql.CurrentTimestamp)
 							.Insert();
 					}
 				}
 
+				/*
 				var list =
 				(
 					from r in db.GetTable<TestRun>()
@@ -158,13 +154,15 @@ namespace TestRunner
 						TestDescription = g.Key.Take == null ? $"{g.Key.TestName}({g.Key.Repeat})" : $"{g.Key.TestName}({g.Key.Repeat}/{g.Key.Take})",
 						Provider  = g.Key.Provider,
 						Ticks     = ticks,
-						Time      = new TimeSpan(ticks)
+						Time      = new TimeSpan(ticks),
+						CreatedOn = DateTime.Now
 					};
 				})
 				.ToList();
 
 				db.GetTable<TestResult>().Truncate();
 				db.GetTable<TestResult>().BulkCopy(list);
+				*/
 			}
 
 			var res = tests.Select(t =>
@@ -280,7 +278,7 @@ namespace TestRunner
 				db.CreateTable<TestRun>();
 				db.CreateTable<TestMethod>();
 				db.CreateTable<TestStopwatch>();
-				db.CreateTable<TestResult>();
+				//db.CreateTable<TestResult>();
 			}
 
 			Console.WriteLine("Database created.");
