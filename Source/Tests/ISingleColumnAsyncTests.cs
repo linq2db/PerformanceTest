@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Tests.Tests
 {
-	interface ISingleColumnAsyncTests : ITests
+	interface ISingleColumnAsyncTests : TestRunner.ITests
 	{
 		Task<bool> GetSingleColumnFastAsync (Stopwatch watch, int repeatCount, int takeCount);
 		Task<bool> GetSingleColumnSlowAsync (Stopwatch watch, int repeatCount, int takeCount);

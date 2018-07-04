@@ -2,9 +2,9 @@
 
 using LinqToDB.Mapping;
 
-namespace Tests.DataModel
+namespace TestRunner.DataModel
 {
-	[Table()]
+	[Table]
 	public class TestStopwatch
 	{
 		[PrimaryKey, Identity] public int      ID;

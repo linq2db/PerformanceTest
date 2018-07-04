@@ -21,15 +21,9 @@ namespace Tests.L2DB
 				OnEntityCreated = new ObjectIdentityTracker().EntityCreated;
 		}
 
-		public ITable<Narrow>        Narrows         => GetTable<Narrow>();
-		public ITable<NarrowLong>    NarrowLongs     => GetTable<NarrowLong>();
-		public ITable<WideLong>      WideLongs       => GetTable<WideLong>();
-
-		public ITable<Setting>       Settings        => GetTable<Setting>();
-		public ITable<TestRun>       TestRuns        => GetTable<TestRun>();
-		public ITable<TestMethod>    TestMethods     => GetTable<TestMethod>();
-		public ITable<TestStopwatch> TestStopwatches => GetTable<TestStopwatch>();
-		public ITable<TestResult>    TestResults     => GetTable<TestResult>();
+		public ITable<Narrow>     Narrows     => GetTable<Narrow>();
+		public ITable<NarrowLong> NarrowLongs => GetTable<NarrowLong>();
+		public ITable<WideLong>   WideLongs   => GetTable<WideLong>();
 	}
 
 	class ObjectIdentityTracker

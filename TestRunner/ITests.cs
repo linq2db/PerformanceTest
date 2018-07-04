@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Diagnostics;
 
-namespace Tests.Tests
+namespace TestRunner
 {
-	interface ITests
+	public interface ITests
 	{
 		string Name { get; set; }
 

@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace Tests.Tests
 {
-	interface ISingleColumnTests : ITests
+	interface ISingleColumnTests : TestRunner.ITests
 	{
 		bool   GetSingleColumnFast (Stopwatch watch, int repeatCount, int takeCount);
 		bool   GetSingleColumnSlow (Stopwatch watch, int repeatCount, int takeCount);

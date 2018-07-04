@@ -17,14 +17,8 @@ namespace Tests.BLT
 
 		static readonly DataProviderBase _dataProvider = new Sql2012DataProvider();
 
-		public Table<Narrow>        Narrows         => GetTable<Narrow>();
-		public Table<NarrowLong>    NarrowLongs     => GetTable<NarrowLong>();
-		public Table<WideLong>      WideLongs       => GetTable<WideLong>();
-
-		public Table<Setting>       Settings        => GetTable<Setting>();
-		public Table<TestRun>       TestRuns        => GetTable<TestRun>();
-		public Table<TestMethod>    TestMethods     => GetTable<TestMethod>();
-		public Table<TestStopwatch> TestStopwatches => GetTable<TestStopwatch>();
-		public Table<TestResult>    TestResults     => GetTable<TestResult>();
+		public Table<Narrow>     Narrows     => GetTable<Narrow>();
+		public Table<NarrowLong> NarrowLongs => GetTable<NarrowLong>();
+		public Table<WideLong>   WideLongs   => GetTable<WideLong>();
 	}
 }

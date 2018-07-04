@@ -2,7 +2,7 @@
 
 using LinqToDB.Mapping;
 
-namespace Tests.DataModel
+namespace TestRunner.DataModel
 {
 	[Table]
 	public class Setting

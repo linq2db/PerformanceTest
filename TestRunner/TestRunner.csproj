@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>netcoreapp2.0;net461</TargetFrameworks>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="linq2db" Version="2.1.0" />
+		<PackageReference Include="CodeJam" Version="2.0.0" />
+	</ItemGroup>
+
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net461'">
+		<Reference Include="System.Data.Linq" />
+		<Reference Include="System.ServiceModel" />
+	</ItemGroup>
+</Project>

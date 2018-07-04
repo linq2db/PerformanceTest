@@ -64,6 +64,10 @@
       <Project>{ee1a8cae-d390-4a2d-89f1-b1c1a934c2f3}</Project>
       <Name>Tests</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TestRunner\TestRunner.csproj">
+      <Project>{ed3349b6-2dc9-4293-a295-570d9b54dda2}</Project>
+      <Name>TestRunner</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

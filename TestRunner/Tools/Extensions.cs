@@ -7,7 +7,7 @@ using LinqToDB.Extensions;
 using LinqToDB.Mapping;
 using LinqToDB.Reflection;
 
-namespace Tests.Tools
+namespace TestRunner.Tools
 {
 	public static class Extensions
 	{

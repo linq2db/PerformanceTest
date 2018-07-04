@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 using LinqToDB;
+using LinqToDB.Async;
 
 namespace Tests.L2DB
 {
@@ -120,11 +122,18 @@ namespace Tests.L2DB
 		{
 			watch.Start();
 
+			var token = default(CancellationToken);
+
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new L2DBContext(TrackChanges))
-					await db.NarrowLongs.Take(takeCount).ForEachAsync(item => {});
+				//await db.NarrowLongs.Take(takeCount).ForEachAsync(item => {});
+				using (var en = db.NarrowLongs.Take(takeCount).AsAsyncEnumerable().GetEnumerator())
+					while (await en.MoveNext(token))
+					{
+						var item = en.Current;
+					}
 
-			watch.Stop();
+					watch.Stop();
 
 			return true;
 		}

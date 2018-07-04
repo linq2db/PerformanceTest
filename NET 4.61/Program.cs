@@ -6,7 +6,7 @@ namespace NET._4._61
 	{
 		static void Main(string[] args)
 		{
-			Tests.TestRunner.Run("NET 4.61");
+			Tests.LinqTestRunner.Run("NET 4.61");
 		}
 	}
 }

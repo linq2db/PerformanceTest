@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinqToDB", "..\linq2db\Sour
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GUI", "GUI\GUI.csproj", "{8B74CD62-A714-4F97-98BC-731B5132EC98}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestRunner", "TestRunner\TestRunner.csproj", "{ED3349B6-2DC9-4293-A295-570D9B54DDA2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{8B74CD62-A714-4F97-98BC-731B5132EC98}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8B74CD62-A714-4F97-98BC-731B5132EC98}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8B74CD62-A714-4F97-98BC-731B5132EC98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED3349B6-2DC9-4293-A295-570D9B54DDA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED3349B6-2DC9-4293-A295-570D9B54DDA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED3349B6-2DC9-4293-A295-570D9B54DDA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED3349B6-2DC9-4293-A295-570D9B54DDA2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

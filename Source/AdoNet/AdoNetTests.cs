@@ -23,11 +23,9 @@ namespace Tests.AdoNet
 			watch.Start();
 
 			using (var con = new SqlConnection(ConnectionString))
+			using (var cmd = con.CreateCommand())
 			{
 				con.Open();
-
-				var cmd = con.CreateCommand();
-
 				cmd.CommandText = GetSingleColumnSql;
 
 				for (var i = 0; i < repeatCount; i++)
@@ -44,11 +42,9 @@ namespace Tests.AdoNet
 			watch.Start();
 
 			using (var con = new SqlConnection(ConnectionString))
+			using (var cmd = con.CreateCommand())
 			{
 				await con.OpenAsync();
-
-				var cmd = con.CreateCommand();
-
 				cmd.CommandText = GetSingleColumnSql;
 
 				for (var i = 0; i < repeatCount; i++)
@@ -66,11 +62,9 @@ namespace Tests.AdoNet
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var con = new SqlConnection(ConnectionString))
+				using (var cmd = con.CreateCommand())
 				{
 					con.Open();
-
-					var cmd = con.CreateCommand();
-
 					cmd.CommandText = GetSingleColumnSql;
 					cmd.ExecuteScalar();
 				}
@@ -86,11 +80,9 @@ namespace Tests.AdoNet
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var con = new SqlConnection(ConnectionString))
+				using (var cmd = con.CreateCommand())
 				{
 					await con.OpenAsync();
-
-					var cmd = con.CreateCommand();
-
 					cmd.CommandText = GetSingleColumnSql;
 					await cmd.ExecuteScalarAsync();
 				}
@@ -105,11 +97,9 @@ namespace Tests.AdoNet
 			watch.Start();
 
 			using (var con = new SqlConnection(ConnectionString))
+			using (var cmd = con.CreateCommand())
 			{
 				con.Open();
-
-				var cmd = con.CreateCommand();
-
 				cmd.CommandText = GetParamSql;
 
 				for (var i = 0; i < repeatCount; i++)
@@ -131,11 +121,9 @@ namespace Tests.AdoNet
 			watch.Start();
 
 			using (var con = new SqlConnection(ConnectionString))
+			using (var cmd = con.CreateCommand())
 			{
 				await con.OpenAsync();
-
-				var cmd = con.CreateCommand();
-
 				cmd.CommandText = GetParamSql;
 
 				for (var i = 0; i < repeatCount; i++)
@@ -160,11 +148,9 @@ namespace Tests.AdoNet
 
 			for (var i = 0; i < repeatCount; i++)
 			using (var con = new SqlConnection(ConnectionString))
+			using (var cmd = con.CreateCommand())
 			{
 				con.Open();
-
-				var cmd = con.CreateCommand();
-
 				cmd.CommandText = sql;
 
 				using (var rd = cmd.ExecuteReader())
@@ -190,11 +176,9 @@ namespace Tests.AdoNet
 
 			for (var i = 0; i < repeatCount; i++)
 			using (var con = new SqlConnection(ConnectionString))
+			using (var cmd = con.CreateCommand())
 			{
 				await con.OpenAsync();
-
-				var cmd = con.CreateCommand();
-
 				cmd.CommandText = sql;
 
 				using (var rd = await cmd.ExecuteReaderAsync())
@@ -220,11 +204,9 @@ namespace Tests.AdoNet
 
 			for (var i = 0; i < repeatCount; i++)
 			using (var con = new SqlConnection(ConnectionString))
+			using (var cmd = con.CreateCommand())
 			{
 				con.Open();
-
-				var cmd = con.CreateCommand();
-
 				cmd.CommandText = sql;
 
 				using (var rd = cmd.ExecuteReader())
@@ -260,11 +242,9 @@ namespace Tests.AdoNet
 
 			for (var i = 0; i < repeatCount; i++)
 			using (var con = new SqlConnection(ConnectionString))
+			using (var cmd = con.CreateCommand())
 			{
 				await con.OpenAsync();
-
-				var cmd = con.CreateCommand();
-
 				cmd.CommandText = sql;
 
 				using (var rd = await cmd.ExecuteReaderAsync())
@@ -306,11 +286,9 @@ WHERE
 
 			for (var i = 0; i < repeatCount; i++)
 			using (var con = new SqlConnection(ConnectionString))
+			using (var cmd = con.CreateCommand())
 			{
 				con.Open();
-
-				var cmd = con.CreateCommand();
-
 				cmd.CommandText = sql;
 
 				using (var rd = cmd.ExecuteReader())
@@ -349,11 +327,9 @@ OFFSET 1 ROWS FETCH NEXT {takeCount} ROWS ONLY";
 
 			for (var i = 0; i < repeatCount; i++)
 			using (var con = new SqlConnection(ConnectionString))
+			using (var cmd = con.CreateCommand())
 			{
 				con.Open();
-
-				var cmd = con.CreateCommand();
-
 				cmd.CommandText = sql;
 
 				using (var rd = cmd.ExecuteReader())
@@ -407,11 +383,9 @@ OFFSET 1000 ROWS FETCH NEXT {takeCount} ROWS ONLY";
 
 			for (var i = 0; i < repeatCount; i++)
 			using (var con = new SqlConnection(ConnectionString))
+			using (var cmd = con.CreateCommand())
 			{
 				con.Open();
-
-				var cmd = con.CreateCommand();
-
 				cmd.CommandText = sql;
 
 				using (var rd = cmd.ExecuteReader())

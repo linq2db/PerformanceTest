@@ -2,7 +2,7 @@
 
 namespace Tests.Tests
 {
-	abstract class TestsBase : ITests
+	abstract class TestsBase : TestRunner.ITests
 	{
 		protected const string GetSingleColumnSql = "SELECT ID FROM Narrow WHERE ID = 1";
 		protected const string GetParamSql        = "SELECT ID FROM Narrow WHERE ID = @id AND Field1 = @p";

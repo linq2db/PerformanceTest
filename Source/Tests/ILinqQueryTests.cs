@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace Tests.Tests
 {
-	interface ILinqQueryTests : ITests
+	interface ILinqQueryTests : TestRunner.ITests
 	{
 		bool   SimpleLinqQuery    (Stopwatch watch, int repeatCount, int takeCount);
 		bool   ComplicatedLinqFast(Stopwatch watch, int repeatCount, int takeCount);

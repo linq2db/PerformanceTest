@@ -60,14 +60,8 @@ namespace Tests.L2DB
 			Host = host;
 		}
 
-		public ITable<Narrow>        Narrows         => this.GetTable<Narrow>();
-		public ITable<NarrowLong>    NarrowLongs     => this.GetTable<NarrowLong>();
-		public ITable<WideLong>      WideLongs       => this.GetTable<WideLong>();
-
-		public ITable<Setting>       Settings        => this.GetTable<Setting>();
-		public ITable<TestRun>       TestRuns        => this.GetTable<TestRun>();
-		public ITable<TestMethod>    TestMethods     => this.GetTable<TestMethod>();
-		public ITable<TestStopwatch> TestStopwatches => this.GetTable<TestStopwatch>();
-		public ITable<TestResult>    TestResults     => this.GetTable<TestResult>();
+		public ITable<Narrow>     Narrows     => this.GetTable<Narrow>();
+		public ITable<NarrowLong> NarrowLongs => this.GetTable<NarrowLong>();
+		public ITable<WideLong>   WideLongs   => this.GetTable<WideLong>();
 	}
 }
