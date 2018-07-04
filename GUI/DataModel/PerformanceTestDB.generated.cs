@@ -156,11 +156,16 @@ namespace PerformanceTest.DataModel
 	{
 		[PrimaryKey, NotNull    ] public int       ID            { get; set; } // int
 		[Column,     NotNull    ] public int       Field1        { get; set; } // int
+		[Column,        Nullable] public byte?     ByteValue     { get; set; } // tinyint
 		[Column,        Nullable] public short?    ShortValue    { get; set; } // smallint
 		[Column,        Nullable] public int?      IntValue      { get; set; } // int
 		[Column,        Nullable] public long?     LongValue     { get; set; } // bigint
 		[Column,        Nullable] public string    StringValue   { get; set; } // nvarchar(100)
 		[Column,        Nullable] public DateTime? DateTimeValue { get; set; } // datetime2(7)
+		[Column,        Nullable] public TimeSpan? TimeValue     { get; set; } // time(7)
+		[Column,        Nullable] public decimal?  DecimalValue  { get; set; } // decimal(18, 0)
+		[Column,        Nullable] public double?   DoubleValue   { get; set; } // float
+		[Column,        Nullable] public float?    FloatValue    { get; set; } // real
 	}
 
 	public static partial class TableExtensions

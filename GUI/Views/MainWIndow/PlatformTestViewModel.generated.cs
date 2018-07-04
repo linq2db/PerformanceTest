@@ -8,7 +8,6 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
-using PerformanceTest.Views.TestControl;
 
 namespace PerformanceTest.Views.MainWindow
 {

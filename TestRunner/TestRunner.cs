@@ -13,6 +13,8 @@ using LinqToDB.Data;
 using LinqToDB.DataProvider.SQLite;
 using LinqToDB.Expressions;
 
+using Microsoft.Data.Sqlite;
+
 namespace TestRunner
 {
 	using DataModel;
@@ -254,15 +256,25 @@ namespace TestRunner
 
 			var dbPath = Path.Combine(resultFolder, "Result");
 
-			SQLiteTools.CreateDatabase(dbPath);
-
 			DataConnection.AddConfiguration("Result", $"Data Source={dbPath}.sqlite", SQLiteTools.GetDataProvider());
 
 			using (var db = new DataConnection("Result"))
 			{
 				if (!enforceCreate)
-					if (db.GetTable<Setting>().Any(s => s.Name == "DB Version" && s.Value == DatabaseVersion))
-						return;
+				{
+					try
+					{
+						if (db.GetTable<Setting>().Any(s => s.Name == "DB Version" && s.Value == DatabaseVersion))
+							return;
+					}
+					catch
+					{
+					}
+				}
+
+				db.Close();
+
+				File.Delete($"{dbPath}.sqlite");
 
 				CreateTable(db, new[] { new Setting { Name = "DB Version", Value =  DatabaseVersion } });
 				db.CreateTable<TestRun>();
