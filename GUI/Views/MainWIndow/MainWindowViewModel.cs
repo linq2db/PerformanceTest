@@ -28,7 +28,8 @@ namespace PerformanceTest.Views.MainWindow
 		{
 			Settings.Default.Main_WindowState = WindowState.ToString();
 		}
-		bool Confirm()
+
+		static bool Confirm()
 		{
 			var mbResult = MessageBoxResult.Cancel;
 
@@ -57,7 +58,7 @@ namespace PerformanceTest.Views.MainWindow
 			{
 				using (var db = new ResultDB())
 				{
-					Application.Current.Dispatcher.Invoke(() => Status = "Loading...");
+					Status = "Loading...";
 
 					var runs    = await db.TestRuns.       ToListAsync();
 					var methods = await db.TestMethods.    ToListAsync();
@@ -249,7 +250,7 @@ namespace PerformanceTest.Views.MainWindow
 					MessageBox.Show(ex.Message, "Exception", MessageBoxButton.OK, MessageBoxImage.Error));
 			}
 
-			Application.Current.Dispatcher.Invoke(() => Status = "");
+			Status = "";
 		}
 
 		#endregion
