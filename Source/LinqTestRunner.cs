@@ -26,7 +26,7 @@ namespace Tests
 
 			DataConnection.AddConfiguration(
 				"Test",
-				$"Server={serverName};Database=PerformanceTest;Trusted_Connection=True;Application Name=LinqToDB Test;",
+				$"Server={serverName};Database=PerformanceTest;Trusted_Connection=True;Asynchronous Processing=True;Application Name=LinqToDB Test;",
 				SqlServerTools.GetDataProvider(SqlServerVersion.v2012));
 
 			DataConnection.DefaultConfiguration = "Test";
