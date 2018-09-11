@@ -18,7 +18,7 @@ namespace Tests
 	{
 		const string DatabaseVersion = "1";
 
-		public static void Run(string platform)
+		public static void Run(string platform, bool asyncProcessing)
 		{
 			Console.WriteLine($"Testing {platform}...");
 
@@ -26,7 +26,8 @@ namespace Tests
 
 			DataConnection.AddConfiguration(
 				"Test",
-				$"Server={serverName};Database=PerformanceTest;Trusted_Connection=True;Asynchronous Processing=True;Application Name=LinqToDB Test;",
+				$"Server={serverName};Database=PerformanceTest;Trusted_Connection=True;Application Name=LinqToDB Test;"
+					+ (asyncProcessing ? "Asynchronous Processing=True;" : ""),
 				SqlServerTools.GetDataProvider(SqlServerVersion.v2012));
 
 			DataConnection.DefaultConfiguration = "Test";
