@@ -85,6 +85,34 @@ namespace Tests
 				new L2S.L2SCompTests       { TrackChanges = true },
 			};
 
+			RunTests("All", "LinqToDB Compare",
+			new[]
+			{
+				new L2DB.L2DBAllTests(platform, L2DB.TestType.AdoNet),
+				new L2DB.L2DBAllTests(platform, L2DB.TestType.Linq),
+				new L2DB.L2DBAllTests(platform, L2DB.TestType.Async),
+				new L2DB.L2DBAllTests(platform, L2DB.TestType.ChangeTracking),
+				new L2DB.L2DBAllTests(platform, L2DB.TestType.ChangeTrackingAsync),
+			},
+			new[]
+			{
+				CreateTest<L2DB.L2DBAllTests>(t => t.GetList, 1000, 1000),
+			});
+
+			RunTests("All", "EF Core Compare",
+			new[]
+			{
+				new EFCore.EFCoreAllTests(platform, EFCore.TestType.AdoNet),
+				new EFCore.EFCoreAllTests(platform, EFCore.TestType.Linq),
+				new EFCore.EFCoreAllTests(platform, EFCore.TestType.Async),
+				new EFCore.EFCoreAllTests(platform, EFCore.TestType.ChangeTracking),
+				new EFCore.EFCoreAllTests(platform, EFCore.TestType.ChangeTrackingAsync),
+			},
+			new[]
+			{
+				CreateTest<EFCore.EFCoreAllTests>(t => t.GetList, 1000, 1000),
+			});
+
 			RunTests(platform, "Single Column", testProviders.OfType<ISingleColumnTests>(), new[]
 			{
 				CreateTest<ISingleColumnTests>(t => t.GetSingleColumnFast,  10000),
@@ -215,7 +243,7 @@ namespace Tests
 				CreateTest<ILinqQueryTests>(t => t.ComplicatedLinqSlow,   10, 10, 500000),
 			});
 
-#if !NETCOREAPP2_0
+#if !NETCOREAPP2_1
 			var wcfTestProviders = new ITests[]
 			{
 				new AdoNet.AdoNetTests (),
@@ -258,34 +286,6 @@ namespace Tests
 				CreateTest<ILinqQueryTests>(t => t.ComplicatedLinqSlow,    10, 10, 500000),
 			});
 #endif
-
-			RunTests("All", "LinqToDB Compare",
-			new[]
-			{
-				new L2DB.L2DBAllTests(platform, L2DB.TestType.AdoNet),
-				new L2DB.L2DBAllTests(platform, L2DB.TestType.Linq),
-				new L2DB.L2DBAllTests(platform, L2DB.TestType.Async),
-				new L2DB.L2DBAllTests(platform, L2DB.TestType.ChangeTracking),
-				new L2DB.L2DBAllTests(platform, L2DB.TestType.ChangeTrackingAsync),
-			},
-			new[]
-			{
-				CreateTest<L2DB.L2DBAllTests>(t => t.GetList, 1000, 1000),
-			});
-
-			RunTests("All", "EF Core Compare",
-			new[]
-			{
-				new EFCore.EFCoreAllTests(platform, EFCore.TestType.AdoNet),
-				new EFCore.EFCoreAllTests(platform, EFCore.TestType.Linq),
-				new EFCore.EFCoreAllTests(platform, EFCore.TestType.Async),
-				new EFCore.EFCoreAllTests(platform, EFCore.TestType.ChangeTracking),
-				new EFCore.EFCoreAllTests(platform, EFCore.TestType.ChangeTrackingAsync),
-			},
-			new[]
-			{
-				CreateTest<EFCore.EFCoreAllTests>(t => t.GetList, 1000, 1000),
-			});
 		}
 
 		static void CreateTestDatabase(bool enforceCreate, string serverName)
