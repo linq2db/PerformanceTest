@@ -5,13 +5,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\linq2db\Source\LinqToDB\LinqToDB.csproj" />
 		<ProjectReference Include="..\TestRunner\TestRunner.csproj" />
-<!--		<PackageReference Include="linq2db" Version="2.1.0" />	-->
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.3" />
+		<PackageReference Include="linq2db" Version="2.6.3" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.1" />
 		<PackageReference Include="CodeJam" Version="2.1.1" />
 		<PackageReference Include="Dapper" Version="1.50.5" />
-		<PackageReference Include="PetaPoco.Core.Compiled" Version="5.1.306" />
+		<PackageReference Include="PetaPoco.Compiled" Version="6.0.353" />
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.1'">
