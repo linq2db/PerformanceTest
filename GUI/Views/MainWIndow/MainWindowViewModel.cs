@@ -111,29 +111,29 @@ namespace PerformanceTest.Views.MainWindow
 					{
 						ProviderBrushes = new Dictionary<string, Brush>
 						{
-							["AdoNet"]           = new SolidColorBrush(Color.FromRgb(0xAA, 0x40, 0xFF)),
-							["Dapper"]           = new SolidColorBrush(Color.FromRgb(0x63, 0x2F, 0x00)),
-							["PetaPoco"]         = new SolidColorBrush(Color.FromRgb(0xFF, 0x76, 0xBC)),
+							["AdoNet"]            = new SolidColorBrush(Color.FromRgb(0xAA, 0x40, 0xFF)),
+							["Dapper"]            = new SolidColorBrush(Color.FromRgb(0x63, 0x2F, 0x00)),
+							["PetaPoco"]          = new SolidColorBrush(Color.FromRgb(0xFF, 0x76, 0xBC)),
 
-							["L2DB Sql"]         = GetBrush(Color.FromRgb(0x19, 0x99, 0x00),  0x1A),
-							["L2DB Compiled"]    = GetBrush(Color.FromRgb(0x19, 0x99, 0x00),  0x00),
-							["L2DB Linq"]        = GetBrush(Color.FromRgb(0x19, 0x99, 0x00), -0x1A),
+							["L2DB Sql"]          = GetBrush(Color.FromRgb(0x19, 0x99, 0x00),  0x1A),
+							["L2DB Compiled"]     = GetBrush(Color.FromRgb(0x19, 0x99, 0x00),  0x00),
+							["L2DB Linq"]         = GetBrush(Color.FromRgb(0x19, 0x99, 0x00), -0x1A),
 
-							["EF Core Sql"]      = GetBrush(Color.FromRgb(0xFF, 0x98, 0x1D),  0x1A),
-							["EF Core Compiled"] = GetBrush(Color.FromRgb(0xFF, 0x98, 0x1D),  0x00),
-							["EF Core Linq"]     = GetBrush(Color.FromRgb(0xFF, 0x98, 0x1D), -0x1A),
+							["EF Core Sql"]       = GetBrush(Color.FromRgb(0xFF, 0x98, 0x1D),  0x1A),
+							["EF Core Compiled"]  = GetBrush(Color.FromRgb(0xFF, 0x98, 0x1D),  0x00),
+							["EF Core Linq"]      = GetBrush(Color.FromRgb(0xFF, 0x98, 0x1D), -0x1A),
 
-							["L2S Sql"]          = GetBrush(Color.FromRgb(0x1F, 0xAE, 0xFF),  0x1A),
-							["L2S Compiled"]     = GetBrush(Color.FromRgb(0x1F, 0xAE, 0xFF),  0x00),
-							["L2S Linq"]         = GetBrush(Color.FromRgb(0x1F, 0xAE, 0xFF), -0x1A),
+							["L2S Sql"]           = GetBrush(Color.FromRgb(0x1F, 0xAE, 0xFF),  0x1A),
+							["L2S Compiled"]      = GetBrush(Color.FromRgb(0x1F, 0xAE, 0xFF),  0x00),
+							["L2S Linq"]          = GetBrush(Color.FromRgb(0x1F, 0xAE, 0xFF), -0x1A),
 
-							["EF6 Sql"]          = GetBrush(Color.FromRgb(0xC1, 0x00, 0x4F),  0x1A),
-							["EF6 Compiled"]     = GetBrush(Color.FromRgb(0xC1, 0x00, 0x4F),  0x00),
-							["EF6 Linq"]         = GetBrush(Color.FromRgb(0xC1, 0x00, 0x4F), -0x1A),
+							["EF6 Sql"]           = GetBrush(Color.FromRgb(0xC1, 0x00, 0x4F),  0x1A),
+							["EF6 Compiled"]      = GetBrush(Color.FromRgb(0xC1, 0x00, 0x4F),  0x00),
+							["EF6 Linq"]          = GetBrush(Color.FromRgb(0xC1, 0x00, 0x4F), -0x1A),
 
-							["BLT Sql"]          = GetBrush(Color.FromRgb(0x7F, 0x6E, 0x94),  0x1A),
-							["BLT Compiled"]     = GetBrush(Color.FromRgb(0x7F, 0x6E, 0x94),  0x00),
-							["BLT Linq"]         = GetBrush(Color.FromRgb(0x7F, 0x6E, 0x94), -0x1A),
+							["BLToolkit Sql"]      = GetBrush(Color.FromRgb(0x7F, 0x6E, 0x94),  0x1A),
+							["BLToolkit Compiled"] = GetBrush(Color.FromRgb(0x7F, 0x6E, 0x94),  0x00),
+							["BLToolkit Linq"]     = GetBrush(Color.FromRgb(0x7F, 0x6E, 0x94), -0x1A),
 						};
 
 						var colors = new[]

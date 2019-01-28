@@ -4,13 +4,13 @@ using System.Linq;
 
 using BLToolkit.Data.Linq;
 
-namespace Tests.BLT
+namespace Tests.BLToolkit
 {
 	using Tests;
 
-	class BLTCompTests : TestsBase, ISingleColumnTests, IGetListTests, ILinqQueryTests
+	class BLToolkitCompTests : TestsBase, ISingleColumnTests, IGetListTests, ILinqQueryTests
 	{
-		public override string Name { get; set; } = "BLT Compiled";
+		public override string Name { get; set; } = "BLToolkit Compiled";
 
 		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
 		{

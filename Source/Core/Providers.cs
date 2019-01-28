@@ -4,11 +4,11 @@ namespace Tests
 {
 	using Tests;
 
-	namespace BLT
+	namespace BLToolkit
 	{
-		class BLTCompTests : TestsBase { public override string Name { get; set; } = "BLT Compiled"; }
-		class BLTLinqTests : TestsBase { public override string Name { get; set; } = "BLT Linq";     }
-		class BLTSqlTests  : TestsBase { public override string Name { get; set; } = "BLT Sql";      }
+		class BLToolkitCompTests : TestsBase { public override string Name { get; set; } = "BLToolkit Compiled"; }
+		class BLToolkitLinqTests : TestsBase { public override string Name { get; set; } = "BLToolkit Linq";     }
+		class BLToolkitSqlTests  : TestsBase { public override string Name { get; set; } = "BLToolkit Sql";      }
 	}
 
 	namespace EF6

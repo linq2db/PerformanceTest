@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace Tests.BLT
+namespace Tests.BLToolkit
 {
 	using DataModel;
 	using Tests;
 
-	class BLTSqlTests : TestsBase, ISingleColumnTests, IGetListTests
+	class BLToolkitSqlTests : TestsBase, ISingleColumnTests, IGetListTests
 	{
-		public override string Name { get; set; } = "BLT Sql";
+		public override string Name { get; set; } = "BLToolkit Sql";
 
 		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
 		{

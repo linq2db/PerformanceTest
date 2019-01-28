@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>netcoreapp2.1;net472</TargetFrameworks>
+		<TargetFrameworks>net472;netcoreapp2.1</TargetFrameworks>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -17,7 +17,7 @@
 	<ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.1'">
 		<Compile Remove="L2S\*" />
 		<Compile Remove="EF6\*" />
-		<Compile Remove="BLT\*" />
+		<Compile Remove="BLToolkit\*" />
 		<Compile Remove="L2DB\LoWcf*.cs" />
 	</ItemGroup>
 

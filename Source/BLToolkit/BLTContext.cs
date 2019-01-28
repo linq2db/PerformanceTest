@@ -4,7 +4,7 @@ using BLToolkit.Data;
 using BLToolkit.Data.DataProvider;
 using BLToolkit.Data.Linq;
 
-namespace Tests.BLT
+namespace Tests.BLToolkit
 {
 	using DataModel;
 

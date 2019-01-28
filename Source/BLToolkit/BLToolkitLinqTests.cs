@@ -4,13 +4,13 @@ using System.Linq;
 
 // ReSharper disable ReturnValueOfPureMethodIsNotUsed
 
-namespace Tests.BLT
+namespace Tests.BLToolkit
 {
 	using Tests;
 
-	class BLTLinqTests : TestsBase, ISingleColumnTests, IGetListTests, ILinqQueryTests
+	class BLToolkitLinqTests : TestsBase, ISingleColumnTests, IGetListTests, ILinqQueryTests
 	{
-		public override string Name { get; set; } = "BLT Linq";
+		public override string Name { get; set; } = "BLToolkit Linq";
 
 		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
 		{
