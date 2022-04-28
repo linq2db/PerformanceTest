@@ -364,12 +364,12 @@ return;
 				CreateTest<ILinqQueryTests>(t => t.ComplicatedLinqSlow,   10, 10, 500000),
 			});
 
+#if !NET6_0
 #if TEST_WCF
 			var wcfTestProviders = new ITests[]
 			{
 				new AdoNet.AdoNetTests (),
 				new L2DB.L2DBLinqTests (),
-				//new EF6.EF6LinqTests   { TrackChanges = true },
 				new L2DB.LoWcfLinqTests(),
 			};
 
@@ -406,6 +406,7 @@ return;
 				CreateTest<ILinqQueryTests>(t => t.ComplicatedLinqSlow,    20, 10, 250000),
 				CreateTest<ILinqQueryTests>(t => t.ComplicatedLinqSlow,    10, 10, 500000),
 			});
+#endif
 #endif
 		}
 
