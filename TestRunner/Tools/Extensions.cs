@@ -247,9 +247,9 @@ namespace TestRunner.Tools
 					var value = values.list[l];
 
 					if (right)
-						stringBuilder.Append(' ', lens[k] - value.Length).Append(value);
+						stringBuilder.Append(' ', lens[k] - (value?.Length ?? 0)).Append(value);
 					else
-						stringBuilder.Append(value).Append(' ', lens[k] - value.Length);
+						stringBuilder.Append(value).Append(' ', lens[k] - (value?.Length ?? 0));
 
 					k++;
 					stringBuilder.Append(" ");

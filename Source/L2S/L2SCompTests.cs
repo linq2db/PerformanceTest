@@ -92,8 +92,27 @@ namespace Tests.L2S
 			return true;
 		}
 
+		public bool SimpleLinqQuery(Stopwatch watch, int repeatCount)
+		{
+			var query = CompiledQuery.Compile((L2SContext db) =>
+				(
+					from n1 in db.Narrows
+					where n1.ID < 100
+					select n1.ID
+				));
 
-		public bool SimpleLinqQuery(Stopwatch watch, int repeatCount, int takeCount)
+			watch.Start();
+
+			for (var i = 0; i < repeatCount; i++)
+				using (var db = new L2SContext(TrackChanges))
+					foreach (var item in query(db)) {}
+
+			watch.Stop();
+
+			return true;
+		}
+
+		public bool SimpleLinqQueryTop(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var query = CompiledQuery.Compile((L2SContext db, int top) =>
 				(

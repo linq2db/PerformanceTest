@@ -15,15 +15,16 @@ namespace Tests.L2DB
 
 	public class L2DBContext : DataConnection
 	{
-		public L2DBContext(bool trackChanges = false)
+		public L2DBContext(bool trackChanges = false)// : base(new MappingSchema())
 		{
-			if (trackChanges)
-				OnEntityCreated = new ObjectIdentityTracker().EntityCreated;
+			LinqToDB.Common.Configuration.Linq.EnableAutoFluentMapping = false;
+//			if (trackChanges)
+//				OnEntityCreated = new ObjectIdentityTracker().EntityCreated;
 		}
 
-		public ITable<Narrow>     Narrows     => GetTable<Narrow>();
-		public ITable<NarrowLong> NarrowLongs => GetTable<NarrowLong>();
-		public ITable<WideLong>   WideLongs   => GetTable<WideLong>();
+		public ITable<Narrow>     Narrows     => this.GetTable<Narrow>();
+		public ITable<NarrowLong> NarrowLongs => this.GetTable<NarrowLong>();
+		public ITable<WideLong>   WideLongs   => this.GetTable<WideLong>();
 	}
 
 	class ObjectIdentityTracker
@@ -89,5 +90,10 @@ namespace Tests.L2DB
 			}
 		}
 		*/
+	}
+
+	internal class EntityCreatedEventArgs
+	{
+		public object Entity;
 	}
 }

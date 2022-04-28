@@ -175,16 +175,17 @@ namespace Tests.AdoNet
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-			using (var con = new SqlConnection(ConnectionString))
-			using (var cmd = con.CreateCommand())
 			{
+				using var con = new SqlConnection(ConnectionString);
+				using var cmd = con.CreateCommand();
+
 				await con.OpenAsync();
 				cmd.CommandText = sql;
 
 				using (var rd = await cmd.ExecuteReaderAsync())
 					if (rd.HasRows)
 						while (await rd.ReadAsync())
-							new NarrowLong
+							_ = new NarrowLong
 							{
 								ID     = rd.GetInt32(0),
 								Field1 = rd.GetInt32(1),
@@ -272,10 +273,10 @@ namespace Tests.AdoNet
 			return true;
 		}
 
-		public bool SimpleLinqQuery(Stopwatch watch, int repeatCount, int takeCount)
+		public bool SimpleLinqQuery(Stopwatch watch, int repeatCount)
 		{
 			var sql = $@"
-SELECT TOP ({takeCount})
+SELECT
 	[t1].[ID]
 FROM
 	[Narrow] [t1]
@@ -290,6 +291,48 @@ WHERE
 			{
 				con.Open();
 				cmd.CommandText = sql;
+
+				using (var rd = cmd.ExecuteReader())
+					if (rd.HasRows)
+						while (rd.Read())
+						{
+							var item = new
+							{
+								ID = rd.GetInt32(0),
+							};
+
+							break;
+						}
+			}
+
+			watch.Stop();
+
+			return true;
+		}
+
+		public bool SimpleLinqQueryTop(Stopwatch watch, int repeatCount, int takeCount)
+		{
+			var sql = $@"
+SELECT TOP (@takeCount)
+	[t1].[ID]
+FROM
+	[Narrow] [t1]
+WHERE
+	[t1].[ID] < 100";
+
+			watch.Start();
+
+			for (var i = 0; i < repeatCount; i++)
+			using (var con = new SqlConnection(ConnectionString))
+			using (var cmd = con.CreateCommand())
+			{
+				con.Open();
+				cmd.CommandText = sql;
+
+				var p = cmd.CreateParameter();
+				p.ParameterName = "@takeCount";
+				p.Value         = takeCount;
+				cmd.Parameters.Add(p);
 
 				using (var rd = cmd.ExecuteReader())
 					if (rd.HasRows)

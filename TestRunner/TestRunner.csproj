@@ -1,17 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
 	<PropertyGroup>
-		<TargetFrameworks>netcoreapp2.1;net472</TargetFrameworks>
+		<TargetFrameworks>net6.0;net48</TargetFrameworks>
 		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="linq2db" Version="2.6.4" />
-		<PackageReference Include="Microsoft.Data.SQLite" Version="2.2.3" />
-		<PackageReference Include="CodeJam" Version="2.1.1" />
+		<PackageReference Include="Microsoft.Data.SQLite" Version="5.0.13" />
+		<PackageReference Include="CodeJam" Version="4.0.2" />
+
+		<!--<PackageReference Include="linq2db" Version="3.6.0" />-->
+		<ProjectReference Include="I:\linq2db\Source\LinqToDB\LinqToDB.csproj" />
 	</ItemGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net472'">
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net48'">
 		<Reference Include="System.Data.Linq" />
 		<Reference Include="System.ServiceModel" />
 	</ItemGroup>

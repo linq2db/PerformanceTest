@@ -1,22 +1,22 @@
-"%ProgramFiles(x86)%\\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin\MSBuild.exe" linq2db.PerformanceTest.sln /p:Configuration=Release  /t:Restore;Rebuild /v:m
+"%ProgramFiles%\\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe" linq2db.PerformanceTest.sln /p:Configuration=Release  /t:Restore;Build /v:m
 
-ConsoleRunner\bin\Release\net472\ConsoleRunner.exe
-dotnet "ConsoleRunner\bin\Release\netcoreapp2.1\ConsoleRunner.dll"
-ConsoleRunner\bin\Release\net472\ConsoleRunner.exe
-dotnet "ConsoleRunner\bin\Release\netcoreapp2.1\ConsoleRunner.dll"
-ConsoleRunner\bin\Release\net472\ConsoleRunner.exe
-dotnet "ConsoleRunner\bin\Release\netcoreapp2.1\ConsoleRunner.dll"
-ConsoleRunner\bin\Release\net472\ConsoleRunner.exe
-dotnet "ConsoleRunner\bin\Release\netcoreapp2.1\ConsoleRunner.dll"
-ConsoleRunner\bin\Release\net472\ConsoleRunner.exe
-dotnet "ConsoleRunner\bin\Release\netcoreapp2.1\ConsoleRunner.dll"
-ConsoleRunner\bin\Release\net472\ConsoleRunner.exe
-dotnet "ConsoleRunner\bin\Release\netcoreapp2.1\ConsoleRunner.dll"
-ConsoleRunner\bin\Release\net472\ConsoleRunner.exe
-dotnet "ConsoleRunner\bin\Release\netcoreapp2.1\ConsoleRunner.dll"
-ConsoleRunner\bin\Release\net472\ConsoleRunner.exe
-dotnet "ConsoleRunner\bin\Release\netcoreapp2.1\ConsoleRunner.dll"
-ConsoleRunner\bin\Release\net472\ConsoleRunner.exe
-dotnet "ConsoleRunner\bin\Release\netcoreapp2.1\ConsoleRunner.dll"
-ConsoleRunner\bin\Release\net472\ConsoleRunner.exe
-dotnet "ConsoleRunner\bin\Release\netcoreapp2.1\ConsoleRunner.dll"
+dotnet "ConsoleRunner\bin\Release\net6.0\ConsoleRunner.dll"
+ConsoleRunner\bin\Release\net48\ConsoleRunner.exe
+dotnet "ConsoleRunner\bin\Release\net6.0\ConsoleRunner.dll"
+ConsoleRunner\bin\Release\net48\ConsoleRunner.exe
+dotnet "ConsoleRunner\bin\Release\net6.0\ConsoleRunner.dll"
+ConsoleRunner\bin\Release\net48\ConsoleRunner.exe
+dotnet "ConsoleRunner\bin\Release\net6.0\ConsoleRunner.dll"
+ConsoleRunner\bin\Release\net48\ConsoleRunner.exe
+dotnet "ConsoleRunner\bin\Release\net6.0\ConsoleRunner.dll"
+ConsoleRunner\bin\Release\net48\ConsoleRunner.exe
+dotnet "ConsoleRunner\bin\Release\net6.0\ConsoleRunner.dll"
+ConsoleRunner\bin\Release\net48\ConsoleRunner.exe
+dotnet "ConsoleRunner\bin\Release\net6.0\ConsoleRunner.dll"
+ConsoleRunner\bin\Release\net48\ConsoleRunner.exe
+dotnet "ConsoleRunner\bin\Release\net6.0\ConsoleRunner.dll"
+ConsoleRunner\bin\Release\net48\ConsoleRunner.exe
+dotnet "ConsoleRunner\bin\Release\net6.0\ConsoleRunner.dll"
+ConsoleRunner\bin\Release\net48\ConsoleRunner.exe
+dotnet "ConsoleRunner\bin\Release\net6.0\ConsoleRunner.dll"
+ConsoleRunner\bin\Release\net48\ConsoleRunner.exe

@@ -1,29 +1,33 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
 	<PropertyGroup>
-		<TargetFrameworks>net472;netcoreapp2.1</TargetFrameworks>
-		<LangVersion>7.1</LangVersion>
+		<TargetFrameworks>net6.0;net48</TargetFrameworks>
+		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\TestRunner\TestRunner.csproj" />
-		<PackageReference Include="linq2db" Version="2.6.4" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.3" />
-		<PackageReference Include="CodeJam" Version="2.1.1" />
-		<PackageReference Include="Dapper" Version="1.60.6" />
-		<PackageReference Include="PetaPoco.Compiled" Version="6.0.386" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.4" />
+		<PackageReference Include="CodeJam" Version="4.0.2" />
+		<PackageReference Include="Dapper" Version="2.0.123" />
+		<PackageReference Include="PetaPoco.Compiled" Version="6.0.480" />
+
+		<!--<PackageReference Include="linq2db" Version="3.6.0" />-->
+		<ProjectReference Include="I:\linq2db\Source\LinqToDB\LinqToDB.csproj" />
+		<ProjectReference Include="I:\linq2db\Source\LinqToDB.Remote.Wcf\LinqToDB.Remote.Wcf.csproj" />
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.1'">
+	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
 		<Compile Remove="L2S\*" />
 		<Compile Remove="EF6\*" />
 		<Compile Remove="BLToolkit\*" />
 		<Compile Remove="L2DB\LoWcf*.cs" />
+		<PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
 	</ItemGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net472'">
-		<PackageReference Include="EntityFramework" Version="6.2.0" />
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net48'">
+		<PackageReference Include="EntityFramework" Version="6.4.4" />
 		<PackageReference Include="BLToolkit" Version="4.3.9" />
+		<PackageReference Update="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.6" />
 		<Reference Include="System.Data.Linq" />
 		<Reference Include="System.ServiceModel" />
 		<Compile Remove="Core\*" />

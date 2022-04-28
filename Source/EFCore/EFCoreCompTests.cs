@@ -137,8 +137,14 @@ namespace Tests.EFCore
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new EFCoreContext(TrackChanges))
-					await query(db, takeCount).ForEachAsync(item => {});
+			{
+				using var db = new EFCoreContext(TrackChanges);
+#if NET48
+				await query(db, takeCount).ForEachAsync(item => {});
+#else
+				await foreach (var item in query(db, takeCount)) { }
+#endif
+			}
 
 			watch.Stop();
 
@@ -169,15 +175,42 @@ namespace Tests.EFCore
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new EFCoreContext(TrackChanges))
-					await query(db, takeCount).ForEachAsync(item => {});
+			{
+				using var db = new EFCoreContext(TrackChanges);
+#if NET48
+				await query(db, takeCount).ForEachAsync(item => {});
+#else
+				await foreach (var item in query(db, takeCount)) {}
+#endif
+			}
 
 			watch.Stop();
 
 			return true;
 		}
 
-		public bool SimpleLinqQuery(Stopwatch watch, int repeatCount, int takeCount)
+		public bool SimpleLinqQuery(Stopwatch watch, int repeatCount)
+		{
+			var query = EF.CompileQuery((EFCoreContext db) =>
+				(
+					from n1 in db.Narrow
+					where n1.ID < 100
+					select n1.ID
+				));
+
+			watch.Start();
+
+			for (var i = 0; i < repeatCount; i++)
+				using (var db = new EFCoreContext(TrackChanges))
+					foreach (var item in query(db))
+						break;
+
+			watch.Stop();
+
+			return true;
+		}
+
+		public bool SimpleLinqQueryTop(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var query = EF.CompileQuery((EFCoreContext db, int top) =>
 				(

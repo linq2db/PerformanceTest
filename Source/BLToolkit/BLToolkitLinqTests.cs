@@ -81,7 +81,29 @@ namespace Tests.BLToolkit
 			return true;
 		}
 
-		public bool SimpleLinqQuery(Stopwatch watch, int repeatCount, int takeCount)
+		public bool SimpleLinqQuery(Stopwatch watch, int repeatCount)
+		{
+			watch.Start();
+
+			for (var i = 0; i < repeatCount; i++)
+				using (var db = new BLTContext())
+				{
+					var q =
+					(
+						from n1 in db.Narrows
+						where n1.ID < 100
+						select n1.ID
+					);
+
+					foreach (var item in q) {}
+				}
+
+			watch.Stop();
+
+			return true;
+		}
+
+		public bool SimpleLinqQueryTop(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 

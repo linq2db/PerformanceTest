@@ -6,10 +6,10 @@ namespace ConsoleRunner
 	{
 		static void Main(string[] args)
 		{
-#if NET472
-			Tests.LinqTestRunner.Run("NET 4.72", true);
-#elif NETCOREAPP2_1
-			Tests.LinqTestRunner.Run("Core 2.1", false);
+#if NET48
+			Tests.LinqTestRunner.Run("NET 4.8", true, args);
+#elif NET6_0
+			Tests.LinqTestRunner.Run("NET 6.0", false, args);
 #else
 #error Unknown platform.
 #endif

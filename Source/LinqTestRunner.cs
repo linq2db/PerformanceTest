@@ -1,4 +1,9 @@
-﻿using System;
+﻿#define TEST_CHANGE_TRACKING
+#define TEST_ASYNC
+#define TEST_WCF
+
+using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -18,11 +23,19 @@ namespace Tests
 	{
 		const string DatabaseVersion = "1";
 
-		public static void Run(string platform, bool asyncProcessing)
+		public static void Run(string platform, bool asyncProcessing, string[] args)
 		{
 			Console.WriteLine($"Testing {platform}...");
 
 			var serverName = ".";
+
+#if DEBUG
+			DataConnection.TurnTraceSwitchOn();
+			DataConnection.WriteTraceLine = (s, s1, arg3) =>
+			{
+				Debug.WriteLine(s, s1);
+			};
+#endif
 
 			DataConnection.AddConfiguration(
 				"Test",
@@ -41,6 +54,44 @@ namespace Tests
 
 			CreateResultDatabase(false, resultPath);
 			CreateTestDatabase  (false, serverName);
+
+			for (var index = 0; index < args.Length; index++)
+				Console.WriteLine($"{index}: {args[index]}");
+
+			if (args.Contains("perform"))
+			{
+				var testProviders = new ITests[]
+				{
+					new AdoNet   .AdoNetTests       (),
+	//				new L2DB     .L2DBSqlTests      (),
+					new L2DB     .L2DBLinqTests     (),
+	//				new L2DB     .L2DBCompTests     (),
+	//				new EFCore   .EFCoreSqlTests    (),
+	//				new EFCore   .EFCoreLinqTests   (),
+	//				new EFCore   .EFCoreCompTests   (),
+				};
+
+				RunTests(platform, "Narrow List", testProviders.OfType<IGetListTests>(), new[]
+				{
+					//CreateTest<IGetListTests>(t => t.GetNarrowList, 100,   10000),
+					//CreateTest<IGetListTests>(t => t.GetNarrowList, 100,    100000),
+					CreateTest<IGetListTests>(t => t.GetNarrowList, 30000, 1),
+				});
+
+	//			RunTests(platform, "Linq Query", testProviders.OfType<ILinqQueryTests>(), new[]
+	//			{
+	////				CreateTest<ILinqQueryTests>(t => t.SimpleLinqQuery,     10000),
+	//				CreateTest<ILinqQueryTests>(t => t.SimpleLinqQueryTop,  10000, 1),
+	////				CreateTest<ILinqQueryTests>(t => t.ComplicatedLinqFast, 1000, 1),
+	////				CreateTest<ILinqQueryTests>(t => t.ComplicatedLinqSlow, 100,  10, 100),
+	////				CreateTest<ILinqQueryTests>(t => t.ComplicatedLinqSlow, 100,  10, 1000),
+	////				CreateTest<ILinqQueryTests>(t => t.ComplicatedLinqSlow, 20,   10, 250000),
+	////				CreateTest<ILinqQueryTests>(t => t.ComplicatedLinqSlow, 10,   10, 500000),
+	//			});
+
+				return;
+			}
+
 			RunTests(platform);
 		}
 
@@ -70,6 +121,39 @@ namespace Tests
 				new L2S      .L2SCompTests      (),
 			};
 
+
+
+
+
+/*
+RunTests("All", "LinqToDB Compare",
+	new[]
+	{
+		new L2DB.L2DBAllTests(platform, L2DB.TestType.AdoNet),
+		new L2DB.L2DBAllTests(platform, L2DB.TestType.Linq),
+	},
+	new[]
+	{
+		CreateTest<L2DB.L2DBAllTests>(t => t.GetList, 1000, 1000),
+	});
+
+RunTests(platform, "Narrow List", testProviders.OfType<IGetListTests>(), new[]
+{
+	CreateTest<IGetListTests>(t => t.GetNarrowList, 10000, 1),
+	CreateTest<IGetListTests>(t => t.GetNarrowList, 10000, 10),
+	CreateTest<IGetListTests>(t => t.GetNarrowList, 10000, 100),
+	CreateTest<IGetListTests>(t => t.GetNarrowList, 1000,  1000),
+	CreateTest<IGetListTests>(t => t.GetNarrowList, 100,   10000),
+	CreateTest<IGetListTests>(t => t.GetNarrowList, 10,    100000),
+	CreateTest<IGetListTests>(t => t.GetNarrowList, 1,     1000000),
+});
+return;
+*/
+
+
+
+
+
 			var testProvidersWithChangeTracking = new ITests[]
 			{
 				new AdoNet.AdoNetTests     (),
@@ -90,9 +174,15 @@ namespace Tests
 			{
 				new L2DB.L2DBAllTests(platform, L2DB.TestType.AdoNet),
 				new L2DB.L2DBAllTests(platform, L2DB.TestType.Linq),
+#if TEST_ASYNC
 				new L2DB.L2DBAllTests(platform, L2DB.TestType.Async),
+#endif
+#if TEST_CHANGE_TRACKING
 				new L2DB.L2DBAllTests(platform, L2DB.TestType.ChangeTracking),
+#if TEST_ASYNC
 				new L2DB.L2DBAllTests(platform, L2DB.TestType.ChangeTrackingAsync),
+#endif
+#endif
 			},
 			new[]
 			{
@@ -104,9 +194,15 @@ namespace Tests
 			{
 				new EFCore.EFCoreAllTests(platform, EFCore.TestType.AdoNet),
 				new EFCore.EFCoreAllTests(platform, EFCore.TestType.Linq),
+#if TEST_ASYNC
 				new EFCore.EFCoreAllTests(platform, EFCore.TestType.Async),
+#endif
+#if TEST_CHANGE_TRACKING
 				new EFCore.EFCoreAllTests(platform, EFCore.TestType.ChangeTracking),
+#if TEST_ASYNC
 				new EFCore.EFCoreAllTests(platform, EFCore.TestType.ChangeTrackingAsync),
+#endif
+#endif
 			},
 			new[]
 			{
@@ -120,26 +216,34 @@ namespace Tests
 				CreateTest<ISingleColumnTests>(t => t.GetSingleColumnParam, 10000),
 			});
 
+#if TEST_CHANGE_TRACKING
 			RunTests(platform, "Single Column with Change Tracking", testProvidersWithChangeTracking.OfType<ISingleColumnTests>(), new[]
 			{
 				CreateTest<ISingleColumnTests>(t => t.GetSingleColumnFast,  10000),
 				CreateTest<ISingleColumnTests>(t => t.GetSingleColumnSlow,  10000),
 				CreateTest<ISingleColumnTests>(t => t.GetSingleColumnParam, 10000),
 			});
+#endif
 
+#if TEST_ASYNC
 			RunTests(platform, "Single Column Async", testProviders.OfType<ISingleColumnAsyncTests>(), new[]
 			{
 				CreateTest<ISingleColumnAsyncTests>(t => t.GetSingleColumnFastAsync,  10000),
 				CreateTest<ISingleColumnAsyncTests>(t => t.GetSingleColumnSlowAsync,  10000),
 				CreateTest<ISingleColumnAsyncTests>(t => t.GetSingleColumnParamAsync, 10000),
 			});
+#endif
 
+#if TEST_CHANGE_TRACKING
+#if TEST_ASYNC
 			RunTests(platform, "Single Column Async with Change Tracking", testProvidersWithChangeTracking.OfType<ISingleColumnAsyncTests>(), new[]
 			{
 				CreateTest<ISingleColumnAsyncTests>(t => t.GetSingleColumnFastAsync,  10000),
 				CreateTest<ISingleColumnAsyncTests>(t => t.GetSingleColumnSlowAsync,  10000),
 				CreateTest<ISingleColumnAsyncTests>(t => t.GetSingleColumnParamAsync, 10000),
 			});
+#endif
+#endif
 
 			RunTests(platform, "Narrow List", testProviders.OfType<IGetListTests>(), new[]
 			{
@@ -152,6 +256,7 @@ namespace Tests
 				CreateTest<IGetListTests>(t => t.GetNarrowList,           1, 1000000),
 			});
 
+#if TEST_CHANGE_TRACKING
 			RunTests(platform, "Narrow List with Change Tracking", testProvidersWithChangeTracking.OfType<IGetListTests>(), new[]
 			{
 				CreateTest<IGetListTests>(t => t.GetNarrowList,           10000,  1),
@@ -163,7 +268,9 @@ namespace Tests
 				CreateTest<IGetListTests>(t => t.GetNarrowList,           1, 100000),
 //				CreateTest<IGetListTests>(t => t.GetNarrowList,           1, 1000000),
 			});
+#endif
 
+#if TEST_ASYNC
 			RunTests(platform, "Narrow List Async", testProviders.OfType<IGetListAsyncTests>(), new[]
 			{
 				CreateTest<IGetListAsyncTests>(t => t.GetNarrowListAsync, 10000,   1),
@@ -174,7 +281,10 @@ namespace Tests
 				CreateTest<IGetListAsyncTests>(t => t.GetNarrowListAsync, 10, 100000),
 				CreateTest<IGetListAsyncTests>(t => t.GetNarrowListAsync, 1, 1000000),
 			});
+#endif
 
+#if TEST_CHANGE_TRACKING
+#if TEST_ASYNC
 			RunTests(platform, "Narrow List Async with Change Tracking", testProvidersWithChangeTracking.OfType<IGetListAsyncTests>(), new[]
 			{
 				CreateTest<IGetListAsyncTests>(t => t.GetNarrowListAsync, 10000,  1),
@@ -186,6 +296,8 @@ namespace Tests
 				CreateTest<IGetListAsyncTests>(t => t.GetNarrowListAsync, 1, 100000),
 //				CreateTest<IGetListAsyncTests>(t => t.GetNarrowListAsync, 1, 1000000),
 			});
+#endif
+#endif
 
 			RunTests(platform, "Wide List", testProviders.OfType<IGetListTests>(), new[]
 			{
@@ -198,6 +310,7 @@ namespace Tests
 				CreateTest<IGetListTests>(t => t.GetWideList,             1, 1000000),
 			});
 
+#if TEST_CHANGE_TRACKING
 			RunTests(platform, "Wide List with Change Tracking", testProvidersWithChangeTracking.OfType<IGetListTests>(), new[]
 			{
 				CreateTest<IGetListTests>(t => t.GetWideList,             1000,   1),
@@ -209,7 +322,9 @@ namespace Tests
 				CreateTest<IGetListTests>(t => t.GetWideList,             1, 100000),
 //				CreateTest<IGetListTests>(t => t.GetWideList,             1, 1000000),
 			});
+#endif
 
+#if TEST_ASYNC
 			RunTests(platform, "Wide List Async", testProviders.OfType<IGetListAsyncTests>(), new[]
 			{
 				CreateTest<IGetListAsyncTests>(t => t.GetWideListAsync,   10000,   1),
@@ -220,7 +335,10 @@ namespace Tests
 				CreateTest<IGetListAsyncTests>(t => t.GetWideListAsync,   10, 100000),
 				CreateTest<IGetListAsyncTests>(t => t.GetWideListAsync,   1, 1000000),
 			});
+#endif
 
+#if TEST_CHANGE_TRACKING
+#if TEST_ASYNC
 			RunTests(platform, "Wide List Async with Change Tracking", testProvidersWithChangeTracking.OfType<IGetListAsyncTests>(), new[]
 			{
 				CreateTest<IGetListAsyncTests>(t => t.GetWideListAsync,   1000,   1),
@@ -232,10 +350,13 @@ namespace Tests
 				CreateTest<IGetListAsyncTests>(t => t.GetWideListAsync,   1, 100000),
 //				CreateTest<IGetListAsyncTests>(t => t.GetWideListAsync,   1, 1000000),
 			});
+#endif
+#endif
 
 			RunTests(platform, "Linq Query", testProviders.OfType<ILinqQueryTests>(), new[]
 			{
-				CreateTest<ILinqQueryTests>(t => t.SimpleLinqQuery,     1000,  1),
+				CreateTest<ILinqQueryTests>(t => t.SimpleLinqQuery,     1000),
+				CreateTest<ILinqQueryTests>(t => t.SimpleLinqQueryTop,  1000,  1),
 				CreateTest<ILinqQueryTests>(t => t.ComplicatedLinqFast, 1000,  1),
 				CreateTest<ILinqQueryTests>(t => t.ComplicatedLinqSlow,  100, 10, 100),
 				CreateTest<ILinqQueryTests>(t => t.ComplicatedLinqSlow,  100, 10, 1000),
@@ -243,12 +364,12 @@ namespace Tests
 				CreateTest<ILinqQueryTests>(t => t.ComplicatedLinqSlow,   10, 10, 500000),
 			});
 
-#if !NETCOREAPP2_1
+#if TEST_WCF
 			var wcfTestProviders = new ITests[]
 			{
 				new AdoNet.AdoNetTests (),
 				new L2DB.L2DBLinqTests (),
-				new EF6.EF6LinqTests   { TrackChanges = true },
+				//new EF6.EF6LinqTests   { TrackChanges = true },
 				new L2DB.LoWcfLinqTests(),
 			};
 
@@ -280,7 +401,7 @@ namespace Tests
 
 			RunTests(platform, "Linq over WCF Linq Query", wcfTestProviders.OfType<ILinqQueryTests>(), new[]
 			{
-				CreateTest<ILinqQueryTests>(t => t.SimpleLinqQuery,      1000,  1),
+				CreateTest<ILinqQueryTests>(t => t.SimpleLinqQuery,      1000),
 				CreateTest<ILinqQueryTests>(t => t.ComplicatedLinqFast,  1000,  1),
 				CreateTest<ILinqQueryTests>(t => t.ComplicatedLinqSlow,    20, 10, 250000),
 				CreateTest<ILinqQueryTests>(t => t.ComplicatedLinqSlow,    10, 10, 500000),

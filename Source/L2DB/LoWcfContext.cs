@@ -3,13 +3,14 @@ using System.ServiceModel;
 using System.ServiceModel.Description;
 
 using LinqToDB;
-using LinqToDB.ServiceModel;
+using LinqToDB.Remote;
+using LinqToDB.Remote.Wcf;
 
 namespace Tests.L2DB
 {
 	using DataModel;
 
-	public class LoWcfContext : ServiceModelDataContext
+	public class LoWcfContext : WcfDataContext
 	{
 		public LoWcfContext(bool trackChanges) : base(
 			new NetTcpBinding(SecurityMode.None)
@@ -36,13 +37,13 @@ namespace Tests.L2DB
 			if (Host != null)
 				return;
 
-			ServiceHost host = new ServiceHost(new LinqService { AllowUpdates = true }, new Uri("net.tcp://localhost:" + ++IP));
+			ServiceHost host = new ServiceHost(new WcfLinqService(new LinqService { AllowUpdates = true }, true), new Uri("net.tcp://localhost:" + ++IP));
 
 			host.Description.Behaviors.Add(new ServiceMetadataBehavior());
 			host.Description.Behaviors.Find<ServiceDebugBehavior>().IncludeExceptionDetailInFaults = true;
 			host.AddServiceEndpoint(typeof(IMetadataExchange), MetadataExchangeBindings.CreateMexTcpBinding(), "mex");
 			host.AddServiceEndpoint(
-				typeof(ILinqService),
+				typeof(IWcfLinqService),
 				new NetTcpBinding(SecurityMode.None)
 				{
 					MaxReceivedMessageSize = 10000000,

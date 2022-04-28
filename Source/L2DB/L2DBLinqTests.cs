@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using LinqToDB;
-using LinqToDB.Async;
 
 namespace Tests.L2DB
 {
@@ -36,7 +35,7 @@ namespace Tests.L2DB
 		{
 			watch.Start();
 
-			using (var db = new L2DBContext(TrackChanges))
+			await using (var db = new L2DBContext(TrackChanges))
 				for (var i = 0; i < repeatCount; i++)
 					await db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).FirstAsync();
 
@@ -63,7 +62,7 @@ namespace Tests.L2DB
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(TrackChanges))
+				await using (var db = new L2DBContext(TrackChanges))
 					await db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).FirstAsync();
 
 			watch.Stop();
@@ -92,7 +91,7 @@ namespace Tests.L2DB
 		{
 			watch.Start();
 
-			using (var db = new L2DBContext(TrackChanges))
+			await using (var db = new L2DBContext(TrackChanges))
 				for (var i = 0; i < repeatCount; i++)
 				{
 					var id = 1;
@@ -125,15 +124,17 @@ namespace Tests.L2DB
 			var token = default(CancellationToken);
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(TrackChanges))
-				//await db.NarrowLongs.Take(takeCount).ForEachAsync(item => {});
-				using (var en = db.NarrowLongs.Take(takeCount).AsAsyncEnumerable().GetEnumerator())
-					while (await en.MoveNext(token))
-					{
-						var item = en.Current;
-					}
+			{
+				await using var db = new L2DBContext(TrackChanges);
 
-					watch.Stop();
+				var q = db.NarrowLongs.Take(takeCount).AsAsyncEnumerable();
+
+				await foreach(var item in q.WithCancellation(token))
+				{
+				}
+			}
+
+			watch.Stop();
 
 			return true;
 		}
@@ -156,7 +157,7 @@ namespace Tests.L2DB
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(TrackChanges))
+				await using (var db = new L2DBContext(TrackChanges))
 					await db.WideLongs.Take(takeCount).ForEachAsync(item => {});
 
 			watch.Stop();
@@ -164,14 +165,39 @@ namespace Tests.L2DB
 			return true;
 		}
 
-		public bool SimpleLinqQuery(Stopwatch watch, int repeatCount, int takeCount)
+		public bool SimpleLinqQuery(Stopwatch watch, int repeatCount)
 		{
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(TrackChanges))
-				{
-					var q =
+			{
+				using var db = new L2DBContext(TrackChanges);
+
+				var q =
+					(
+						from n1 in db.Narrows
+						where n1.ID < 100
+						select n1.ID
+					);
+
+				foreach (var item in q)
+					break;
+			}
+
+			watch.Stop();
+
+			return true;
+		}
+
+		public bool SimpleLinqQueryTop(Stopwatch watch, int repeatCount, int takeCount)
+		{
+			watch.Start();
+
+			for (var i = 0; i < repeatCount; i++)
+			{
+				using var db = new L2DBContext(TrackChanges);
+
+				var q =
 					(
 						from n1 in db.Narrows
 						where n1.ID < 100
@@ -179,8 +205,8 @@ namespace Tests.L2DB
 					)
 					.Take(takeCount);
 
-					foreach (var item in q) {}
-				}
+				foreach (var item in q) {}
+			}
 
 			watch.Stop();
 

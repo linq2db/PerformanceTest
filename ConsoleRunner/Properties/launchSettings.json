@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ConsoleRunner": {
+      "commandName": "Project",
+      "commandLineArgs": "perform"
+    }
+  }
+}

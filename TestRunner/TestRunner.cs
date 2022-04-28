@@ -95,7 +95,7 @@ namespace TestRunner
 						.Value(t => t.Platform,  platform)
 						.Value(t => t.Name,      testName)
 						.Value(t => t.CreatedOn, () => Sql.CurrentTimestamp)
-					.InsertWithIdentity();
+					.InsertWithInt32Identity();
 
 				foreach (var test in tests)
 				{
@@ -105,7 +105,7 @@ namespace TestRunner
 							.Value(t => t.Repeat,    test.Repeat)
 							.Value(t => t.Take,      test.Take)
 							.Value(t => t.CreatedOn, () => Sql.CurrentTimestamp)
-						.InsertWithIdentity();
+						.InsertWithInt32Identity();
 
 					foreach (var watch in test.Stopwatch.Where(w => w != null))
 					{
@@ -193,7 +193,7 @@ namespace TestRunner
 			Console.WriteLine(testName);
 			Console.WriteLine(results);
 
-			var basePath = Path.GetDirectoryName(typeof(TestRunner).Assembly.Location);
+			var basePath = Path.GetDirectoryName(typeof(TestRunner).Assembly.Location)!;
 
 			while (!Directory.Exists(Path.Combine(basePath, "Result")))
 				basePath = Path.GetDirectoryName(basePath);
@@ -206,13 +206,27 @@ namespace TestRunner
 			Console.WriteLine();
 		}
 
+		public static Test<T> CreateTest<T>(Expression<Func<T,Func<Stopwatch,int,bool>>> func, int repeat)
+		{
+			var cfunc = func.Compile();
+
+			return new ()
+			{
+				Func   = p => (sw,r,t) => cfunc(p)(sw, r),
+				Name   = ((MethodInfo)((ConstantExpression)func.Body
+					.Find(0, static (_,e) => e is ConstantExpression { Value: MethodInfo })!).Value!).Name,
+				Repeat = repeat,
+				Take   = null
+			};
+		}
+
 		public static Test<T> CreateTest<T>(Expression<Func<T,Func<Stopwatch,int,int,bool>>> func, int repeat, int take = -1)
 		{
 			return new Test<T>
 			{
 				Func   = func.Compile(),
 				Name   = ((MethodInfo)((ConstantExpression)func.Body
-					.Find(e => e is ConstantExpression c && c.Value is MethodInfo)).Value).Name,
+					.Find(0, static (_,e) => e is ConstantExpression { Value: MethodInfo })!).Value!).Name,
 				Repeat = repeat,
 				Take   = take > 0 ? take : (int?)null
 			};
@@ -222,7 +236,7 @@ namespace TestRunner
 		{
 			var cfunc = func.Compile();
 			var name  = ((MethodInfo)((ConstantExpression)func.Body
-				.Find(e => e is ConstantExpression c && c.Value is MethodInfo)).Value).Name;
+				.Find(0, (_,e) => e is ConstantExpression { Value: MethodInfo })!).Value!).Name;
 
 			return new Test<T>
 			{
@@ -237,7 +251,7 @@ namespace TestRunner
 		{
 			var cfunc = func.Compile();
 			var name  = ((MethodInfo)((ConstantExpression)func.Body
-				.Find(e => e is ConstantExpression c && c.Value is MethodInfo)).Value).Name;
+				.Find(0, (_,e) => e is ConstantExpression { Value: MethodInfo })!).Value!).Name;
 
 			return new Test<T>
 			{
@@ -285,16 +299,17 @@ namespace TestRunner
 		}
 
 		public static void CreateTable<T>(DataConnection db, IEnumerable<T> data)
+			where T : class
 		{
 			var list = data.ToList();
 
-			db.CreateTempTable(
-				list,
+			db.CreateTable<T>().BulkCopy(
 				new BulkCopyOptions
 				{
 					NotifyAfter = 10000,
 					RowsCopiedCallback = c => Console.Write($"\rCopying {typeof(T).Name} {c.RowsCopied} of {list.Count}...")
-				});
+				},
+				list);
 
 			Console.WriteLine();
 		}

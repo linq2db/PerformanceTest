@@ -93,7 +93,7 @@ namespace PerformanceTest.Views.MainWindow
 						from r in runs
 						group r by new { r.Platform, r.Name } into g
 						//orderby g.Key.Platform, g.Key.Name
-						select new { g.Key, Items = g.Select(rt => new { Run = rt, Methods = ms[rt.ID] }).ToList() }
+						select new { g.Key, Items = g.Select(rt => new { Run = rt, Methods = ms.TryGetValue(rt.ID, out var m) ? m : new() }).ToList() }
 					)
 					.ToDictionary(t => t.Key, t => t.Items);
 
