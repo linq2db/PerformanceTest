@@ -15,6 +15,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinqToDB", "..\linq2db\Sour
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinqToDB.Remote.Wcf", "..\linq2db\Source\LinqToDB.Remote.Wcf\LinqToDB.Remote.Wcf.csproj", "{9F60AD9D-7C04-4450-9866-2983DBA4CC1A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".root", ".root", "{4ACEAF26-FCF3-4121-B7D3-D5DF81C84DC7}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Packages.props11111 = Directory.Packages.props11111
+		RunAll.cmd = RunAll.cmd
+		UI.cmd = UI.cmd
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

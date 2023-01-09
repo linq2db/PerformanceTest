@@ -15,11 +15,15 @@ namespace Tests.L2DB
 
 	public class L2DBContext : DataConnection
 	{
-		public L2DBContext(bool trackChanges = false)// : base(new MappingSchema())
+		static L2DBContext()
 		{
 			LinqToDB.Common.Configuration.Linq.EnableAutoFluentMapping = false;
+		}
+
+		public L2DBContext(bool trackChanges = false)// : base(new MappingSchema())
+		{
 //			if (trackChanges)
-//				OnEntityCreated = new ObjectIdentityTracker().EntityCreated;
+//				AddInterceptor(OnEntityCreated = new ObjectIdentityTracker().EntityCreated);
 		}
 
 		public ITable<Narrow>     Narrows     => this.GetTable<Narrow>();

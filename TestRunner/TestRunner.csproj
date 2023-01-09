@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>net6.0;net48</TargetFrameworks>
+		<TargetFrameworks>net6.0;net7.0;net48</TargetFrameworks>
 		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Data.SQLite" Version="5.0.13" />
-		<PackageReference Include="CodeJam" Version="4.0.2" />
+		<PackageReference Include="Microsoft.Data.SQLite" Version="7.0.1" />
+		<PackageReference Include="CodeJam" Version="4.1.0" />
 
 		<!--<PackageReference Include="linq2db" Version="3.6.0" />-->
 		<ProjectReference Include="I:\linq2db\Source\LinqToDB\LinqToDB.csproj" />

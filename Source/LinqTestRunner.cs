@@ -1,6 +1,6 @@
-﻿#define TEST_CHANGE_TRACKING
-#define TEST_ASYNC
-#define TEST_WCF
+﻿#define TEST_CHANGE_TRACKING1
+#define TEST_ASYNC1
+#define TEST_WCF1
 
 using System;
 using System.Diagnostics;
@@ -39,9 +39,9 @@ namespace Tests
 
 			DataConnection.AddConfiguration(
 				"Test",
-				$"Server={serverName};Database=PerformanceTest;Trusted_Connection=True;Application Name=LinqToDB Test;"
+				$"Server={serverName};Database=PerformanceTest;Trusted_Connection=True;Application Name=LinqToDB Test;TrustServerCertificate=True;"
 					+ (asyncProcessing ? "Asynchronous Processing=True;" : ""),
-				SqlServerTools.GetDataProvider(SqlServerVersion.v2012));
+				SqlServerTools.GetDataProvider(SqlServerVersion.v2019));
 
 			DataConnection.DefaultConfiguration = "Test";
 
@@ -63,31 +63,27 @@ namespace Tests
 				var testProviders = new ITests[]
 				{
 					new AdoNet   .AdoNetTests       (),
-	//				new L2DB     .L2DBSqlTests      (),
+					new L2DB     .L2DBSqlTests      (),
 					new L2DB     .L2DBLinqTests     (),
-	//				new L2DB     .L2DBCompTests     (),
-	//				new EFCore   .EFCoreSqlTests    (),
-	//				new EFCore   .EFCoreLinqTests   (),
-	//				new EFCore   .EFCoreCompTests   (),
+					new L2DB     .L2DBCompTests     (),
+					new EFCore   .EFCoreSqlTests    (),
+					new EFCore   .EFCoreLinqTests   (),
+					new EFCore   .EFCoreCompTests   (),
 				};
 
 				RunTests(platform, "Narrow List", testProviders.OfType<IGetListTests>(), new[]
 				{
-					//CreateTest<IGetListTests>(t => t.GetNarrowList, 100,   10000),
-					//CreateTest<IGetListTests>(t => t.GetNarrowList, 100,    100000),
-					CreateTest<IGetListTests>(t => t.GetNarrowList, 30000, 1),
+					CreateTest<IGetListTests>(t => t.GetNarrowList, 100,   10000),
+					CreateTest<IGetListTests>(t => t.GetNarrowList, 100,    100000),
+					CreateTest<IGetListTests>(t => t.GetNarrowList, 50000, 1),
 				});
 
-	//			RunTests(platform, "Linq Query", testProviders.OfType<ILinqQueryTests>(), new[]
-	//			{
-	////				CreateTest<ILinqQueryTests>(t => t.SimpleLinqQuery,     10000),
-	//				CreateTest<ILinqQueryTests>(t => t.SimpleLinqQueryTop,  10000, 1),
-	////				CreateTest<ILinqQueryTests>(t => t.ComplicatedLinqFast, 1000, 1),
-	////				CreateTest<ILinqQueryTests>(t => t.ComplicatedLinqSlow, 100,  10, 100),
-	////				CreateTest<ILinqQueryTests>(t => t.ComplicatedLinqSlow, 100,  10, 1000),
-	////				CreateTest<ILinqQueryTests>(t => t.ComplicatedLinqSlow, 20,   10, 250000),
-	////				CreateTest<ILinqQueryTests>(t => t.ComplicatedLinqSlow, 10,   10, 500000),
-	//			});
+				RunTests(platform, "Single Column", testProviders.OfType<ISingleColumnTests>(), new[]
+				{
+					CreateTest<ISingleColumnTests>(t => t.GetSingleColumnFast,  100000),
+					CreateTest<ISingleColumnTests>(t => t.GetSingleColumnSlow,  10000),
+					CreateTest<ISingleColumnTests>(t => t.GetSingleColumnParam, 10000),
+				});
 
 				return;
 			}
@@ -120,10 +116,6 @@ namespace Tests
 				new L2S      .L2SLinqTests      (),
 				new L2S      .L2SCompTests      (),
 			};
-
-
-
-
 
 /*
 RunTests("All", "LinqToDB Compare",
