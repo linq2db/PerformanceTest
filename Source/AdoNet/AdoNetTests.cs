@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Threading.Tasks;
+
+using Microsoft.Data.SqlClient;
 
 namespace Tests.AdoNet
 {

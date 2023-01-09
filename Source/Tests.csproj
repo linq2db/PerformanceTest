@@ -10,6 +10,7 @@
 		<PackageReference Include="CodeJam" Version="4.1.0" />
 		<PackageReference Include="Dapper" Version="2.0.123" />
 		<PackageReference Include="PetaPoco.Compiled" Version="6.0.532" />
+		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.0.1" />
 
 		<!--<PackageReference Include="linq2db" Version="3.6.0" />-->
 		<ProjectReference Include="I:\linq2db\Source\LinqToDB\LinqToDB.csproj" />
@@ -21,7 +22,6 @@
 		<Compile Remove="EF6\*" />
 		<Compile Remove="BLToolkit\*" />
 		<Compile Remove="L2DB\LoWcf*.cs" />
-		<PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
 	</ItemGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net48'">

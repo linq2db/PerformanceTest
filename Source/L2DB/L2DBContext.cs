@@ -7,6 +7,7 @@ using CodeJam.Collections;
 
 using LinqToDB;
 using LinqToDB.Data;
+using LinqToDB.DataProvider.SqlServer;
 using LinqToDB.Mapping;
 
 namespace Tests.L2DB
@@ -15,13 +16,20 @@ namespace Tests.L2DB
 
 	public class L2DBContext : DataConnection
 	{
+		static DataOptions _options = new DataOptions()
+			.UseSqlServer(GetConnectionString("Test"), SqlServerVersion.v2019, SqlServerProvider.MicrosoftDataSqlClient)
+			.WithOptions<LinqOptions>(o => o with { EnableAutoFluentMapping = false })
+			.WithOptions<LinqOptions>(o => o with { ParameterizeTakeSkip    = false })
+			;
+
 		static L2DBContext()
 		{
 			LinqToDB.Common.Configuration.Linq.EnableAutoFluentMapping = false;
 		}
 
-		public L2DBContext(bool trackChanges = false)// : base(new MappingSchema())
+		public L2DBContext(bool trackChanges = false) : base(_options)
 		{
+			InlineParameters = true;
 //			if (trackChanges)
 //				AddInterceptor(OnEntityCreated = new ObjectIdentityTracker().EntityCreated);
 		}

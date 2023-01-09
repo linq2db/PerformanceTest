@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
+
+using Microsoft.Data.SqlClient;
 
 using PetaPoco;
 

@@ -37,11 +37,15 @@ namespace Tests
 			};
 #endif
 
+			var connectionString =
+				$"Server={serverName};Database=PerformanceTest;Trusted_Connection=True;Application Name=LinqToDB Test;TrustServerCertificate=True;"
+				//+ (asyncProcessing ? "Asynchronous Processing=True;" : "")
+				;
+
 			DataConnection.AddConfiguration(
 				"Test",
-				$"Server={serverName};Database=PerformanceTest;Trusted_Connection=True;Application Name=LinqToDB Test;TrustServerCertificate=True;"
-					+ (asyncProcessing ? "Asynchronous Processing=True;" : ""),
-				SqlServerTools.GetDataProvider(SqlServerVersion.v2019));
+				connectionString,
+				SqlServerTools.GetDataProvider(provider : SqlServerProvider.MicrosoftDataSqlClient, connectionString : connectionString));
 
 			DataConnection.DefaultConfiguration = "Test";
 
@@ -71,19 +75,24 @@ namespace Tests
 					new EFCore   .EFCoreCompTests   (),
 				};
 
-				RunTests(platform, "Narrow List", testProviders.OfType<IGetListTests>(), new[]
+				RunTests(platform, "Linq Query Test", testProviders.OfType<ILinqQueryTests>(), new[]
 				{
-					CreateTest<IGetListTests>(t => t.GetNarrowList, 100,   10000),
-					CreateTest<IGetListTests>(t => t.GetNarrowList, 100,    100000),
-					CreateTest<IGetListTests>(t => t.GetNarrowList, 50000, 1),
+					CreateTest<ILinqQueryTests>(t => t.ComplicatedLinqSlow, 1, 10, 500000),
 				});
 
-				RunTests(platform, "Single Column", testProviders.OfType<ISingleColumnTests>(), new[]
-				{
-					CreateTest<ISingleColumnTests>(t => t.GetSingleColumnFast,  100000),
-					CreateTest<ISingleColumnTests>(t => t.GetSingleColumnSlow,  10000),
-					CreateTest<ISingleColumnTests>(t => t.GetSingleColumnParam, 10000),
-				});
+//				RunTests(platform, "Narrow List", testProviders.OfType<IGetListTests>(), new[]
+//				{
+//					CreateTest<IGetListTests>(t => t.GetNarrowList, 100,   10000),
+//					CreateTest<IGetListTests>(t => t.GetNarrowList, 100,    100000),
+//					CreateTest<IGetListTests>(t => t.GetNarrowList, 50000, 1),
+//				});
+//
+//				RunTests(platform, "Single Column", testProviders.OfType<ISingleColumnTests>(), new[]
+//				{
+//					CreateTest<ISingleColumnTests>(t => t.GetSingleColumnFast,  100000),
+//					CreateTest<ISingleColumnTests>(t => t.GetSingleColumnSlow,  10000),
+//					CreateTest<ISingleColumnTests>(t => t.GetSingleColumnParam, 10000),
+//				});
 
 				return;
 			}
@@ -406,7 +415,9 @@ return;
 		{
 			Console.WriteLine("Creating database...");
 
-			using (var db = SqlServerTools.CreateDataConnection($"Server={serverName};Database=master;Trusted_Connection=True"))
+			using (var db = SqlServerTools.CreateDataConnection(
+				$"Server={serverName};Database=master;Trusted_Connection=True;TrustServerCertificate=True;",
+				provider : SqlServerProvider.MicrosoftDataSqlClient))
 			{
 				if (!enforceCreate)
 					if (db.Execute<object>("SELECT db_id('PerformanceTest')") != null)
