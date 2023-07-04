@@ -27,7 +27,7 @@ namespace Tests
 		{
 			Console.WriteLine($"Testing {platform}...");
 
-			var serverName = ".";
+			var serverName = ".\\SQLEXPRESS";
 
 #if DEBUG
 			DataConnection.TurnTraceSwitchOn();
@@ -42,13 +42,6 @@ namespace Tests
 				//+ (asyncProcessing ? "Asynchronous Processing=True;" : "")
 				;
 
-			DataConnection.AddConfiguration(
-				"Test",
-				connectionString,
-				SqlServerTools.GetDataProvider(provider : SqlServerProvider.MicrosoftDataSqlClient, connectionString : connectionString));
-
-			DataConnection.DefaultConfiguration = "Test";
-
 			var basePath = Path.GetDirectoryName(typeof(LinqTestRunner).Assembly.Location);
 
 			while (!Directory.Exists(Path.Combine(basePath, "Result")))
@@ -57,8 +50,8 @@ namespace Tests
 			var resultPath = Path.Combine(basePath, "Result");
 
 			CreateResultDatabase(false, resultPath);
-			CreateTestDatabase  (false, serverName);
-
+			CreateTestDatabase  (false, serverName, connectionString);
+			
 			for (var index = 0; index < args.Length; index++)
 				Console.WriteLine($"{index}: {args[index]}");
 
@@ -411,10 +404,21 @@ return;
 #endif
 		}
 
-		static void CreateTestDatabase(bool enforceCreate, string serverName)
+		static void CreateTestDatabase(bool enforceCreate, string serverName, string connectionString)
 		{
-			Console.WriteLine("Creating database...");
+			void CreateTestConfiguration()
+			{
+				DataConnection.AddConfiguration(
+					"Test",
+					connectionString,
+					SqlServerTools.GetDataProvider(provider: SqlServerProvider.MicrosoftDataSqlClient,
+						connectionString: connectionString));
 
+				DataConnection.DefaultConfiguration = "Test";
+			}
+
+			Console.WriteLine("Creating test database...");
+			
 			using (var db = SqlServerTools.CreateDataConnection(
 				$"Server={serverName};Database=master;Trusted_Connection=True;TrustServerCertificate=True;",
 				provider : SqlServerProvider.MicrosoftDataSqlClient))
@@ -423,13 +427,18 @@ return;
 					if (db.Execute<object>("SELECT db_id('PerformanceTest')") != null)
 						if (db.Execute<object>("SELECT OBJECT_ID('PerformanceTest.dbo.Setting', N'U')") != null)
 							if (db.GetTable<Setting>()
-								.DatabaseName("PerformanceTest")
-								.Any(s => s.Name == "DB Version" && s.Value == DatabaseVersion))
+							    .DatabaseName("PerformanceTest")
+							    .Any(s => s.Name == "DB Version" && s.Value == DatabaseVersion))
+							{
+								CreateTestConfiguration();
 								return;
+							}
 
 				db.Execute("DROP DATABASE IF EXISTS PerformanceTest");
 				db.Execute("CREATE DATABASE PerformanceTest");
 			}
+			
+			CreateTestConfiguration();
 
 			using (var db = new L2DB.L2DBContext())
 			{
