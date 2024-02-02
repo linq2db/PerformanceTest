@@ -11,7 +11,7 @@ namespace TestRunner.DataModel
 		[Column]               public int      TestMethodID { get; set; }
 		[Column]               public TimeSpan Time         { get; set; }
 		[Column]               public long     Ticks        { get; set; }
-		[Column(Length=50)]    public string   Provider     { get; set; }
+		[Column(Length = 50)]  public string   Provider     { get; set; } = default!;
 		[Column]               public DateTime CreatedOn    { get; set; }
 	}
 }

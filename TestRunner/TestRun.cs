@@ -13,21 +13,24 @@ using LinqToDB.Data;
 using LinqToDB.DataProvider.SQLite;
 using LinqToDB.Expressions;
 
+#pragma warning disable MA0051
+#pragma warning disable MA0002
+
 namespace TestRunner
 {
 	using DataModel;
 	using Tools;
 
-	public class TestRunner
+	public class TestRun
 	{
 		const string DatabaseVersion = "1";
 
-		static readonly Random _random = new Random();
+		static readonly Random _random = new();
 
 		public static void RunTests<T>(string platform, string testName, IEnumerable<T> testProviders, Test<T>[] testMethods)
 			where T : class, ITests
 		{
-			RunTests(platform, testName, testProviders, p => {}, testMethods);
+			RunTests(platform, testName, testProviders, _ => {}, testMethods);
 		}
 
 		public static void RunTests<T>(string platform, string testName, IEnumerable<T> providers, Action<T> action, Test<T>[] testMethods)
@@ -91,7 +94,7 @@ namespace TestRunner
 
 			using (var db = new DataConnection("Result"))
 			{
-				var id = db.GetTable<TestRun>()
+				var id = db.GetTable<DataModel.TestRun>()
 						.Value(t => t.Platform,  platform)
 						.Value(t => t.Name,      testName)
 						.Value(t => t.CreatedOn, () => Sql.CurrentTimestamp)
@@ -119,10 +122,9 @@ namespace TestRunner
 					}
 				}
 
-				/*
 				var list =
 				(
-					from r in db.GetTable<TestRun>()
+					from r in db.GetTable<DataModel.TestRun>()
 					join m in db.GetTable<TestMethod>()    on r.ID equals m.TestRunID
 					join s in db.GetTable<TestStopwatch>() on m.ID equals s.TestMethodID
 					select new { r, m, s}
@@ -162,23 +164,22 @@ namespace TestRunner
 
 				db.GetTable<TestResult>().Truncate();
 				db.GetTable<TestResult>().BulkCopy(list);
-				*/
 			}
 
 			var res = tests.Select(t =>
 			{
 				var dic = new Dictionary<string,object>
 				{
-					["Test"]   = t.Test,
-					["Repeat"] = t.Repeat,
-					["Take"]   = t.Take,
+					{ "Test"  , t.Test   },
+					{ "Repeat", t.Repeat },
+					{ "Take"  , t.Take   }
 				};
 
 				foreach (var w in
-					from w in t.Stopwatch
-					where w != null
-					orderby w.time.Ticks
-					select w)
+				         from w in t.Stopwatch
+				         where w != null
+				         orderby w.time.Ticks
+				         select w)
 				{
 					dic.Add(w.p.Name, w.time);
 				}
@@ -193,9 +194,9 @@ namespace TestRunner
 			Console.WriteLine(testName);
 			Console.WriteLine(results);
 
-			var basePath = Path.GetDirectoryName(typeof(TestRunner).Assembly.Location)!;
+			var basePath = Path.GetDirectoryName(typeof(TestRun).Assembly.Location)!;
 
-			while (!Directory.Exists(Path.Combine(basePath, "Result")))
+			while (!Directory.Exists(Path.Combine(basePath!, "Result")))
 				basePath = Path.GetDirectoryName(basePath);
 
 			var filePath = Path.Combine(basePath, "Result", $"{platform}.{testName}.txt");
@@ -210,26 +211,26 @@ namespace TestRunner
 		{
 			var cfunc = func.Compile();
 
-			return new ()
-			{
-				Func   = p => (sw,r,t) => cfunc(p)(sw, r),
-				Name   = ((MethodInfo)((ConstantExpression)func.Body
+			return new
+			(
+				Func   : p => (sw,r,_) => cfunc(p)(sw, r),
+				Name   : ((MethodInfo)((ConstantExpression)func.Body
 					.Find(0, static (_,e) => e is ConstantExpression { Value: MethodInfo })!).Value!).Name,
-				Repeat = repeat,
-				Take   = null
-			};
+				Repeat : repeat,
+				Take   : null
+			);
 		}
 
 		public static Test<T> CreateTest<T>(Expression<Func<T,Func<Stopwatch,int,int,bool>>> func, int repeat, int take = -1)
 		{
 			return new Test<T>
-			{
-				Func   = func.Compile(),
-				Name   = ((MethodInfo)((ConstantExpression)func.Body
+			(
+				Func   : func.Compile(),
+				Name   : ((MethodInfo)((ConstantExpression)func.Body
 					.Find(0, static (_,e) => e is ConstantExpression { Value: MethodInfo })!).Value!).Name,
-				Repeat = repeat,
-				Take   = take > 0 ? take : (int?)null
-			};
+				Repeat : repeat,
+				Take   : take > 0 ? take : null
+			);
 		}
 
 		public static Test<T> CreateTest<T>(Expression<Func<T,Func<Stopwatch,int,int,int,bool>>> func, int repeat, int take, int parm)
@@ -239,12 +240,12 @@ namespace TestRunner
 				.Find(0, (_,e) => e is ConstantExpression { Value: MethodInfo })!).Value!).Name;
 
 			return new Test<T>
-			{
-				Func   = p => (sw,r,t) => cfunc(p)(sw, r, t, parm),
-				Name   = $"{name}({parm})",
-				Repeat = repeat,
-				Take   = take > 0 ? take : (int?)null
-			};
+			(
+				Func   : p => (sw,r,t) => cfunc(p)(sw, r, t, parm),
+				Name   : $"{name}({parm})",
+				Repeat : repeat,
+				Take   : take > 0 ? take : null
+			);
 		}
 
 		public static Test<T> CreateTest<T>(Expression<Func<T,Func<Stopwatch,int,int,Task<bool>>>> func, int repeat, int take = -1)
@@ -254,12 +255,12 @@ namespace TestRunner
 				.Find(0, (_,e) => e is ConstantExpression { Value: MethodInfo })!).Value!).Name;
 
 			return new Test<T>
-			{
-				Func   = p => (sw,r,t) => cfunc(p)(sw, r, t).Result,
-				Name   = name.Replace("Async", ""),
-				Repeat = repeat,
-				Take   = take > 0 ? take : (int?)null
-			};
+			(
+				Func   : p => (sw,r,t) => cfunc(p)(sw, r, t).Result,
+				Name   : name.Replace("Async", ""),
+				Repeat : repeat,
+				Take   : take > 0 ? take : null
+			);
 		}
 
 		public static void CreateResultDatabase(bool enforceCreate, string resultFolder)
@@ -281,6 +282,7 @@ namespace TestRunner
 					}
 					catch
 					{
+						// ignored
 					}
 				}
 
@@ -289,10 +291,10 @@ namespace TestRunner
 				File.Delete($"{dbPath}.sqlite");
 
 				CreateTable(db, new[] { new Setting { Name = "DB Version", Value =  DatabaseVersion } });
-				db.CreateTable<TestRun>();
+				db.CreateTable<DataModel.TestRun>();
 				db.CreateTable<TestMethod>();
 				db.CreateTable<TestStopwatch>();
-				//db.CreateTable<TestResult>();
+				db.CreateTable<TestResult>();
 			}
 
 			Console.WriteLine("Database created.");

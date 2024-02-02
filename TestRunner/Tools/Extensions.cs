@@ -11,17 +11,13 @@ namespace TestRunner.Tools
 {
 	public static class Extensions
 	{
-		class ValueHolder<T>
-		{
-#pragma warning disable 414
-			public T Value;
-#pragma warning restore 414
-		}
+		record ValueHolder<T>(T Value);
 
 		public static StringBuilder ToDiagnosticString<T>(this IEnumerable<T> source, StringBuilder stringBuilder)
+		where T : notnull
 		{
 			if (MappingSchema.Default.IsScalarType(typeof(T)))
-				return source.Select(value => new ValueHolder<T> { Value = value }).ToDiagnosticString(stringBuilder);
+				return source.Select(value => new ValueHolder<T>(value)).ToDiagnosticString(stringBuilder);
 
 			var ta         = TypeAccessor.GetAccessor<T>();
 			var itemValues = new List<string[]>();

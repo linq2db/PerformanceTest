@@ -9,7 +9,7 @@ namespace TestRunner.DataModel
 	{
 		[PrimaryKey, Identity] public int      ID        { get; set; }
 		[Column]               public int      TestRunID { get; set; }
-		[Column(Length=50)]    public string   Name      { get; set; }
+		[Column(Length=50)]    public string   Name      { get; set; } = default!;
 		[Column]               public int      Repeat    { get; set; }
 		[Column, Nullable]     public int?     Take      { get; set; }
 		[Column]               public DateTime CreatedOn { get; set; }

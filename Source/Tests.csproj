@@ -7,16 +7,17 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\linq2db\Source\LinqToDB.Remote.Wcf\LinqToDB.Remote.Wcf.csproj" />
 		<ProjectReference Include="..\TestRunner\TestRunner.csproj" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.1" />
-		<PackageReference Include="CodeJam" Version="4.1.0" />
-		<PackageReference Include="Dapper" Version="2.0.123" />
-		<PackageReference Include="PetaPoco.Compiled" Version="6.0.532" />
-		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.0.1" />
+
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+		<PackageReference Include="CodeJam" />
+		<PackageReference Include="Dapper" />
+		<PackageReference Include="PetaPoco.Compiled" />
+		<PackageReference Include="Microsoft.Data.SqlClient" />
 
 		<!--<PackageReference Include="linq2db" Version="3.6.0" />-->
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0' OR '$(TargetFramework)' == 'net7.0'">
+	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0' OR '$(TargetFramework)' == 'net8.0'">
 		<Compile Remove="L2S\*" />
 		<Compile Remove="EF6\*" />
 		<Compile Remove="BLToolkit\*" />
@@ -24,9 +25,8 @@
 	</ItemGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net48'">
-		<PackageReference Include="EntityFramework" Version="6.4.4" />
-		<PackageReference Include="BLToolkit" Version="4.3.9" />
-		<PackageReference Update="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.6" />
+		<PackageReference Include="EntityFramework" />
+		<PackageReference Include="BLToolkit" />
 
 		<Reference Include="System.Data.Linq" />
 		<Reference Include="System.ServiceModel" />

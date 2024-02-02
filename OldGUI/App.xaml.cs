@@ -17,7 +17,7 @@ namespace PerformanceTest
 		public App()
 		{
 			DataConnection.TurnTraceSwitchOn();
-			DataConnection.WriteTraceLine = (s, s1, _) => Debug.WriteLine(s, s1);
+			DataConnection.WriteTraceLine = (s, s1) => Debug.WriteLine(s, s1);
 
 			SettingValueExtension.AppSettings = new AppSettings();
 

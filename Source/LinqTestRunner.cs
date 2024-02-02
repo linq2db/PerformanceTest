@@ -19,7 +19,7 @@ namespace Tests
 	using DataModel;
 	using Tests;
 
-	public class LinqTestRunner : TestRunner.TestRunner
+	public class LinqTestRunner : TestRunner.TestRun
 	{
 		const string DatabaseVersion = "1";
 
