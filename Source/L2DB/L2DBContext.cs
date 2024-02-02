@@ -18,13 +18,13 @@ namespace Tests.L2DB
 	{
 		static DataOptions _options = new DataOptions()
 			.UseSqlServer(GetConnectionString("Test"), SqlServerVersion.v2019, SqlServerProvider.MicrosoftDataSqlClient)
-			.WithOptions<LinqOptions>(o => o with { EnableAutoFluentMapping = false })
+			.WithOptions<LinqOptions>(o => o with { EnableContextSchemaEdit = false })
 			.WithOptions<LinqOptions>(o => o with { ParameterizeTakeSkip    = false })
 			;
 
 		static L2DBContext()
 		{
-			LinqToDB.Common.Configuration.Linq.EnableAutoFluentMapping = false;
+			LinqToDB.Common.Configuration.Linq.EnableContextSchemaEdit = false;
 		}
 
 		public L2DBContext(bool trackChanges = false) : base(_options)

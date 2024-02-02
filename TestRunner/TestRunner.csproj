@@ -9,11 +9,14 @@
 		<PackageReference Include="CodeJam" Version="4.1.0" />
 
 		<!--<PackageReference Include="linq2db" Version="3.6.0" />-->
-		<ProjectReference Include="I:\linq2db\Source\LinqToDB\LinqToDB.csproj" />
 	</ItemGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net48'">
 		<Reference Include="System.Data.Linq" />
 		<Reference Include="System.ServiceModel" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\linq2db\Source\LinqToDB\LinqToDB.csproj" />
 	</ItemGroup>
 </Project>

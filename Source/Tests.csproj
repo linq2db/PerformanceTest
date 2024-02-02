@@ -5,6 +5,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\linq2db\Source\LinqToDB.Remote.Wcf\LinqToDB.Remote.Wcf.csproj" />
 		<ProjectReference Include="..\TestRunner\TestRunner.csproj" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.1" />
 		<PackageReference Include="CodeJam" Version="4.1.0" />
@@ -13,8 +14,6 @@
 		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.0.1" />
 
 		<!--<PackageReference Include="linq2db" Version="3.6.0" />-->
-		<ProjectReference Include="I:\linq2db\Source\LinqToDB\LinqToDB.csproj" />
-		<ProjectReference Include="I:\linq2db\Source\LinqToDB.Remote.Wcf\LinqToDB.Remote.Wcf.csproj" Condition="'$(TargetFramework)' == 'net48'" />
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0' OR '$(TargetFramework)' == 'net7.0'">
