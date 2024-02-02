@@ -3,13 +3,13 @@
 		<PackageVersion Include="MahApps.Metro"            Version="2.4.10" />
 		<PackageVersion Include="Microsoft.Data.SQLite"    Version="8.0.1"   />
 		<PackageVersion Include="CodeJam"                  Version="4.1.0"   />
-		<PackageVersion Include="CodeJam"                  Version="4.1.0"   />
 		<PackageVersion Include="Dapper"                   Version="2.1.28"  />
 		<PackageVersion Include="PetaPoco.Compiled"        Version="6.0.677" />
 		<PackageVersion Include="Microsoft.Data.SqlClient" Version="5.1.5"   />
 		<PackageVersion Include="EntityFramework"          Version="6.4.4"   />
 		<PackageVersion Include="BLToolkit"                Version="4.3.9"   />
 		<PackageVersion Include="linq2db"                  Version="5.3.2"   />
+		<PackageVersion Include="linq2db.t4models"         Version="5.3.2"   />
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0' OR '$(TargetFramework)' == 'net8.0'">

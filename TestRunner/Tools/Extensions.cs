@@ -7,6 +7,9 @@ using LinqToDB.Extensions;
 using LinqToDB.Mapping;
 using LinqToDB.Reflection;
 
+#pragma warning disable MA0011
+#pragma warning disable MA0051
+
 namespace TestRunner.Tools
 {
 	public static class Extensions
@@ -42,7 +45,7 @@ namespace TestRunner.Tools
 						if (values[i].Length > 0 && values[i][0] == '.')
 							values[i] = "0" + values[i];
 					}
-					else values[i] = value.ToString();
+					else values[i] = value.ToString()!;
 				}
 
 				itemValues.Add(values);
@@ -124,9 +127,9 @@ namespace TestRunner.Tools
 			return stringBuilder;
 		}
 
-		public static StringBuilder ToDiagnosticString(this IEnumerable<IDictionary<string,object>> source, StringBuilder stringBuilder)
+		public static StringBuilder ToDiagnosticString(this IEnumerable<IDictionary<string,object?>> source, StringBuilder stringBuilder)
 		{
-			var itemValues = new Dictionary<string,(Type type,List<string> list)>();
+			var itemValues = new Dictionary<string,(Type type,List<string?> list)>();
 
 			foreach (var dic in source)
 			{
@@ -139,28 +142,32 @@ namespace TestRunner.Tools
 						var value  = item.Value;
 						var type   = item.Value.GetType();
 
-						string str;
-
 						if (!itemValues.TryGetValue(item.Key, out var items))
 						{
-							itemValues.Add(item.Key, items = (type, new List<string>()));
+							itemValues.Add(item.Key, items = (type, new List<string?>()));
 
 							for (var i = 0; i < max; i++)
 								items.list.Add(null);
 						}
 
-						if      (value == null)            str = ""; //"<NULL>";
-						else if (type == typeof(decimal))  str = ((decimal) value).ToString("G");
-						else if (type == typeof(DateTime)) str = ((DateTime)value).ToString("yyy-MM-dd hh:mm:ss");
-						else if (type == typeof(TimeSpan))
+						var str = value switch
 						{
-							str = new string(((TimeSpan)value).ToString().SkipWhile(c => c == '0' || c == ':').ToArray());
-							if (str.Length > 0 && str[0] == '.')
-								str = "0" + str;
-						}
-						else str = value.ToString();
+							null       => "", //"<NULL>";
+							decimal  v => v.ToString("G"),
+							DateTime v => v.ToString("yyy-MM-dd hh:mm:ss"),
+							TimeSpan v => FromTimeSpan(v),
+							_          => value.ToString()
+						};
 
 						items.list.Add(str);
+
+						static string FromTimeSpan(TimeSpan value)
+						{
+							var str = new string(((TimeSpan)value).ToString().SkipWhile(c => c is '0' or ':').ToArray());
+							if (str.Length > 0 && str[0] == '.')
+								str = "0" + str;
+							return str;
+						}
 					}
 				}
 
@@ -261,13 +268,16 @@ namespace TestRunner.Tools
 		}
 
 		public static string ToDiagnosticString1<T>(this IEnumerable<T> source)
+		where T : notnull
 		{
 			return source.ToDiagnosticString(new StringBuilder()).ToString();
 		}
 
 		public static string ToDiagnosticString(this IEnumerable<IDictionary<string,object>> source)
 		{
-			return source.ToDiagnosticString(new StringBuilder()).ToString();
+			if (source == null)
+				throw new ArgumentNullException(nameof(source));
+			return source!.ToDiagnosticString(new StringBuilder()).ToString();
 		}
 	}
 }

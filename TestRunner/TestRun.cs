@@ -114,7 +114,7 @@ namespace TestRunner
 					{
 						db.GetTable<TestStopwatch>()
 								.Value(t => t.TestMethodID, mid)
-								.Value(t => t.Time,         watch.time)
+								.Value(t => t.Time,         watch!.time)
 								.Value(t => t.Ticks,        watch.stopwatch.ElapsedTicks)
 								.Value(t => t.Provider,     watch.p.Name)
 								.Value(t => t.CreatedOn,    () => Sql.CurrentTimestamp)
@@ -168,7 +168,7 @@ namespace TestRunner
 
 			var res = tests.Select(t =>
 			{
-				var dic = new Dictionary<string,object>
+				var dic = new Dictionary<string,object?>
 				{
 					{ "Test"  , t.Test   },
 					{ "Repeat", t.Repeat },
@@ -176,10 +176,10 @@ namespace TestRunner
 				};
 
 				foreach (var w in
-				         from w in t.Stopwatch
-				         where w != null
-				         orderby w.time.Ticks
-				         select w)
+					from w in t.Stopwatch
+					where w != null
+					orderby w.time.Ticks
+					select w)
 				{
 					dic.Add(w.p.Name, w.time);
 				}

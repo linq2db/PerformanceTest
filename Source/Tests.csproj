@@ -1,9 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<PropertyGroup>
-		<TargetFrameworks>net6.0;net48;net8.0</TargetFrameworks>
-		<LangVersion>latest</LangVersion>
-	</PropertyGroup>
-
 	<ItemGroup>
 		<ProjectReference Include="..\..\linq2db\Source\LinqToDB.Remote.Wcf\LinqToDB.Remote.Wcf.csproj" />
 		<ProjectReference Include="..\TestRunner\TestRunner.csproj" />
