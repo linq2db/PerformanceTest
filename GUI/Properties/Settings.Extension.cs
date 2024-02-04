@@ -6,7 +6,7 @@ namespace PerformanceTest.Properties
 {
 	partial class Settings
 	{
-		public static object GetValue(string setting, string defaultValue)
+		public static object? GetValue(string setting, string? defaultValue)
 		{
 			var sp = Default.Properties[setting];
 
@@ -18,13 +18,13 @@ namespace PerformanceTest.Properties
 
 			var value = Default[setting];
 
-			if (value == null || value is string && value.ToString().Length == 0)
+			if (value is null or string { Length: 0 })
 				value = defaultValue;
 
 			return value;
 		}
 
-		static readonly object _saveSync = new object();
+		static readonly object _saveSync = new();
 
 		public void TrySave()
 		{
@@ -37,37 +37,35 @@ namespace PerformanceTest.Properties
 					}
 					catch
 					{
+						// ignored
 					}
 			}) { Priority = ThreadPriority.BelowNormal}.Start();
 		}
 
-		private  Timer    _timer;
-		readonly object   _timerSync = new object();
+		private  Timer?   _timer;
+		readonly object   _timerSync = new();
 		private  DateTime _lastDelaySave;
 
 		public void DelaySave()
 		{
 			_lastDelaySave = DateTime.Now;
 
-			if (_timer == null)
+			_timer ??= new Timer(_ =>
 			{
-				_timer = new Timer(s =>
+				if ((DateTime.Now - _lastDelaySave).TotalMilliseconds > 2000 && _timer != null)
 				{
-					if ((DateTime.Now - _lastDelaySave).TotalMilliseconds > 2000 && _timer != null)
+					lock (_timerSync)
 					{
-						lock (_timerSync)
+						if (_timer != null)
 						{
-							if (_timer != null)
-							{
-								_timer.Dispose();
-								_timer = null;
-								TrySave();
-							}
+							_timer.Dispose();
+							_timer = null;
+							TrySave();
 						}
 					}
-				},
-				null, 2100, 2100);
-			}
+				}
+			},
+			null, 2100, 2100);
 		}
 	}
 }

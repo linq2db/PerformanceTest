@@ -7,6 +7,7 @@ using LinqToDB.Extensions;
 using LinqToDB.Mapping;
 using LinqToDB.Reflection;
 
+#pragma warning disable MA0002
 #pragma warning disable MA0011
 #pragma warning disable MA0051
 
@@ -41,7 +42,7 @@ namespace TestRunner.Tools
 					else if (type == typeof(DateTime)) values[i] = ((DateTime)value).ToString("yyy-MM-dd hh:mm:ss");
 					else if (type == typeof(TimeSpan))
 					{
-						values[i] = new string(((TimeSpan)value).ToString().SkipWhile(c => c == '0' || c == ':').ToArray());
+						values[i] = new string(((TimeSpan)value).ToString().SkipWhile(c => c is '0' or ':').ToArray());
 						if (values[i].Length > 0 && values[i][0] == '.')
 							values[i] = "0" + values[i];
 					}
@@ -163,7 +164,7 @@ namespace TestRunner.Tools
 
 						static string FromTimeSpan(TimeSpan value)
 						{
-							var str = new string(((TimeSpan)value).ToString().SkipWhile(c => c is '0' or ':').ToArray());
+							var str = new string(value.ToString().SkipWhile(c => c is '0' or ':').ToArray());
 							if (str.Length > 0 && str[0] == '.')
 								str = "0" + str;
 							return str;
@@ -273,11 +274,9 @@ namespace TestRunner.Tools
 			return source.ToDiagnosticString(new StringBuilder()).ToString();
 		}
 
-		public static string ToDiagnosticString(this IEnumerable<IDictionary<string,object>> source)
+		public static string ToDiagnosticString(this IEnumerable<IDictionary<string,object?>> source)
 		{
-			if (source == null)
-				throw new ArgumentNullException(nameof(source));
-			return source!.ToDiagnosticString(new StringBuilder()).ToString();
+			return source.ToDiagnosticString(new StringBuilder()).ToString();
 		}
 	}
 }

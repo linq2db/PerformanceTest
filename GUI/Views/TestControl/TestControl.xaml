@@ -10,7 +10,7 @@
 	d:DesignWidth  = "600"
 	d:DataContext  = "{d:DesignInstance local:TestViewModel, IsDesignTimeCreatable=true}">
 
-	<Border BorderBrush="{StaticResource AccentColorBrush}" Background="White" BorderThickness="1" Margin="3,1">
+	<Border BorderBrush="{StaticResource MahApps.Brushes.Accent}" Background="White" BorderThickness="1" Margin="3,1">
 		<Grid HorizontalAlignment="Stretch" >
 			<Grid.RowDefinitions>
 				<RowDefinition Height="Auto" />
@@ -38,16 +38,16 @@
 				<Label Grid.Column="3" Content="{Binding Name}"     Margin="0" FontSize="14" FontWeight="Bold" />
 
 				<StackPanel Name="ButtonPanel" Grid.Column="4" HorizontalAlignment="Right" Orientation="Horizontal">
-					<Button ToolTip="Save as image" Style="{DynamicResource MetroCircleButtonStyle}" Height="33" Width="33" HorizontalAlignment="Right" Click="SaveButton_Click" Name="SaveButton">
+					<Button ToolTip="Save as image" Style="{StaticResource MahApps.Styles.Button.Circle}" Height="33" Width="33" HorizontalAlignment="Right" Click="SaveButton_Click" Name="SaveButton">
 						<Image Margin="9" Height="15" Source="{StaticResource SaveIcon}" />
 					</Button>
-					<Button ToolTip="Copy to clipboard" Style="{DynamicResource MetroCircleButtonStyle}" Height="33" Width="33" HorizontalAlignment="Right" Click="CopyButton_Click">
+					<Button ToolTip="Copy to clipboard" Style="{StaticResource MahApps.Styles.Button.Circle}" Height="33" Width="33" HorizontalAlignment="Right" Click="CopyButton_Click">
 						<Image Margin="0" Height="15" Source="{StaticResource CopyIcon}" />
 					</Button>
-					<Button ToolTip="Delete best and worst" Command="{Binding DeleteBestWorstCommand}" Style="{DynamicResource MetroCircleButtonStyle}" Height="33" Width="33" HorizontalAlignment="Right">
+					<Button ToolTip="Delete best and worst" Command="{Binding DeleteBestWorstCommand}" Style="{StaticResource MahApps.Styles.Button.Circle}" Height="33" Width="33" HorizontalAlignment="Right">
 						<Image Margin="2,1,0,0" Height="15" Source="{StaticResource DeleteIcon}" />
 					</Button>
-					<Button ToolTip="Kill everything (current test only)" Command="{Binding DeleteCommand}" Style="{DynamicResource MetroCircleButtonStyle}" Height="33" Width="33" HorizontalAlignment="Right">
+					<Button ToolTip="Kill everything (current test only)" Command="{Binding DeleteCommand}" Style="{DynamicResource MahApps.Styles.Button.Circle}" Height="33" Width="33" HorizontalAlignment="Right">
 						<Image Margin="0" Height="15" Source="{StaticResource SkullIcon}" />
 					</Button>
 				</StackPanel>
@@ -103,7 +103,7 @@
 												BorderThickness     = "1"
 												HorizontalAlignment = "Left">
 												<Border.ToolTip>
-													<ItemsControl ItemsSource="{Binding Watches}" Margin="2" BorderThickness="0" BorderBrush="{StaticResource AccentColorBrush}">
+													<ItemsControl ItemsSource="{Binding Watches}" Margin="2" BorderThickness="0" BorderBrush="{StaticResource MahApps.Brushes.Accent}">
 														<ItemsControl.ItemTemplate>
 															<DataTemplate>
 																<Label Content="{Binding Time}" Margin="2" Padding="0" FontSize="12" />

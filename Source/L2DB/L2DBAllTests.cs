@@ -23,8 +23,8 @@ namespace Tests.L2DB
 			_testType = testType;
 		}
 
-		private         string _name;
-		public override string  Name
+		private         string? _name;
+		public override string   Name
 		{
 			get
 			{

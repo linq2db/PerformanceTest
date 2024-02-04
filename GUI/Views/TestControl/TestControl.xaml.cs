@@ -41,12 +41,12 @@ namespace PerformanceTest.Views.TestControl
 			Clipboard.SetImage(CreateBitmap());
 		}
 
-		internal void SaveButton_Click(object sender, RoutedEventArgs e)
+		internal void SaveButton_Click(object sender, RoutedEventArgs? e)
 		{
-			var basePath = Path.GetDirectoryName(GetType().Assembly.Location);
+			var basePath = Path.GetDirectoryName(GetType().Assembly.Location)!;
 
 			while (!Directory.Exists(Path.Combine(basePath, "Result")))
-				basePath = Path.GetDirectoryName(basePath);
+				basePath = Path.GetDirectoryName(basePath)!;
 
 			var viewModel = (TestViewModel)DataContext;
 			var fileName  = Path.Combine(basePath, "Result", $"{viewModel.Platform}.{viewModel.Name}.png");

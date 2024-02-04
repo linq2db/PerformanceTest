@@ -51,7 +51,7 @@ namespace PerformanceTest.Views.MainWindow
 			Task.Run(RefreshDataAsync);
 		}
 
-		public static Dictionary<string,Brush>? ProviderBrushes;
+		public static Dictionary<string,Brush> ProviderBrushes = default!;
 
 		public async Task RefreshDataAsync()
 		{

@@ -158,7 +158,7 @@ namespace Tests.L2DB
 
 			for (var i = 0; i < repeatCount; i++)
 				await using (var db = new L2DBContext(TrackChanges))
-					await db.WideLongs.Take(takeCount).ForEachAsync(item => {});
+					await db.WideLongs.Take(takeCount).ForEachAsync(_ => {}).ConfigureAwait(false);
 
 			watch.Stop();
 

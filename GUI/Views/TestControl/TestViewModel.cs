@@ -15,6 +15,12 @@ namespace PerformanceTest.Views.TestControl
 
 	public partial class TestViewModel
 	{
+		public TestViewModel()
+		{
+			DeleteCommand          = new AsyncRelayCommand(DeleteDataAsync);
+			DeleteBestWorstCommand = new AsyncRelayCommand(DeleteBestWorstDataAsync);
+		}
+
 		public void Merge(TestViewModel test)
 		{
 			Methods = test.Methods;
@@ -46,9 +52,7 @@ namespace PerformanceTest.Views.TestControl
 
 		#region DeleteCommand
 
-		private AsyncRelayCommand _deleteCommand;
-		public  AsyncRelayCommand  DeleteCommand =>
-			_deleteCommand ?? (_deleteCommand = new AsyncRelayCommand(DeleteDataAsync));
+		public AsyncRelayCommand DeleteCommand { get; }
 
 		async Task DeleteDataAsync()
 		{
@@ -96,9 +100,7 @@ namespace PerformanceTest.Views.TestControl
 
 		#region DeleteBestWorstCommand
 
-		private AsyncRelayCommand _deleteBestWorstCommand;
-		public  AsyncRelayCommand  DeleteBestWorstCommand =>
-			_deleteBestWorstCommand ?? (_deleteBestWorstCommand = new AsyncRelayCommand(DeleteBestWorstDataAsync));
+		public AsyncRelayCommand DeleteBestWorstCommand { get; }
 
 		async Task DeleteBestWorstDataAsync()
 		{
@@ -118,17 +120,16 @@ namespace PerformanceTest.Views.TestControl
 
 			try
 			{
-				using (var db = new ResultDB())
+				await using var db = new ResultDB();
 				// Need CreateTempTableAsync
-				using (var tmp = db.CreateTempTable("#tmp", dataToDelete))
-				{
-					var q =
+				await using var tmp = db.CreateTempTable("#tmp", dataToDelete);
+
+				var q =
 						from w in db.TestStopwatches
 						join t in tmp on w.ID equals t.ID
 						select w;
 
-					await q.DeleteAsync();
-				}
+				await q.DeleteAsync();
 
 				await App.Root.ViewModel.RefreshDataAsync();
 			}

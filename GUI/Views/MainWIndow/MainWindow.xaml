@@ -28,7 +28,7 @@
 		<KeyBinding Key="F5" Command="{Binding RefreshCommand}"/>
 	</controls:MetroWindow.InputBindings>
 
-	<Border BorderBrush="{StaticResource AccentColorBrush}" BorderThickness="2,0,2,2">
+	<Border BorderBrush="{StaticResource MahApps.Brushes.Accent}" BorderThickness="2,0,2,2">
 		<Grid>
 			<Grid.RowDefinitions>
 				<RowDefinition Height="Auto" />
@@ -42,20 +42,20 @@
 
 			<ToolBarTray Grid.Row="0" Grid.ColumnSpan="2">
 				<ToolBar Band="1" BandIndex="1">
-					<Button ToolTip="Save all as images" Style="{DynamicResource MetroCircleButtonStyle}" Height="44" Width="44" Click="SaveButton_Click">
-						<Image Margin="11" Source="{StaticResource SaveIcon}" />
+					<Button ToolTip="Save all as images" Click="SaveButton_Click" Style="{StaticResource MahApps.Styles.Button.Circle}" Height="44" Width="44" >
+						<Image Margin="10" Source="{StaticResource SaveIcon}" />
 					</Button>
-					<Button ToolTip="Refresh (F5)" Command="{Binding RefreshCommand}" Style="{DynamicResource MetroCircleButtonStyle}" Height="44" Width="44">
-						<Image Margin="10" Source="{StaticResource RefreshIcon}" />
+					<Button ToolTip="Refresh (F5)" Command="{Binding RefreshCommand}" Style="{StaticResource MahApps.Styles.Button.Circle}" Height="44" Width="44" >
+						<Image Margin="9" Source="{StaticResource RefreshIcon}" />
 					</Button>
-					<Button ToolTip="Kill all tests" Command="{Binding KillCommand}" Style="{DynamicResource MetroCircleButtonStyle}" Height="44" Width="44">
-						<Image Margin="10" Source="{StaticResource SkullIcon}" />
+					<Button ToolTip="Kill all tests" Command="{Binding KillCommand}" Style="{StaticResource MahApps.Styles.Button.Circle}" Height="44" Width="44" >
+						<Image Margin="9" Source="{StaticResource SkullIcon}" />
 					</Button>
 				</ToolBar>
 			</ToolBarTray>
 
 			<TreeView Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Platforms}" MinWidth="200"
-					BorderBrush="{StaticResource AccentColorBrush}" BorderThickness="1" Margin="2,1,0,2" SelectedItemChanged="TreeView_SelectedItemChanged">
+					BorderBrush="{StaticResource MahApps.Brushes.Accent}" BorderThickness="1" Margin="2,1,0,2" SelectedItemChanged="TreeView_SelectedItemChanged">
 				<TreeView.ItemContainerStyle>
 					<Style TargetType="{x:Type TreeViewItem}">
 						<Setter Property="IsExpanded" Value="True" />
@@ -81,7 +81,7 @@
 				</ItemsControl>
 			</ScrollViewer>
 
-			<StatusBar Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Background="{StaticResource AccentColorBrush}">
+			<StatusBar Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Background="{StaticResource MahApps.Brushes.Accent}">
 				<StatusBarItem  Margin="5,0" Content="{Binding Status}" Width="Auto" />
 			</StatusBar>
 		</Grid>

@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net8.0-windows</TargetFramework>
@@ -10,13 +9,14 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Compile Include="..\TestRunner\DataModel\**\*.cs" >
-			<Link>DataModel</Link>
+		<Compile Include="..\TestRunner\DataModel\**\*.*">
+			<Link>DataModel\%(RecursiveDir)%(Filename)%(Extension)</Link>
 		</Compile>
 
 		<PackageReference Include="MahApps.Metro" />
 		<PackageReference Include="linq2db" />
 		<PackageReference Include="linq2db.t4models" />
+		<PackageReference Include="Microsoft.Data.SQLite" />
 
 		<Compile Update="Properties\Settings.Designer.cs">
 			<DesignTimeSharedInput>True</DesignTimeSharedInput>

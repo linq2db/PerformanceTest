@@ -13,6 +13,8 @@ using LinqToDB.Data;
 using LinqToDB.DataProvider.SQLite;
 using LinqToDB.Expressions;
 
+using Microsoft.Data.Sqlite;
+
 #pragma warning disable MA0051
 #pragma warning disable MA0002
 
@@ -196,8 +198,8 @@ namespace TestRunner
 
 			var basePath = Path.GetDirectoryName(typeof(TestRun).Assembly.Location)!;
 
-			while (!Directory.Exists(Path.Combine(basePath!, "Result")))
-				basePath = Path.GetDirectoryName(basePath);
+			while (!Directory.Exists(Path.Combine(basePath, "Result")))
+				basePath = Path.GetDirectoryName(basePath)!;
 
 			var filePath = Path.Combine(basePath, "Result", $"{platform}.{testName}.txt");
 
@@ -263,7 +265,7 @@ namespace TestRunner
 			);
 		}
 
-		public static void CreateResultDatabase(bool enforceCreate, string resultFolder)
+		public static void CreateResultDatabase(string resultFolder)
 		{
 			Console.WriteLine("Creating database...");
 
@@ -271,31 +273,24 @@ namespace TestRunner
 
 			DataConnection.AddConfiguration("Result", $"Data Source={dbPath}.sqlite", SQLiteTools.GetDataProvider());
 
-			using (var db = new DataConnection("Result"))
-			{
-				if (!enforceCreate)
-				{
-					try
-					{
-						if (db.GetTable<Setting>().Any(s => s.Name == "DB Version" && s.Value == DatabaseVersion))
-							return;
-					}
-					catch
-					{
-						// ignored
-					}
-				}
+			using var db = new DataConnection("Result");
 
-				db.Close();
+			db.CreateTable<Setting>(tableOptions : TableOptions.CreateIfNotExists);
 
-				File.Delete($"{dbPath}.sqlite");
+			if (db.GetTable<Setting>().Any(s => s.Name == "DB Version" && s.Value == DatabaseVersion))
+				return;
 
-				CreateTable(db, new[] { new Setting { Name = "DB Version", Value =  DatabaseVersion } });
-				db.CreateTable<DataModel.TestRun>();
-				db.CreateTable<TestMethod>();
-				db.CreateTable<TestStopwatch>();
-				db.CreateTable<TestResult>();
-			}
+			db.Close();
+
+			SqliteConnection.ClearAllPools();
+
+			File.Delete($"{dbPath}.sqlite");
+
+			CreateTable(db, new[] { new Setting { Name = "DB Version", Value =  DatabaseVersion } });
+			db.CreateTable<DataModel.TestRun>();
+			db.CreateTable<TestMethod>();
+			db.CreateTable<TestStopwatch>();
+			db.CreateTable<TestResult>();
 
 			Console.WriteLine("Database created.");
 		}

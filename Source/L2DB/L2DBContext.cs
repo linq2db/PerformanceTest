@@ -8,16 +8,18 @@ using CodeJam.Collections;
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider.SqlServer;
+using LinqToDB.Interceptors;
 using LinqToDB.Mapping;
 
 namespace Tests.L2DB
 {
 	using DataModel;
+	using static global::Dapper.SqlMapper;
 
 	public class L2DBContext : DataConnection
 	{
 		static DataOptions _options = new DataOptions()
-			.UseSqlServer(GetConnectionString("Test"), SqlServerVersion.v2019, SqlServerProvider.MicrosoftDataSqlClient)
+			.UseSqlServer(GetConnectionString("Test"), SqlServerVersion.v2022, SqlServerProvider.MicrosoftDataSqlClient)
 			.WithOptions<LinqOptions>(o => o with { EnableContextSchemaEdit = false })
 			.WithOptions<LinqOptions>(o => o with { ParameterizeTakeSkip    = false })
 			;
@@ -30,8 +32,8 @@ namespace Tests.L2DB
 		public L2DBContext(bool trackChanges = false) : base(_options)
 		{
 			InlineParameters = true;
-//			if (trackChanges)
-//				AddInterceptor(OnEntityCreated = new ObjectIdentityTracker().EntityCreated);
+			if (trackChanges)
+				AddInterceptor(new ObjectIdentityTracker());
 		}
 
 		public ITable<Narrow>     Narrows     => this.GetTable<Narrow>();
@@ -39,11 +41,11 @@ namespace Tests.L2DB
 		public ITable<WideLong>   WideLongs   => this.GetTable<WideLong>();
 	}
 
-	class ObjectIdentityTracker
+	class ObjectIdentityTracker : IEntityServiceInterceptor
 	{
 		interface IObjectStore
 		{
-			void StoreEntity(EntityCreatedEventArgs args);
+			public object StoreEntity(object entity);
 		}
 
 		class ObjectStore<T> : IObjectStore
@@ -58,54 +60,31 @@ namespace Tests.L2DB
 				_dic = new Dictionary<T,T>(10000, _comparer);
 			}
 
-			public void StoreEntity(EntityCreatedEventArgs args)
+			public object StoreEntity(object entity)
 			{
-				var entity = (T)args.Entity;
+				if (_dic.TryGetValue((T)entity, out var e))
+					return e;
 
-				if (_dic.TryGetValue(entity, out var e))
-					args.Entity = e;
-				else
-					_dic.Add(entity, entity);
+				_dic.Add((T)entity, (T)entity);
+
+				return entity;
 			}
 		}
 
-		readonly Dictionary<Type,IObjectStore> _entityDic = new Dictionary<Type,IObjectStore>();
+		readonly Dictionary<Type,IObjectStore> _entityDic = new();
 
-		public void EntityCreated(EntityCreatedEventArgs args)
+		public object EntityCreated(EntityCreatedEventData eventData, object entity)
 		{
-			var entity = args.Entity;
-			var type   = entity.GetType();
+			var type = entity.GetType();
 
 			if (!_entityDic.TryGetValue(type, out var store))
 			{
-				store = (IObjectStore)Activator.CreateInstance(typeof(ObjectStore<>).MakeGenericType(type));
+				store = (IObjectStore)Activator.CreateInstance(typeof(ObjectStore<>).MakeGenericType(type))!;
 				_entityDic.Add(type, store);
 			}
 
-			store.StoreEntity(args);
+			return store.StoreEntity(entity);
 		}
 
-		/*
-		static readonly IEqualityComparer<NarrowLong> _comparer = ComparerBuilder<NarrowLong>.GetEqualityComparer(
-			ta => ta.Members.Where(m => m.MemberInfo.GetCustomAttribute<PrimaryKeyAttribute>() != null));
-
-		readonly Dictionary<NarrowLong,NarrowLong> _nlDic = new Dictionary<NarrowLong,NarrowLong>(10000, _comparer);
-
-		public void EntityCreated1(EntityCreatedEventArgs args)
-		{
-			if (args.Entity is NarrowLong nl)
-			{
-				if (!_nlDic.TryGetValue(nl, out var n))
-					_nlDic.Add(nl, nl);
-				else
-					args.Entity = n;
-			}
-		}
-		*/
-	}
-
-	internal class EntityCreatedEventArgs
-	{
-		public object Entity;
 	}
 }

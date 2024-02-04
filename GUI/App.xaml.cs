@@ -21,10 +21,10 @@ namespace PerformanceTest
 
 			SettingValueExtension.AppSettings = new AppSettings();
 
-			var basePath = Path.GetDirectoryName(typeof(App).Assembly.Location);
+			var basePath = Path.GetDirectoryName(typeof(App).Assembly.Location)!;
 
 			while (!Directory.Exists(Path.Combine(basePath, "Result")))
-				basePath = Path.GetDirectoryName(basePath);
+				basePath = Path.GetDirectoryName(basePath)!;
 
 			var dbPath = Path.Combine(basePath, "Result", "Result");
 
@@ -39,16 +39,16 @@ namespace PerformanceTest
 		}
 
 		public static bool       IsInDesignMode;
-		public static MainWindow Root;
+		public static MainWindow Root = default!;
 
 		class AppSettings : IAppSettings
 		{
-			public object GetValue(string setting, string defaultValue)
+			public object? GetValue(string setting, string? defaultValue)
 			{
 				return Settings.GetValue(setting, defaultValue);
 			}
 
-			public object GetValue(string setting)
+			public object? GetValue(string setting)
 			{
 				var sp = Settings.Default.Properties[setting];
 
@@ -58,7 +58,7 @@ namespace PerformanceTest
 				return Settings.Default[setting];
 			}
 
-			public void SetValue(string setting, object value)
+			public void SetValue(string setting, object? value)
 			{
 				Settings.Default[setting] = value;
 			}

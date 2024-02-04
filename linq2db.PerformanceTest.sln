@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Source\Tests.cspro
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleRunner", "ConsoleRunner\ConsoleRunner.csproj", "{1182B7A6-EB49-443E-99A3-9AE7037A6CF9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OldGUI", "OldGUI\OldGUI.csproj", "{8B74CD62-A714-4F97-98BC-731B5132EC98}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestRunner", "TestRunner\TestRunner.csproj", "{ED3349B6-2DC9-4293-A295-570D9B54DDA2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinqToDB", "..\linq2db\Source\LinqToDB\LinqToDB.csproj", "{3914859B-C108-4501-8490-E137B8112946}"
@@ -23,7 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".root", ".root", "{4ACEAF26
 		UI.cmd = UI.cmd
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gui", "Gui\Gui.csproj", "{3EAD91C4-6167-4C34-9BA9-33896E37162B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GUI", "Gui\GUI.csproj", "{3EAD91C4-6167-4C34-9BA9-33896E37162B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,10 +37,6 @@ Global
 		{1182B7A6-EB49-443E-99A3-9AE7037A6CF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1182B7A6-EB49-443E-99A3-9AE7037A6CF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1182B7A6-EB49-443E-99A3-9AE7037A6CF9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8B74CD62-A714-4F97-98BC-731B5132EC98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8B74CD62-A714-4F97-98BC-731B5132EC98}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8B74CD62-A714-4F97-98BC-731B5132EC98}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8B74CD62-A714-4F97-98BC-731B5132EC98}.Release|Any CPU.Build.0 = Release|Any CPU
 		{ED3349B6-2DC9-4293-A295-570D9B54DDA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{ED3349B6-2DC9-4293-A295-570D9B54DDA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED3349B6-2DC9-4293-A295-570D9B54DDA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
