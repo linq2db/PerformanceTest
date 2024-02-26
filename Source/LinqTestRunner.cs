@@ -62,18 +62,18 @@ namespace Tests
 			{
 				var testProviders = new ITests[]
 				{
-					new AdoNet   .AdoNetTests       (),
-					new L2DB     .L2DBSqlTests      (),
+//					new AdoNet   .AdoNetTests       (),
+//					new L2DB     .L2DBSqlTests      (),
 					new L2DB     .L2DBLinqTests     (),
-					new L2DB     .L2DBCompTests     (),
-					new EFCore   .EFCoreSqlTests    (),
-					new EFCore   .EFCoreLinqTests   (),
-					new EFCore   .EFCoreCompTests   (),
+//					new L2DB     .L2DBCompTests     (),
+//					new EFCore   .EFCoreSqlTests    (),
+//					new EFCore   .EFCoreLinqTests   (),
+//					new EFCore   .EFCoreCompTests   (),
 				};
 
 				RunTests(platform, "Linq Query Test", testProviders.OfType<ILinqQueryTests>(),
 				[
-					CreateTest<ILinqQueryTests>(t => t.ComplicatedLinqSlow, 1, 10, 500000)
+					CreateTest<ILinqQueryTests>(t => t.ComplicatedLinqFast, 100, 100)
 				]);
 
 //				RunTests(platform, "Narrow List", testProviders.OfType<IGetListTests>(), new[]
