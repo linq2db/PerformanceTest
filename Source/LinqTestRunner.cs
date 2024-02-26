@@ -1,5 +1,5 @@
-﻿#define TEST_CHANGE_TRACKING
-#define TEST_ASYNC
+﻿#define TEST_CHANGE_TRACKING1
+#define TEST_ASYNC1
 #define TEST_WCF1
 
 using System;

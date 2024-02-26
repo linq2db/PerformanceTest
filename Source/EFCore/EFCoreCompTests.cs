@@ -139,11 +139,7 @@ namespace Tests.EFCore
 			for (var i = 0; i < repeatCount; i++)
 			{
 				using var db = new EFCoreContext(TrackChanges);
-#if NET48
-				await query(db, takeCount).ForEachAsync(item => {});
-#else
-				await foreach (var item in query(db, takeCount)) { }
-#endif
+				await foreach (var _ in query(db, takeCount)) { }
 			}
 
 			watch.Stop();
@@ -160,7 +156,7 @@ namespace Tests.EFCore
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new EFCoreContext(TrackChanges))
-					foreach (var item in query(db, takeCount)) {}
+					foreach (var _ in query(db, takeCount)) {}
 
 			watch.Stop();
 
@@ -177,11 +173,7 @@ namespace Tests.EFCore
 			for (var i = 0; i < repeatCount; i++)
 			{
 				using var db = new EFCoreContext(TrackChanges);
-#if NET48
-				await query(db, takeCount).ForEachAsync(item => {});
-#else
-				await foreach (var item in query(db, takeCount)) {}
-#endif
+				await foreach (var _ in query(db, takeCount)) {}
 			}
 
 			watch.Stop();
@@ -202,7 +194,7 @@ namespace Tests.EFCore
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new EFCoreContext(TrackChanges))
-					foreach (var item in query(db))
+					foreach (var _ in query(db))
 						break;
 
 			watch.Stop();
@@ -224,7 +216,7 @@ namespace Tests.EFCore
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new EFCoreContext(TrackChanges))
-					foreach (var item in query(db, takeCount)) {}
+					foreach (var _ in query(db, takeCount)) {}
 
 			watch.Stop();
 
@@ -253,7 +245,7 @@ namespace Tests.EFCore
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new EFCoreContext(TrackChanges))
-					foreach (var item in query(db, takeCount)) {}
+					foreach (var _ in query(db, takeCount)) {}
 
 			watch.Stop();
 
@@ -296,7 +288,7 @@ namespace Tests.EFCore
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new EFCoreContext(TrackChanges))
-					foreach (var item in query(db, takeCount)) {}
+					foreach (var _ in query(db, takeCount)) {}
 
 			watch.Stop();
 

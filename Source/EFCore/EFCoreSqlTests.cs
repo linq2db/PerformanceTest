@@ -23,11 +23,7 @@ namespace Tests.EFCore
 
 			using (var db = new EFCoreContext(TrackChanges))
 				for (var i = 0; i < repeatCount; i++)
-#if NET48
-					db.Narrow.FromSql(GetSingleColumnSql).Select(t => t.ID).AsEnumerable().First();
-#else
-					db.Narrow.FromSqlRaw(GetSingleColumnSql).Select(t => t.ID).AsEnumerable().First();
-#endif
+					_ = db.Narrow.FromSqlRaw(GetSingleColumnSql).Select(t => t.ID).AsEnumerable().First();
 
 			watch.Stop();
 
@@ -40,11 +36,7 @@ namespace Tests.EFCore
 
 			using (var db = new EFCoreContext(TrackChanges))
 				for (var i = 0; i < repeatCount; i++)
-#if NET48
-					await db.Narrow.FromSql(GetSingleColumnSql).Select(t => t.ID).FirstAsync();
-#else
-					await db.Narrow.FromSqlRaw(GetSingleColumnSql).Select(t => t.ID).FirstAsync();
-#endif
+					_ = await db.Narrow.FromSqlRaw(GetSingleColumnSql).Select(t => t.ID).FirstAsync();
 
 			watch.Stop();
 
@@ -57,11 +49,7 @@ namespace Tests.EFCore
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new EFCoreContext(TrackChanges))
-#if NET48
-					db.Narrow.FromSql(GetSingleColumnSql).Select(t => t.ID).AsEnumerable().First();
-#else
-					db.Narrow.FromSqlRaw(GetSingleColumnSql).Select(t => t.ID).AsEnumerable().First();
-#endif
+					_ = db.Narrow.FromSqlRaw(GetSingleColumnSql).Select(t => t.ID).AsEnumerable().First();
 
 			watch.Stop();
 
@@ -74,11 +62,7 @@ namespace Tests.EFCore
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new EFCoreContext(TrackChanges))
-#if NET48
-					await db.Narrow.FromSql(GetSingleColumnSql).Select(t => t.ID).FirstAsync();
-#else
-					await db.Narrow.FromSqlRaw(GetSingleColumnSql).Select(t => t.ID).FirstAsync();
-#endif
+					_ = await db.Narrow.FromSqlRaw(GetSingleColumnSql).Select(t => t.ID).FirstAsync();
 
 			watch.Stop();
 
@@ -92,14 +76,8 @@ namespace Tests.EFCore
 			using (var db = new EFCoreContext(TrackChanges))
 			{
 				for (var i = 0; i < repeatCount; i++)
-					db.Narrow
-#if NET48
-						.FromSql(GetParamSql,
-							new SqlParameter("@id", 1),
-							new SqlParameter("@p",  2))
-#else
+					_ = db.Narrow
 						.FromSqlInterpolated($"SELECT ID FROM Narrow WHERE ID = {1} AND Field1 = {2}")
-#endif
 						.Select(t => t.ID).AsEnumerable().First();
 			}
 
@@ -115,14 +93,8 @@ namespace Tests.EFCore
 			using (var db = new EFCoreContext(TrackChanges))
 			{
 				for (var i = 0; i < repeatCount; i++)
-					await db.Narrow
-#if NET48
-						.FromSql(GetParamSql,
-							new SqlParameter("@id", 1),
-							new SqlParameter("@p",  2))
-#else
+					_ = await db.Narrow
 						.FromSqlInterpolated($"SELECT ID FROM Narrow WHERE ID = {1} AND Field1 = {2}")
-#endif
 						.Select(t => t.ID).FirstAsync();
 			}
 
@@ -139,11 +111,7 @@ namespace Tests.EFCore
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new EFCoreContext(TrackChanges))
-#if NET48
-					foreach (var item in db.NarrowLong.FromSql(sql)) {}
-#else
-					foreach (var item in db.NarrowLong.FromSqlRaw(sql)) {}
-#endif
+					foreach (var _ in db.NarrowLong.FromSqlRaw(sql)) {}
 
 			watch.Stop();
 
@@ -158,11 +126,7 @@ namespace Tests.EFCore
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new EFCoreContext(TrackChanges))
-#if NET48
-					await db.NarrowLong.FromSql(sql).ForEachAsync(item => {});
-#else
-					await db.NarrowLong.FromSqlRaw(sql).ForEachAsync(item => {});
-#endif
+					await db.NarrowLong.FromSqlRaw(sql).ForEachAsync(_ => {});
 
 			watch.Stop();
 
@@ -177,11 +141,7 @@ namespace Tests.EFCore
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new EFCoreContext(TrackChanges))
-#if NET48
-					foreach (var item in db.WideLong.FromSql(sql)) {}
-#else
-					foreach (var item in db.WideLong.FromSqlRaw(sql)) {}
-#endif
+					foreach (var _ in db.WideLong.FromSqlRaw(sql)) {}
 
 			watch.Stop();
 
@@ -196,11 +156,7 @@ namespace Tests.EFCore
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new EFCoreContext(TrackChanges))
-#if NET48
-					await db.WideLong.FromSql(sql).ForEachAsync(item => {});
-#else
-					await db.WideLong.FromSqlRaw(sql).ForEachAsync(item => {});
-#endif
+					await db.WideLong.FromSqlRaw(sql).ForEachAsync(_ => {});
 
 			watch.Stop();
 
