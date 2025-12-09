@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 using System.Windows;
 
@@ -17,16 +16,16 @@ namespace PerformanceTest
 		public App()
 		{
 			DataConnection.TurnTraceSwitchOn();
-			DataConnection.WriteTraceLine = (s, s1) => Debug.WriteLine(s, s1);
+			DataConnection.WriteTraceLine = (s, s1, _) => Debug.WriteLine(s, s1);
 
 			SettingValueExtension.AppSettings = new AppSettings();
 
 			var basePath = Path.GetDirectoryName(typeof(App).Assembly.Location);
 
-			while (!Directory.Exists(Path.Combine(basePath, "Result")))
+			while (!Directory.Exists(Path.Combine(basePath!, "Result")))
 				basePath = Path.GetDirectoryName(basePath);
 
-			var dbPath = Path.Combine(basePath, "Result", "Result");
+			var dbPath = Path.Combine(basePath!, "Result", "Result");
 
 			DataConnection.AddConfiguration("Result", $"Data Source={dbPath}.sqlite", SQLiteTools.GetDataProvider());
 			DataConnection.DefaultConfiguration = "Result";
@@ -38,8 +37,8 @@ namespace PerformanceTest
 			base.OnExit(e);
 		}
 
-		public static bool       IsInDesignMode;
-		public static MainWindow Root;
+		public static bool        IsInDesignMode;
+		public static MainWindow? Root;
 
 		class AppSettings : IAppSettings
 		{
@@ -51,9 +50,6 @@ namespace PerformanceTest
 			public object GetValue(string setting)
 			{
 				var sp = Settings.Default.Properties[setting];
-
-				if (sp == null)
-					return null;
 
 				return Settings.Default[setting];
 			}

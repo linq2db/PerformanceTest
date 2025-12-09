@@ -1,0 +1,55 @@
+﻿<#@ template debug="true" hostspecific="true" language="C#"                              #>
+<#@ CleanupBehavior processor="T4VSHost" CleanupAfterProcessingtemplate="true"           #>
+<#@ output extension=".generated.cs"                                                     #>
+<#@ include file="$(LinqToDBT4TemplatesPath)T4Model.ttinclude"               once="true" #>
+<#@ include file="$(LinqToDBT4TemplatesPath)NotifyPropertyChanged.ttinclude" once="true" #>
+<#
+	Model.Namespace.Name = "PerformanceTest.Views.TestControl";
+
+	Model.Usings.Add("System.Windows");
+	Model.Usings.Add("System.Collections.ObjectModel");
+	Model.Usings.Add("System.Windows.Controls");
+	Model.Usings.Add("System.Windows.Media");
+
+	Model.Types.Add(
+		new Class("MethodViewModel",
+		[
+			new NotifyingProperty("string", "Name",   "DisplayName"),
+			new NotifyingProperty("long",   "Repeat", "DisplayName"),
+			new NotifyingProperty("long?",  "Take",   "DisplayName"),
+			new NotifyingProperty("string", "DisplayName").InitGetter("Name + \" / \" + Repeat + (Take.HasValue ? \" / \" + Take : \"\")"),
+
+			new NotifyingProperty("ObservableCollection<TimeViewModel>", "Times"),
+		]));
+
+	Model.Types.Add(
+		new Class("ProviderViewModel",
+		[
+			new NotifyingProperty("string", "Name"),
+			new NotifyingProperty("Brush",  "Color"),
+		]));
+
+	Model.Types.Add(
+		new Class("TestViewModel",
+		[
+			new NotifyingProperty("string", "Platform"),
+			new NotifyingProperty("string", "Name"),
+
+			new NotifyingProperty("ObservableCollection<MethodViewModel>",   "Methods"),
+			new NotifyingProperty("ObservableCollection<ProviderViewModel>", "Providers"),
+		]));
+
+	Model.Types.Add(
+		new Class("TimeViewModel",
+		[
+			new NotifyingProperty("string",   "Name"),
+			new NotifyingProperty("TimeSpan", "Time",    "Width"),
+			new NotifyingProperty("TimeSpan", "MaxTime", "Width"),
+			new NotifyingProperty("Border",   "Border"),
+			new NotifyingProperty("int",      "Width"),
+			new NotifyingProperty("Brush",    "Color"),
+			new NotifyingProperty("int",      "Count").InitGetter("Watches.Length"),
+		]));
+
+	GenerateModel();
+#>

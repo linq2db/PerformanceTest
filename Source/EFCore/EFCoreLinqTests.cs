@@ -23,7 +23,7 @@ namespace Tests.EFCore
 
 			using (var db = new EFCoreContext(TrackChanges))
 				for (var i = 0; i < repeatCount; i++)
-					db.Narrow.Where(t => t.ID == 1).Select(t => t.ID).AsEnumerable().First();
+					_ = db.Narrow.Where(t => t.ID == 1).Select(t => t.ID).AsEnumerable().First();
 
 			watch.Stop();
 
@@ -34,7 +34,11 @@ namespace Tests.EFCore
 		{
 			watch.Start();
 
+#if NET481
 			using (var db = new EFCoreContext(TrackChanges))
+#else
+			await using (var db = new EFCoreContext(TrackChanges))
+#endif
 				for (var i = 0; i < repeatCount; i++)
 					await db.Narrow.Where(t => t.ID == 1).Select(t => t.ID).FirstAsync();
 
@@ -49,7 +53,7 @@ namespace Tests.EFCore
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new EFCoreContext(TrackChanges))
-					db.Narrow.Where(t => t.ID == 1).Select(t => t.ID).AsEnumerable().First();
+					_ = db.Narrow.Where(t => t.ID == 1).Select(t => t.ID).AsEnumerable().First();
 
 			watch.Stop();
 
@@ -61,7 +65,11 @@ namespace Tests.EFCore
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
+#if NET481
 				using (var db = new EFCoreContext(TrackChanges))
+#else
+				await using (var db = new EFCoreContext(TrackChanges))
+#endif
 					await db.Narrow.Where(t => t.ID == 1).Select(t => t.ID).FirstAsync();
 
 			watch.Stop();
@@ -78,7 +86,7 @@ namespace Tests.EFCore
 				{
 					var id = 1;
 					var p  = 2;
-					db.Narrow.Where(t => t.ID == id && t.Field1 == p).Select(t => t.ID).AsEnumerable().First();
+					_ = db.Narrow.Where(t => t.ID == id && t.Field1 == p).Select(t => t.ID).AsEnumerable().First();
 				}
 
 			watch.Stop();
@@ -90,7 +98,11 @@ namespace Tests.EFCore
 		{
 			watch.Start();
 
+#if NET481
 			using (var db = new EFCoreContext(TrackChanges))
+#else
+			await using (var db = new EFCoreContext(TrackChanges))
+#endif
 				for (var i = 0; i < repeatCount; i++)
 				{
 					var id = 1;
@@ -109,7 +121,7 @@ namespace Tests.EFCore
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new EFCoreContext(TrackChanges))
-					foreach (var item in db.NarrowLong.Take(takeCount)) {}
+					foreach (var _ in db.NarrowLong.Take(takeCount)) {}
 
 			watch.Stop();
 
@@ -121,8 +133,12 @@ namespace Tests.EFCore
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
+#if NET481
 				using (var db = new EFCoreContext(TrackChanges))
-					await db.NarrowLong.Take(takeCount).ForEachAsync(item => {});
+#else
+				await using (var db = new EFCoreContext(TrackChanges))
+#endif
+					await db.NarrowLong.Take(takeCount).ForEachAsync(_ => {});
 
 			watch.Stop();
 
@@ -135,7 +151,7 @@ namespace Tests.EFCore
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new EFCoreContext(TrackChanges))
-					foreach (var item in db.WideLong.Take(takeCount)) {}
+					foreach (var _ in db.WideLong.Take(takeCount)) {}
 
 			watch.Stop();
 
@@ -147,8 +163,12 @@ namespace Tests.EFCore
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
+#if NET481
 				using (var db = new EFCoreContext(TrackChanges))
-					await db.WideLong.Take(takeCount).ForEachAsync(item => {});
+#else
+				await using (var db = new EFCoreContext(TrackChanges))
+#endif
+					await db.WideLong.Take(takeCount).ForEachAsync(_ => {});
 
 			watch.Stop();
 
@@ -160,18 +180,19 @@ namespace Tests.EFCore
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new EFCoreContext(TrackChanges))
-				{
-					var q =
-					(
-						from n1 in db.Narrow
-						where n1.ID < 100
-						select n1.ID
-					);
+			{
+				using var db = new EFCoreContext(TrackChanges);
 
-					foreach (var item in q)
-						break;
-				}
+				var q =
+				(
+					from n1 in db.Narrow
+					where n1.ID < 100
+					select n1.ID
+				);
+
+				foreach (var _ in q)
+					break;
+			}
 
 			watch.Stop();
 
@@ -183,9 +204,10 @@ namespace Tests.EFCore
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new EFCoreContext(TrackChanges))
-				{
-					var q =
+			{
+				using var db = new EFCoreContext(TrackChanges);
+
+				var q =
 					(
 						from n1 in db.Narrow
 						where n1.ID < 100
@@ -193,8 +215,8 @@ namespace Tests.EFCore
 					)
 					.Take(takeCount);
 
-					foreach (var item in q) {}
-				}
+				foreach (var _ in q) {}
+			}
 
 			watch.Stop();
 
@@ -206,9 +228,10 @@ namespace Tests.EFCore
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new EFCoreContext(TrackChanges))
-				{
-					var q =
+			{
+				using var db = new EFCoreContext(TrackChanges);
+
+				var q =
 					(
 						from n1 in db.Narrow
 						join n2 in db.Narrow on new { n1.ID, n1.Field1 } equals new { n2.ID, n2.Field1 }
@@ -224,8 +247,8 @@ namespace Tests.EFCore
 					.Skip(1)
 					.Take(takeCount);
 
-					foreach (var item in q) {}
-				}
+				foreach (var _ in q) {}
+			}
 
 			watch.Stop();
 
@@ -237,9 +260,10 @@ namespace Tests.EFCore
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new EFCoreContext(TrackChanges))
-				{
-					var q =
+			{
+				using var db = new EFCoreContext(TrackChanges);
+
+				var q =
 					(
 						from n in db.NarrowLong
 						join w in db.WideLong on n.Field1 equals w.Field1
@@ -269,8 +293,8 @@ namespace Tests.EFCore
 					.Skip(1000)
 					.Take(takeCount);
 
-					foreach (var item in q) {}
-				}
+				foreach (var _ in q) {}
+			}
 
 			watch.Stop();
 

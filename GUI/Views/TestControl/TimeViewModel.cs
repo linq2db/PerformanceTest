@@ -39,7 +39,7 @@ namespace PerformanceTest.Views.TestControl
 
 		partial void AfterNameChanged()
 		{
-			Application.Current.Dispatcher.Invoke(() => Color = MainWindowViewModel.ProviderBrushes[_name]);
+			Application.Current.Dispatcher.Invoke(() => Color = MainWindowViewModel.ProviderBrushes?[_name]);
 		}
 
 		public IEnumerable<int> GetBestWorst()
@@ -47,7 +47,7 @@ namespace PerformanceTest.Views.TestControl
 			var count = Watches.Length;
 
 			if (count <= 2)
-				return new int[0];
+				return [];
 
 			var n = count <=  5 ? 1 : count <= 10 ? 2 : count / 5;
 

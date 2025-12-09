@@ -195,7 +195,7 @@ namespace TestRunner
 
 			var basePath = Path.GetDirectoryName(typeof(TestRunner).Assembly.Location)!;
 
-			while (!Directory.Exists(Path.Combine(basePath, "Result")))
+			while (!Directory.Exists(Path.Combine(basePath!, "Result")))
 				basePath = Path.GetDirectoryName(basePath);
 
 			var filePath = Path.Combine(basePath, "Result", $"{platform}.{testName}.txt");
@@ -281,6 +281,7 @@ namespace TestRunner
 					}
 					catch
 					{
+						// ignored
 					}
 				}
 
@@ -288,7 +289,7 @@ namespace TestRunner
 
 				File.Delete($"{dbPath}.sqlite");
 
-				CreateTable(db, new[] { new Setting { Name = "DB Version", Value =  DatabaseVersion } });
+				CreateTable(db, [new Setting { Name = "DB Version", Value =  DatabaseVersion }]);
 				db.CreateTable<TestRun>();
 				db.CreateTable<TestMethod>();
 				db.CreateTable<TestStopwatch>();

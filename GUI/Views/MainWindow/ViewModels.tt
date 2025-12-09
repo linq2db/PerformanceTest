@@ -1,0 +1,37 @@
+﻿<#@ template debug="true" hostspecific="true" language="C#"                              #>
+<#@ CleanupBehavior processor="T4VSHost" CleanupAfterProcessingtemplate="true"           #>
+<#@ output extension=".generated.cs"                                                     #>
+<#@ include file="$(LinqToDBT4TemplatesPath)T4Model.ttinclude"               once="true" #>
+<#@ include file="$(LinqToDBT4TemplatesPath)NotifyPropertyChanged.ttinclude" once="true" #>
+<#
+	Model.Namespace.Name = "PerformanceTest.Views.MainWindow";
+
+	Model.Usings.Add("System.Windows");
+	Model.Usings.Add("System.Collections.ObjectModel");
+	Model.Usings.Add("PerformanceTest.Views.TestControl");
+
+	Model.Types.Add(
+		new Class("MainWindowViewModel",
+		[
+			new NotifyingProperty("WindowState", "WindowState"),
+			new NotifyingProperty("string",      "Status"),
+
+			new NotifyingProperty("ObservableCollection<TestViewModel>",     "Tests"),
+			new NotifyingProperty("ObservableCollection<PlatformViewModel>", "Platforms"),
+		]));
+
+	Model.Types.Add(
+		new Class("PlatformTestViewModel",
+		[
+			new NotifyingProperty("string", "Name"),
+		]));
+
+	Model.Types.Add(
+		new Class("PlatformViewModel",
+		[
+			new NotifyingProperty("string", "Name"),
+			new NotifyingProperty("ObservableCollection<PlatformTestViewModel>", "Tests"),
+		]));
+
+	GenerateModel();
+#>

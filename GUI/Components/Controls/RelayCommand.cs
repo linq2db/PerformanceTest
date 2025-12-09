@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -8,15 +7,15 @@ namespace PerformanceTest.Components.Controls
 {
 	public class RelayCommand : ICommand, INotifyPropertyChanged
 	{
-		readonly Action<object> _execute;
+		readonly Action<object?> _execute;
 
 		public RelayCommand(Action execute, bool isEnabled = true)
 		{
-			_execute   = o => execute();
+			_execute   = _ => execute();
 			_isEnabled = isEnabled;
 		}
 
-		public RelayCommand(Action<object> execute, bool isEnabled = true)
+		public RelayCommand(Action<object?> execute, bool isEnabled = true)
 		{
 			_execute   = execute;
 			_isEnabled = isEnabled;
@@ -40,14 +39,14 @@ namespace PerformanceTest.Components.Controls
 			}
 		}
 
-		public bool CanExecute(object parameter)
+		public bool CanExecute(object? parameter)
 		{
 			return IsEnabled;
 		}
 
-		public event EventHandler CanExecuteChanged;
+		public event EventHandler? CanExecuteChanged;
 
-		public void Execute(object parameter)
+		public void Execute(object? parameter)
 		{
 			try
 			{
@@ -60,7 +59,7 @@ namespace PerformanceTest.Components.Controls
 		}
 
 		[field : NonSerialized]
-		public virtual event PropertyChangedEventHandler PropertyChanged;
+		public virtual event PropertyChangedEventHandler? PropertyChanged;
 
 		void OnPropertyChanged(string propertyName)
 		{
@@ -76,11 +75,11 @@ namespace PerformanceTest.Components.Controls
 	public class AsyncRelayCommand : RelayCommand
 	{
 		public AsyncRelayCommand(Func<Task> execute)
-			: base(o => ExecuteAsyncTask(execute))
+			: base(_ => ExecuteAsyncTask(execute))
 		{
 		}
 
-		public AsyncRelayCommand(Func<object,Task> execute)
+		public AsyncRelayCommand(Func<object?,Task> execute)
 			: base(o => ExecuteAsyncTask(execute, o))
 		{
 		}
@@ -97,7 +96,7 @@ namespace PerformanceTest.Components.Controls
 			}
 		}
 
-		static async void ExecuteAsyncTask(Func<object,Task> execute, object o)
+		static async void ExecuteAsyncTask(Func<object?,Task> execute, object? o)
 		{
 			try
 			{

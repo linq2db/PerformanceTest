@@ -1,1 +1,1 @@
-GUI\bin\Release\linq2db.PerformanceTest.GUI.exe 
+GUI\bin\Release\net10.0-windows\GUI.exe 

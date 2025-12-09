@@ -139,7 +139,7 @@ namespace Tests.EFCore
 			for (var i = 0; i < repeatCount; i++)
 			{
 				using var db = new EFCoreContext(TrackChanges);
-#if NET48
+#if NET481
 				await query(db, takeCount).ForEachAsync(item => {});
 #else
 				await foreach (var item in query(db, takeCount)) { }
@@ -177,7 +177,7 @@ namespace Tests.EFCore
 			for (var i = 0; i < repeatCount; i++)
 			{
 				using var db = new EFCoreContext(TrackChanges);
-#if NET48
+#if NET481
 				await query(db, takeCount).ForEachAsync(item => {});
 #else
 				await foreach (var item in query(db, takeCount)) {}

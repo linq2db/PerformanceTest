@@ -45,7 +45,7 @@ namespace Tests
 			DataConnection.AddConfiguration(
 				"Test",
 				connectionString,
-				SqlServerTools.GetDataProvider(provider : SqlServerProvider.MicrosoftDataSqlClient, connectionString : connectionString));
+				SqlServerTools.GetDataProvider(connectionString : connectionString));
 
 			DataConnection.DefaultConfiguration = "Test";
 
@@ -416,8 +416,7 @@ return;
 			Console.WriteLine("Creating database...");
 
 			using (var db = SqlServerTools.CreateDataConnection(
-				$"Server={serverName};Database=master;Trusted_Connection=True;TrustServerCertificate=True;",
-				provider : SqlServerProvider.MicrosoftDataSqlClient))
+				$"Server={serverName};Database=master;Trusted_Connection=True;TrustServerCertificate=True;"))
 			{
 				if (!enforceCreate)
 					if (db.Execute<object>("SELECT db_id('PerformanceTest')") != null)

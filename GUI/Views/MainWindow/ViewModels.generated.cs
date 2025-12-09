@@ -5,7 +5,7 @@
 // </auto-generated>
 //---------------------------------------------------------------------------------------------------
 
-#pragma warning disable 1591
+#pragma warning disable 1573, 1591
 
 using System;
 using System.Collections.ObjectModel;
@@ -168,9 +168,7 @@ namespace PerformanceTest.Views.MainWindow
 
 		#region INotifyPropertyChanged support
 
-#if !SILVERLIGHT
 		[field : NonSerialized]
-#endif
 		public virtual event PropertyChangedEventHandler PropertyChanged;
 
 		protected void OnPropertyChanged(string propertyName)
@@ -179,20 +177,7 @@ namespace PerformanceTest.Views.MainWindow
 
 			if (propertyChanged != null)
 			{
-#if SILVERLIGHT
-				if (System.Windows.Deployment.Current.Dispatcher.CheckAccess())
-					propertyChanged(this, new PropertyChangedEventArgs(propertyName));
-				else
-					System.Windows.Deployment.Current.Dispatcher.BeginInvoke(
-						() =>
-						{
-							var pc = PropertyChanged;
-							if (pc != null)
-								pc(this, new PropertyChangedEventArgs(propertyName));
-						});
-#else
 				propertyChanged(this, new PropertyChangedEventArgs(propertyName));
-#endif
 			}
 		}
 
@@ -202,25 +187,181 @@ namespace PerformanceTest.Views.MainWindow
 
 			if (propertyChanged != null)
 			{
-#if SILVERLIGHT
-				if (System.Windows.Deployment.Current.Dispatcher.CheckAccess())
-					propertyChanged(this, arg);
-				else
-					System.Windows.Deployment.Current.Dispatcher.BeginInvoke(
-						() =>
-						{
-							var pc = PropertyChanged;
-							if (pc != null)
-								pc(this, arg);
-						});
-#else
 				propertyChanged(this, arg);
-#endif
+			}
+		}
+
+		#endregion
+	}
+
+	public partial class PlatformTestViewModel : INotifyPropertyChanged
+	{
+		#region Name : string
+
+		private string _name;
+		public  string  Name
+		{
+			get { return _name; }
+			set
+			{
+				if (_name != value)
+				{
+					BeforeNameChanged(value);
+					_name = value;
+					AfterNameChanged();
+
+					OnNameChanged();
+				}
+			}
+		}
+
+		#region INotifyPropertyChanged support
+
+		partial void BeforeNameChanged(string newValue);
+		partial void AfterNameChanged ();
+
+		public const string NameOfName = "Name";
+
+		private static readonly PropertyChangedEventArgs _nameChangedEventArgs = new PropertyChangedEventArgs(NameOfName);
+
+		private void OnNameChanged()
+		{
+			OnPropertyChanged(_nameChangedEventArgs);
+		}
+
+		#endregion
+
+		#endregion
+
+		#region INotifyPropertyChanged support
+
+		[field : NonSerialized]
+		public virtual event PropertyChangedEventHandler PropertyChanged;
+
+		protected void OnPropertyChanged(string propertyName)
+		{
+			var propertyChanged = PropertyChanged;
+
+			if (propertyChanged != null)
+			{
+				propertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+
+		protected void OnPropertyChanged(PropertyChangedEventArgs arg)
+		{
+			var propertyChanged = PropertyChanged;
+
+			if (propertyChanged != null)
+			{
+				propertyChanged(this, arg);
+			}
+		}
+
+		#endregion
+	}
+
+	public partial class PlatformViewModel : INotifyPropertyChanged
+	{
+		#region Name : string
+
+		private string _name;
+		public  string  Name
+		{
+			get { return _name; }
+			set
+			{
+				if (_name != value)
+				{
+					BeforeNameChanged(value);
+					_name = value;
+					AfterNameChanged();
+
+					OnNameChanged();
+				}
+			}
+		}
+
+		#region INotifyPropertyChanged support
+
+		partial void BeforeNameChanged(string newValue);
+		partial void AfterNameChanged ();
+
+		public const string NameOfName = "Name";
+
+		private static readonly PropertyChangedEventArgs _nameChangedEventArgs = new PropertyChangedEventArgs(NameOfName);
+
+		private void OnNameChanged()
+		{
+			OnPropertyChanged(_nameChangedEventArgs);
+		}
+
+		#endregion
+
+		#endregion
+
+		#region Tests : ObservableCollection<PlatformTestViewModel>
+
+		private ObservableCollection<PlatformTestViewModel> _tests;
+		public  ObservableCollection<PlatformTestViewModel>  Tests
+		{
+			get { return _tests; }
+			set
+			{
+				if (_tests != value)
+				{
+					BeforeTestsChanged(value);
+					_tests = value;
+					AfterTestsChanged();
+
+					OnTestsChanged();
+				}
+			}
+		}
+
+		#region INotifyPropertyChanged support
+
+		partial void BeforeTestsChanged(ObservableCollection<PlatformTestViewModel> newValue);
+		partial void AfterTestsChanged ();
+
+		public const string NameOfTests = "Tests";
+
+		private static readonly PropertyChangedEventArgs _testsChangedEventArgs = new PropertyChangedEventArgs(NameOfTests);
+
+		private void OnTestsChanged()
+		{
+			OnPropertyChanged(_testsChangedEventArgs);
+		}
+
+		#endregion
+
+		#endregion
+
+		#region INotifyPropertyChanged support
+
+		[field : NonSerialized]
+		public virtual event PropertyChangedEventHandler PropertyChanged;
+
+		protected void OnPropertyChanged(string propertyName)
+		{
+			var propertyChanged = PropertyChanged;
+
+			if (propertyChanged != null)
+			{
+				propertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+
+		protected void OnPropertyChanged(PropertyChangedEventArgs arg)
+		{
+			var propertyChanged = PropertyChanged;
+
+			if (propertyChanged != null)
+			{
+				propertyChanged(this, arg);
 			}
 		}
 
 		#endregion
 	}
 }
-
-#pragma warning restore 1591

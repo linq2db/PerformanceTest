@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Configuration;
-using System.Threading;
 
 namespace PerformanceTest.Properties
 {
@@ -18,13 +17,13 @@ namespace PerformanceTest.Properties
 
 			var value = Default[setting];
 
-			if (value == null || value is string && value.ToString().Length == 0)
+			if (value is null or string { Length: 0 })
 				value = defaultValue;
 
 			return value;
 		}
 
-		static readonly object _saveSync = new object();
+		static readonly Lock _saveSync = new();
 
 		public void TrySave()
 		{
@@ -37,21 +36,20 @@ namespace PerformanceTest.Properties
 					}
 					catch
 					{
+						// ignored
 					}
 			}) { Priority = ThreadPriority.BelowNormal}.Start();
 		}
 
-		private  Timer    _timer;
-		readonly object   _timerSync = new object();
+		private  Timer?   _timer;
+		readonly Lock     _timerSync = new();
 		private  DateTime _lastDelaySave;
 
 		public void DelaySave()
 		{
 			_lastDelaySave = DateTime.Now;
 
-			if (_timer == null)
-			{
-				_timer = new Timer(s =>
+			_timer ??= new Timer(s =>
 				{
 					if ((DateTime.Now - _lastDelaySave).TotalMilliseconds > 2000 && _timer != null)
 					{
@@ -67,7 +65,6 @@ namespace PerformanceTest.Properties
 					}
 				},
 				null, 2100, 2100);
-			}
 		}
 	}
 }

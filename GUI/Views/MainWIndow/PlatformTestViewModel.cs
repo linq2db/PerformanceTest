@@ -7,6 +7,6 @@ namespace PerformanceTest.Views.MainWindow
 
 	partial class PlatformTestViewModel
 	{
-		public TestViewModel Test{ get; set; }
+		public TestViewModel? Test{ get; set; }
 	}
 }

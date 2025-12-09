@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using LinqToDB;
+using LinqToDB.Async;
 
 namespace Tests.L2DB
 {
@@ -50,7 +51,7 @@ namespace Tests.L2DB
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new L2DBContext(TrackChanges))
-					db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).AsEnumerable().First();
+					_ = db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).AsEnumerable().First();
 
 			watch.Stop();
 
@@ -79,7 +80,7 @@ namespace Tests.L2DB
 				{
 					var id = 1;
 					var p  = 2;
-					db.Narrows.Where(t => t.ID == id && t.Field1 == p).Select(t => t.ID).AsEnumerable().First();
+					_ = db.Narrows.Where(t => t.ID == id && t.Field1 == p).Select(t => t.ID).AsEnumerable().First();
 				}
 
 			watch.Stop();
@@ -96,7 +97,7 @@ namespace Tests.L2DB
 				{
 					var id = 1;
 					var p  = 2;
-					await db.Narrows.Where(t => t.ID == id && t.Field1 == p).Select(t => t.ID).FirstAsync();
+					_ = await db.Narrows.Where(t => t.ID == id && t.Field1 == p).Select(t => t.ID).FirstAsync();
 				}
 
 			watch.Stop();
@@ -110,7 +111,7 @@ namespace Tests.L2DB
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new L2DBContext(TrackChanges))
-					foreach (var item in db.NarrowLongs.Take(takeCount)) {}
+					foreach (var _ in db.NarrowLongs.Take(takeCount)) {}
 
 			watch.Stop();
 
@@ -129,7 +130,7 @@ namespace Tests.L2DB
 
 				var q = db.NarrowLongs.Take(takeCount).AsAsyncEnumerable();
 
-				await foreach(var item in q.WithCancellation(token))
+				await foreach(var _ in q.WithCancellation(token))
 				{
 				}
 			}
@@ -145,7 +146,7 @@ namespace Tests.L2DB
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new L2DBContext(TrackChanges))
-					foreach (var item in db.WideLongs.Take(takeCount)) {}
+					foreach (var _ in db.WideLongs.Take(takeCount)) {}
 
 			watch.Stop();
 
@@ -158,7 +159,7 @@ namespace Tests.L2DB
 
 			for (var i = 0; i < repeatCount; i++)
 				await using (var db = new L2DBContext(TrackChanges))
-					await db.WideLongs.Take(takeCount).ForEachAsync(item => {});
+					await db.WideLongs.Take(takeCount).ForEachAsync(_ => {});
 
 			watch.Stop();
 
@@ -180,7 +181,7 @@ namespace Tests.L2DB
 						select n1.ID
 					);
 
-				foreach (var item in q)
+				foreach (var _ in q)
 					break;
 			}
 
@@ -205,7 +206,7 @@ namespace Tests.L2DB
 					)
 					.Take(takeCount);
 
-				foreach (var item in q) {}
+				foreach (var _ in q) {}
 			}
 
 			watch.Stop();
@@ -218,9 +219,10 @@ namespace Tests.L2DB
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(TrackChanges))
-				{
-					var q =
+			{
+				using var db = new L2DBContext(TrackChanges);
+
+				var q =
 					(
 						from n1 in db.Narrows
 						join n2 in db.Narrows on new { n1.ID, n1.Field1 } equals new { n2.ID, n2.Field1 }
@@ -236,8 +238,8 @@ namespace Tests.L2DB
 					.Skip(1)
 					.Take(takeCount);
 
-					foreach (var item in q) {}
-				}
+				foreach (var _ in q) {}
+			}
 
 			watch.Stop();
 
@@ -249,9 +251,10 @@ namespace Tests.L2DB
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(TrackChanges))
-				{
-					var q =
+			{
+				using var db = new L2DBContext(TrackChanges);
+
+				var q =
 					(
 						from n in db.NarrowLongs
 						join w in db.WideLongs on n.Field1 equals w.Field1
@@ -284,8 +287,8 @@ namespace Tests.L2DB
 					.Skip(1000)
 					.Take(takeCount);
 
-					foreach (var item in q) {}
-				}
+				foreach (var _ in q) {}
+			}
 
 			watch.Stop();
 

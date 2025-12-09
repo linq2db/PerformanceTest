@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/.root/">
+    <File Path="Directory.Packages.props11111" />
+    <File Path="RunAll.cmd" />
+    <File Path="UI.cmd" />
+  </Folder>
+  <Project Path="../linq2db/Source/LinqToDB.Remote.Wcf/LinqToDB.Remote.Wcf.csproj" />
+  <Project Path="../linq2db/Source/LinqToDB/LinqToDB.csproj" />
+  <Project Path="ConsoleRunner/ConsoleRunner.csproj" />
+  <Project Path="GUI/GUI.csproj" Id="808bb581-26f0-4650-8081-b253ca1e1ad9" />
+  <Project Path="Source/Tests.csproj" />
+  <Project Path="TestRunner/TestRunner.csproj" />
+</Solution>

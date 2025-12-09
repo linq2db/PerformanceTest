@@ -33,7 +33,7 @@ namespace Tests.L2DB
 		{
 			watch.Start();
 
-			using (var db = new L2DBContext(TrackChanges))
+			await using (var db = new L2DBContext(TrackChanges))
 				for (var i = 0; i < repeatCount; i++)
 					await db.ExecuteAsync<int>(GetSingleColumnSql);
 
@@ -60,7 +60,7 @@ namespace Tests.L2DB
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(TrackChanges))
+				await using (var db = new L2DBContext(TrackChanges))
 					await db.ExecuteAsync<int>(GetSingleColumnSql);
 
 			watch.Stop();
@@ -87,7 +87,7 @@ namespace Tests.L2DB
 		{
 			watch.Start();
 
-			using (var db = new L2DBContext(TrackChanges))
+			await using (var db = new L2DBContext(TrackChanges))
 				for (var i = 0; i < repeatCount; i++)
 					await db.ExecuteAsync<int>(GetParamSql,
 						new DataParameter("@id", 1),
@@ -106,7 +106,7 @@ namespace Tests.L2DB
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new L2DBContext(TrackChanges))
-					foreach (var item in db.Query<NarrowLong>(sql)) {}
+					foreach (var _ in db.Query<NarrowLong>(sql)) {}
 
 			watch.Stop();
 
@@ -120,8 +120,8 @@ namespace Tests.L2DB
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(TrackChanges))
-					foreach (var item in await db.QueryToListAsync<NarrowLong>(sql)) {}
+				await using (var db = new L2DBContext(TrackChanges))
+					foreach (var _ in await db.QueryToListAsync<NarrowLong>(sql)) {}
 
 			watch.Stop();
 
@@ -136,7 +136,7 @@ namespace Tests.L2DB
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new L2DBContext(TrackChanges))
-					foreach (var item in db.Query<WideLong>(sql)) {}
+					foreach (var _ in db.Query<WideLong>(sql)) {}
 
 			watch.Stop();
 
@@ -150,8 +150,8 @@ namespace Tests.L2DB
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(TrackChanges))
-					foreach (var item in await db.QueryToListAsync<WideLong>(sql)) {}
+				await using (var db = new L2DBContext(TrackChanges))
+					foreach (var _ in await db.QueryToListAsync<WideLong>(sql)) {}
 
 			watch.Stop();
 

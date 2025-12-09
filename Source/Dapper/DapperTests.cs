@@ -41,7 +41,11 @@ namespace Tests.Dapper
 		{
 			watch.Start();
 
+#if NET481
 			using (var con = new SqlConnection(ConnectionString))
+#else
+			await using (var con = new SqlConnection(ConnectionString))
+#endif
 			{
 				await con.OpenAsync();
 				for (var i = 0; i < repeatCount; i++)
@@ -58,11 +62,11 @@ namespace Tests.Dapper
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var con = new SqlConnection(ConnectionString))
-				{
-					con.Open();
-					con.Query<int>(GetSingleColumnSql);
-				}
+			{
+				using var con = new SqlConnection(ConnectionString);
+				con.Open();
+				con.Query<int>(GetSingleColumnSql);
+			}
 
 			watch.Stop();
 
@@ -74,11 +78,15 @@ namespace Tests.Dapper
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var con = new SqlConnection(ConnectionString))
-				{
-					await con.OpenAsync();
-					await con.QueryAsync<int>(GetSingleColumnSql);
-				}
+			{
+#if NET481
+				using var con = new SqlConnection(ConnectionString);
+#else
+				await using var con = new SqlConnection(ConnectionString);
+#endif
+				await con.OpenAsync();
+				await con.QueryAsync<int>(GetSingleColumnSql);
+			}
 
 			watch.Stop();
 
@@ -105,7 +113,11 @@ namespace Tests.Dapper
 		{
 			watch.Start();
 
+#if NET481
 			using (var con = new SqlConnection(ConnectionString))
+#else
+			await using (var con = new SqlConnection(ConnectionString))
+#endif
 			{
 				await con.OpenAsync();
 				for (var i = 0; i < repeatCount; i++)
@@ -124,10 +136,10 @@ namespace Tests.Dapper
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-			using (var con = new SqlConnection(ConnectionString))
 			{
+				using var con = new SqlConnection(ConnectionString);
 				con.Open();
-				foreach (var item in con.Query<NarrowLong>(sql)) {}
+				foreach (var _ in con.Query<NarrowLong>(sql)) {}
 			}
 
 			watch.Stop();
@@ -142,10 +154,14 @@ namespace Tests.Dapper
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-			using (var con = new SqlConnection(ConnectionString))
 			{
+#if NET481
+				using var con = new SqlConnection(ConnectionString);
+#else
+				await using var con = new SqlConnection(ConnectionString);
+#endif
 				await con.OpenAsync();
-				foreach (var item in await con.QueryAsync<NarrowLong>(sql)) {}
+				foreach (var _ in await con.QueryAsync<NarrowLong>(sql)) {}
 			}
 
 			watch.Stop();
@@ -160,10 +176,10 @@ namespace Tests.Dapper
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-			using (var con = new SqlConnection(ConnectionString))
 			{
+				using var con = new SqlConnection(ConnectionString);
 				con.Open();
-				foreach (var item in con.Query<WideLong>(sql)) {}
+				foreach (var _ in con.Query<WideLong>(sql)) {}
 			}
 
 			watch.Stop();
@@ -178,10 +194,14 @@ namespace Tests.Dapper
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-			using (var con = new SqlConnection(ConnectionString))
 			{
+#if NET481
+				using var con = new SqlConnection(ConnectionString);
+#else
+				await using var con = new SqlConnection(ConnectionString);
+#endif
 				await con.OpenAsync();
-				foreach (var item in await con.QueryAsync<WideLong>(sql)) {}
+				foreach (var _ in await con.QueryAsync<WideLong>(sql)) {}
 			}
 
 			watch.Stop();

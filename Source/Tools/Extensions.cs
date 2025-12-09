@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using LinqToDB.Extensions;
+using LinqToDB.Internal.Extensions;
 using LinqToDB.Mapping;
 using LinqToDB.Reflection;
 
@@ -35,7 +35,7 @@ namespace Tests.Tools
 				{
 					var member = members[i];
 					var value  = member.GetValue(item);
-					var type   = members[i].Type.ToNullableUnderlying();
+					var type   = members[i].Type.ToUnderlying();
 
 					if      (value == null)            values[i] = ""; //"<NULL>";
 					else if (type == typeof(decimal))  values[i] = ((decimal) value).ToString("G");
@@ -87,7 +87,7 @@ namespace Tests.Tools
 				{
 					stringBuilder.Append("| ");
 
-					var type  = members[i].Type.ToNullableUnderlying();
+					var type  = members[i].Type.ToUnderlying();
 					var right = false;
 
 					switch (Type.GetTypeCode(type))
@@ -219,7 +219,7 @@ namespace Tests.Tools
 
 					stringBuilder.Append("| ");
 
-					var type  = values.type.ToNullableUnderlying();
+					var type  = values.type.ToUnderlying();
 					var right = false;
 
 					switch (Type.GetTypeCode(type))

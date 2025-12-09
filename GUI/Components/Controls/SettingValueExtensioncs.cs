@@ -7,12 +7,12 @@ namespace PerformanceTest.Components.Controls
 {
 	public class SettingValueExtension : MarkupExtension
 	{
-		public static IAppSettings AppSettings { get; set; }
+		public static IAppSettings? AppSettings { get; set; }
 
-		public string Setting { get; set; }
-		public string Default { get; set; }
+		public required string Setting { get; set; }
+		public required string Default { get; set; }
 
-		public override object ProvideValue(IServiceProvider serviceProvider)
+		public override object? ProvideValue(IServiceProvider serviceProvider)
 		{
 			if (AppSettings == null)
 				return null;
@@ -27,10 +27,10 @@ namespace PerformanceTest.Components.Controls
 			var value      = AppSettings.GetValue(Setting, Default);
 			var descriptor = DependencyPropertyDescriptor.FromProperty(property, target.GetType());
 
-			descriptor.AddValueChanged(target, (_,__) =>
+			descriptor.AddValueChanged(target, (_,_) =>
 			{
 				var newValue  = descriptor.GetValue(target);
-				var convValue = descriptor.Converter.ConvertTo(newValue, value.GetType());
+				var convValue = descriptor.Converter!.ConvertTo(newValue, value.GetType())!;
 
 				if (!Equals(convValue, AppSettings.GetValue(Setting)))
 				{
@@ -41,14 +41,14 @@ namespace PerformanceTest.Components.Controls
 
 			try
 			{
-				return descriptor.Converter.ConvertFrom(value);
+				return descriptor.Converter?.ConvertFrom(value);
 			}
-			catch (Exception ex)
+			catch
 			{
-				ex.ToString();
+				// ignored
 			}
 
-			var str = (value ?? Default ?? "").ToString();
+			var str = value.ToString() ?? "";
 
 			if (property.PropertyType == typeof(GridLength)) return GetGridLength(str);
 			if (property.PropertyType == typeof(double))     return GetDouble    (str);
@@ -60,13 +60,13 @@ namespace PerformanceTest.Components.Controls
 		{
 			if (value.Length > 0)
 			{
-				var    isStar = value[value.Length - 1] == '*';
+				var isStar = value[^1] == '*';
 
-				if (double.TryParse(value.Substring(0, value.Length - 1), out var number))
+				if (double.TryParse(value[..^1], out var number))
 					return new GridLength(number, isStar ? GridUnitType.Star : GridUnitType.Pixel);
 			}
 
-			if (value != Default)
+			if (value == Default)
 				return GetGridLength(Default);
 
 			return GridLength.Auto;
@@ -77,7 +77,7 @@ namespace PerformanceTest.Components.Controls
 			if (double.TryParse(value, out var number))
 				return number;
 
-			if (value != Default)
+			if (value == Default)
 				return GetDouble(Default);
 
 			return double.NaN;

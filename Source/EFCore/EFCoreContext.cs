@@ -23,8 +23,7 @@ namespace Tests.EFCore
 
 		static string GetConnectionString()
 		{
-			if (_connectionString == null)
-				_connectionString = LinqToDB.Data.DataConnection.GetConnectionString("Test").Replace("LinqToDB", "EFCore");
+			_connectionString ??= LinqToDB.Data.DataConnection.GetConnectionString("Test").Replace("LinqToDB", "EFCore");
 			return _connectionString;
 		}
 

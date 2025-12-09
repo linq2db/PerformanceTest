@@ -23,26 +23,25 @@ namespace Tests.L2DB
 			_testType = testType;
 		}
 
-		private         string _name;
-		public override string  Name
+		public override string Name
 		{
 			get
 			{
-				if (_name == null)
+				if (field == null)
 				{
 					switch (_testType)
 					{
-						case TestType.AdoNet              : return $"{_platform} AdoNet";
-						case TestType.Linq                : return $"{_platform} Linq";
-						case TestType.Async               : return $"{_platform} Async";
-						case TestType.ChangeTracking      : return $"{_platform} Change Tracking";
-						case TestType.ChangeTrackingAsync : return $"{_platform} Change Tracking Async";
+						case TestType.AdoNet:              return $"{_platform} AdoNet";
+						case TestType.Linq:                return $"{_platform} Linq";
+						case TestType.Async:               return $"{_platform} Async";
+						case TestType.ChangeTracking:      return $"{_platform} Change Tracking";
+						case TestType.ChangeTrackingAsync: return $"{_platform} Change Tracking Async";
 					}
 				}
 
-				return _name;
+				return field;
 			}
-			set => _name = value;
+			set;
 		}
 
 		public bool GetList(Stopwatch watch, int repeatCount, int takeCount)

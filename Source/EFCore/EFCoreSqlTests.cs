@@ -23,7 +23,7 @@ namespace Tests.EFCore
 
 			using (var db = new EFCoreContext(TrackChanges))
 				for (var i = 0; i < repeatCount; i++)
-#if NET48
+#if NET481
 					db.Narrow.FromSql(GetSingleColumnSql).Select(t => t.ID).AsEnumerable().First();
 #else
 					db.Narrow.FromSqlRaw(GetSingleColumnSql).Select(t => t.ID).AsEnumerable().First();
@@ -40,7 +40,7 @@ namespace Tests.EFCore
 
 			using (var db = new EFCoreContext(TrackChanges))
 				for (var i = 0; i < repeatCount; i++)
-#if NET48
+#if NET481
 					await db.Narrow.FromSql(GetSingleColumnSql).Select(t => t.ID).FirstAsync();
 #else
 					await db.Narrow.FromSqlRaw(GetSingleColumnSql).Select(t => t.ID).FirstAsync();
@@ -57,7 +57,7 @@ namespace Tests.EFCore
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new EFCoreContext(TrackChanges))
-#if NET48
+#if NET481
 					db.Narrow.FromSql(GetSingleColumnSql).Select(t => t.ID).AsEnumerable().First();
 #else
 					db.Narrow.FromSqlRaw(GetSingleColumnSql).Select(t => t.ID).AsEnumerable().First();
@@ -73,10 +73,11 @@ namespace Tests.EFCore
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
+#if NET481
 				using (var db = new EFCoreContext(TrackChanges))
-#if NET48
 					await db.Narrow.FromSql(GetSingleColumnSql).Select(t => t.ID).FirstAsync();
 #else
+				await using (var db = new EFCoreContext(TrackChanges))
 					await db.Narrow.FromSqlRaw(GetSingleColumnSql).Select(t => t.ID).FirstAsync();
 #endif
 
@@ -92,8 +93,8 @@ namespace Tests.EFCore
 			using (var db = new EFCoreContext(TrackChanges))
 			{
 				for (var i = 0; i < repeatCount; i++)
-					db.Narrow
-#if NET48
+					_ = db.Narrow
+#if NET481
 						.FromSql(GetParamSql,
 							new SqlParameter("@id", 1),
 							new SqlParameter("@p",  2))
@@ -112,11 +113,15 @@ namespace Tests.EFCore
 		{
 			watch.Start();
 
+#if NET481
 			using (var db = new EFCoreContext(TrackChanges))
+#else
+			await using (var db = new EFCoreContext(TrackChanges))
+#endif
 			{
 				for (var i = 0; i < repeatCount; i++)
 					await db.Narrow
-#if NET48
+#if NET481
 						.FromSql(GetParamSql,
 							new SqlParameter("@id", 1),
 							new SqlParameter("@p",  2))
@@ -139,10 +144,10 @@ namespace Tests.EFCore
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new EFCoreContext(TrackChanges))
-#if NET48
-					foreach (var item in db.NarrowLong.FromSql(sql)) {}
+#if NET481
+					foreach (var _ in db.NarrowLong.FromSql(sql)) {}
 #else
-					foreach (var item in db.NarrowLong.FromSqlRaw(sql)) {}
+					foreach (var _ in db.NarrowLong.FromSqlRaw(sql)) {}
 #endif
 
 			watch.Stop();
@@ -157,11 +162,12 @@ namespace Tests.EFCore
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
+#if NET481
 				using (var db = new EFCoreContext(TrackChanges))
-#if NET48
-					await db.NarrowLong.FromSql(sql).ForEachAsync(item => {});
+					await db.NarrowLong.FromSql(sql).ForEachAsync(_ => {});
 #else
-					await db.NarrowLong.FromSqlRaw(sql).ForEachAsync(item => {});
+				await using (var db = new EFCoreContext(TrackChanges))
+					await db.NarrowLong.FromSqlRaw(sql).ForEachAsync(_ => {});
 #endif
 
 			watch.Stop();
@@ -177,10 +183,10 @@ namespace Tests.EFCore
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new EFCoreContext(TrackChanges))
-#if NET48
-					foreach (var item in db.WideLong.FromSql(sql)) {}
+#if NET481
+					foreach (var _ in db.WideLong.FromSql(sql)) {}
 #else
-					foreach (var item in db.WideLong.FromSqlRaw(sql)) {}
+					foreach (var _ in db.WideLong.FromSqlRaw(sql)) {}
 #endif
 
 			watch.Stop();
@@ -195,11 +201,12 @@ namespace Tests.EFCore
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
+#if NET481
 				using (var db = new EFCoreContext(TrackChanges))
-#if NET48
-					await db.WideLong.FromSql(sql).ForEachAsync(item => {});
+					await db.WideLong.FromSql(sql).ForEachAsync(_ => {});
 #else
-					await db.WideLong.FromSqlRaw(sql).ForEachAsync(item => {});
+				await using (var db = new EFCoreContext(TrackChanges))
+					await db.WideLong.FromSqlRaw(sql).ForEachAsync(_ => {});
 #endif
 
 			watch.Stop();

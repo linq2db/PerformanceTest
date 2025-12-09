@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using LinqToDB.Extensions;
+using LinqToDB.Internal.Extensions;
 using LinqToDB.Mapping;
 using LinqToDB.Reflection;
 
@@ -13,9 +13,7 @@ namespace TestRunner.Tools
 	{
 		class ValueHolder<T>
 		{
-#pragma warning disable 414
 			public T Value;
-#pragma warning restore 414
 		}
 
 		public static StringBuilder ToDiagnosticString<T>(this IEnumerable<T> source, StringBuilder stringBuilder)
@@ -35,7 +33,7 @@ namespace TestRunner.Tools
 				{
 					var member = members[i];
 					var value  = member.GetValue(item);
-					var type   = members[i].Type.ToNullableUnderlying();
+					var type   = members[i].Type.ToUnderlying();
 
 					if      (value == null)            values[i] = ""; //"<NULL>";
 					else if (type == typeof(decimal))  values[i] = ((decimal) value).ToString("G");
@@ -87,7 +85,7 @@ namespace TestRunner.Tools
 				{
 					stringBuilder.Append("| ");
 
-					var type  = members[i].Type.ToNullableUnderlying();
+					var type  = members[i].Type.ToUnderlying();
 					var right = false;
 
 					switch (Type.GetTypeCode(type))
@@ -219,7 +217,7 @@ namespace TestRunner.Tools
 
 					stringBuilder.Append("| ");
 
-					var type  = values.type.ToNullableUnderlying();
+					var type  = values.type.ToUnderlying();
 					var right = false;
 
 					switch (Type.GetTypeCode(type))
