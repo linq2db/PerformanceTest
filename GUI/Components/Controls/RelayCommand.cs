@@ -31,7 +31,7 @@ namespace PerformanceTest.Components.Controls
 				{
 					_isEnabled = value;
 
-					OnPropertyChanged("IsEnabled");
+					OnPropertyChanged(nameof(IsEnabled));
 
 					if (CanExecuteChanged != null)
 						CanExecuteChanged(this, EventArgs.Empty);
@@ -66,9 +66,7 @@ namespace PerformanceTest.Components.Controls
 			var propertyChanged = PropertyChanged;
 
 			if (propertyChanged != null)
-			{
 				propertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
 		}
 	}
 

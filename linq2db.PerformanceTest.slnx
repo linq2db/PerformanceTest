@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/.root/">
+    <File Path="Directory.Build.props" />
     <File Path="Directory.Packages.props11111" />
     <File Path="RunAll.cmd" />
     <File Path="UI.cmd" />

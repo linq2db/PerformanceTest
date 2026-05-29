@@ -13,7 +13,7 @@ namespace TestRunner.Tools
 	{
 		class ValueHolder<T>
 		{
-			public T Value;
+			public T? Value;
 		}
 
 		public static StringBuilder ToDiagnosticString<T>(this IEnumerable<T> source, StringBuilder stringBuilder)
@@ -23,7 +23,7 @@ namespace TestRunner.Tools
 
 			var ta         = TypeAccessor.GetAccessor<T>();
 			var itemValues = new List<string[]>();
-			var members    = ta.Members.Where(m => source.Any(v => m.GetValue(v) != null)).ToList();
+			var members    = ta.Members.Where(m => source.Any(v => m.GetValue(v!) != null)).ToList();
 
 			foreach (var item in source)
 			{
@@ -32,7 +32,7 @@ namespace TestRunner.Tools
 				for (var i = 0; i < members.Count; i++)
 				{
 					var member = members[i];
-					var value  = member.GetValue(item);
+					var value  = member.GetValue(item!);
 					var type   = members[i].Type.ToUnderlying();
 
 					if      (value == null)            values[i] = ""; //"<NULL>";

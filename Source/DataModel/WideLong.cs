@@ -13,7 +13,7 @@ namespace Tests.DataModel
 		[Column, Nullable]             public short?    ShortValue    { get; set; }
 		[Column, Nullable]             public int?      IntValue      { get; set; }
 		[Column, Nullable]             public long?     LongValue     { get; set; }
-		[Column(Length=100), Nullable] public string    StringValue   { get; set; }
+		[Column(Length=100), Nullable] public string?   StringValue   { get; set; }
 		[Column, Nullable]             public DateTime? DateTimeValue { get; set; }
 		[Column, Nullable]             public TimeSpan? TimeValue     { get; set; }
 		[Column, Nullable]             public decimal?  DecimalValue  { get; set; }

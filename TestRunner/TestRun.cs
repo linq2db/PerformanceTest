@@ -111,7 +111,7 @@ namespace TestRunner
 					{
 						db.GetTable<TestStopwatch>()
 								.Value(t => t.TestMethodID, mid)
-								.Value(t => t.Time,         watch.time)
+								.Value(t => t.Time,         watch!.time)
 								.Value(t => t.Ticks,        watch.stopwatch.ElapsedTicks)
 								.Value(t => t.Provider,     watch.p.Name)
 								.Value(t => t.CreatedOn,    () => Sql.CurrentTimestamp)
@@ -210,26 +210,26 @@ namespace TestRunner
 		{
 			var cfunc = func.Compile();
 
-			return new ()
-			{
-				Func   = p => (sw,r,t) => cfunc(p)(sw, r),
-				Name   = ((MethodInfo)((ConstantExpression)func.Body
+			return new
+			(
+				Func   : p => (sw,r,t) => cfunc(p)(sw, r),
+				Name   : ((MethodInfo)((ConstantExpression)func.Body
 					.Find(0, static (_,e) => e is ConstantExpression { Value: MethodInfo })!).Value!).Name,
-				Repeat = repeat,
-				Take   = null
-			};
+				Repeat : repeat,
+				Take   : null
+			);
 		}
 
 		public static Test<T> CreateTest<T>(Expression<Func<T,Func<Stopwatch,int,int,bool>>> func, int repeat, int take = -1)
 		{
-			return new Test<T>
-			{
-				Func   = func.Compile(),
-				Name   = ((MethodInfo)((ConstantExpression)func.Body
+			return new
+			(
+				Func   : func.Compile(),
+				Name   : ((MethodInfo)((ConstantExpression)func.Body
 					.Find(0, static (_,e) => e is ConstantExpression { Value: MethodInfo })!).Value!).Name,
-				Repeat = repeat,
-				Take   = take > 0 ? take : (int?)null
-			};
+				Repeat : repeat,
+				Take   : take > 0 ? take : (int?)null
+			);
 		}
 
 		public static Test<T> CreateTest<T>(Expression<Func<T,Func<Stopwatch,int,int,int,bool>>> func, int repeat, int take, int parm)
@@ -238,13 +238,13 @@ namespace TestRunner
 			var name  = ((MethodInfo)((ConstantExpression)func.Body
 				.Find(0, (_,e) => e is ConstantExpression { Value: MethodInfo })!).Value!).Name;
 
-			return new Test<T>
-			{
-				Func   = p => (sw,r,t) => cfunc(p)(sw, r, t, parm),
-				Name   = $"{name}({parm})",
-				Repeat = repeat,
-				Take   = take > 0 ? take : (int?)null
-			};
+			return new
+			(
+				Func   : p => (sw,r,t) => cfunc(p)(sw, r, t, parm),
+				Name   : $"{name}({parm})",
+				Repeat : repeat,
+				Take   : take > 0 ? take : (int?)null
+			);
 		}
 
 		public static Test<T> CreateTest<T>(Expression<Func<T,Func<Stopwatch,int,int,Task<bool>>>> func, int repeat, int take = -1)
@@ -253,13 +253,13 @@ namespace TestRunner
 			var name  = ((MethodInfo)((ConstantExpression)func.Body
 				.Find(0, (_,e) => e is ConstantExpression { Value: MethodInfo })!).Value!).Name;
 
-			return new Test<T>
-			{
-				Func   = p => (sw,r,t) => cfunc(p)(sw, r, t).Result,
-				Name   = name.Replace("Async", ""),
-				Repeat = repeat,
-				Take   = take > 0 ? take : (int?)null
-			};
+			return new
+			(
+				Func   : p => (sw,r,t) => cfunc(p)(sw, r, t).Result,
+				Name   : name.Replace("Async", ""),
+				Repeat : repeat,
+				Take   : take > 0 ? take : (int?)null
+			);
 		}
 
 		public static void CreateResultDatabase(bool enforceCreate, string resultFolder)

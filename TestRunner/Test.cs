@@ -3,11 +3,5 @@ using System.Diagnostics;
 
 namespace TestRunner
 {
-	public class Test<T>
-	{
-		public Func<T,Func<Stopwatch,int,int,bool>> Func;
-		public string Name;
-		public int    Repeat;
-		public int?   Take;
-	}
+	public record Test<T>(Func<T,Func<Stopwatch,int,int,bool>> Func, string Name, int Repeat, int? Take);
 }
