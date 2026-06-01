@@ -5,8 +5,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Data.SQLite" Version="10.0.0" />
-		<PackageReference Include="CodeJam" Version="4.1.0" />
+		<PackageReference Include="Microsoft.Data.SQLite" Version="10.0.8" />
+		<PackageReference Include="CodeJam" Version="5.0.0" />
 
 		<!--<PackageReference Include="linq2db" Version="3.6.0" />-->
 		<ProjectReference Include="..\..\linq2db\Source\LinqToDB\LinqToDB.csproj" />
