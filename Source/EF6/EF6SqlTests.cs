@@ -125,16 +125,13 @@ namespace Tests.EF6
 
 		public bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
 		{
-			if (!TrackChanges && takeCount >= 1000)
-				return false;
-
 			var sql = GetNarrowListSql(takeCount);
 
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new EF6Context(TrackChanges))
-					foreach (var item in db.NarrowLong.SqlQuery(sql)) {}
+					foreach (var item in (TrackChanges ? db.NarrowLong.SqlQuery(sql) : db.NarrowLong.SqlQuery(sql).AsNoTracking())) {}
 
 			watch.Stop();
 
@@ -143,16 +140,13 @@ namespace Tests.EF6
 
 		public async Task<bool> GetNarrowListAsync(Stopwatch watch, int repeatCount, int takeCount)
 		{
-			if (!TrackChanges && takeCount >= 1000)
-				return false;
-
 			var sql = GetNarrowListSql(takeCount);
 
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new EF6Context(TrackChanges))
-					await db.NarrowLong.SqlQuery(sql).ForEachAsync(item => {});
+					await (TrackChanges ? db.NarrowLong.SqlQuery(sql) : db.NarrowLong.SqlQuery(sql).AsNoTracking()).ForEachAsync(item => {});
 
 			watch.Stop();
 
@@ -161,16 +155,13 @@ namespace Tests.EF6
 
 		public bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
 		{
-			if (!TrackChanges && takeCount >= 1000)
-				return false;
-
 			var sql = GetWideListSql(takeCount);
 
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new EF6Context(TrackChanges))
-					foreach (var item in db.WideLong.SqlQuery(sql)) {}
+					foreach (var item in (TrackChanges ? db.WideLong.SqlQuery(sql) : db.WideLong.SqlQuery(sql).AsNoTracking())) {}
 
 			watch.Stop();
 
@@ -179,16 +170,13 @@ namespace Tests.EF6
 
 		public async Task<bool> GetWideListAsync(Stopwatch watch, int repeatCount, int takeCount)
 		{
-			if (!TrackChanges && takeCount >= 1000)
-				return false;
-
 			var sql = GetWideListSql(takeCount);
 
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new EF6Context(TrackChanges))
-					await db.WideLong.SqlQuery(sql).ForEachAsync(item => { });
+					await (TrackChanges ? db.WideLong.SqlQuery(sql) : db.WideLong.SqlQuery(sql).AsNoTracking()).ForEachAsync(item => { });
 
 			watch.Stop();
 

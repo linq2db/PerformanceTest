@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Tests.L2S
 {
@@ -16,7 +17,7 @@ namespace Tests.L2S
 
 			using (var db = new L2SContext(TrackChanges))
 				for (var i = 0; i < repeatCount; i++)
-					db.ExecuteQuery<int>(GetSingleColumnSql);
+					db.ExecuteQuery<int>(GetSingleColumnSql).First();
 
 			watch.Stop();
 
@@ -29,7 +30,7 @@ namespace Tests.L2S
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new L2SContext(TrackChanges))
-					db.ExecuteQuery<int>(GetSingleColumnSql);
+					db.ExecuteQuery<int>(GetSingleColumnSql).First();
 
 			watch.Stop();
 
@@ -42,7 +43,7 @@ namespace Tests.L2S
 
 			using (var db = new L2SContext(TrackChanges))
 				for (var i = 0; i < repeatCount; i++)
-					db.ExecuteQuery<int>("SELECT ID FROM Narrow WHERE ID = {0} AND Field1 = {1}", 1, 2);
+					db.ExecuteQuery<int>("SELECT ID FROM Narrow WHERE ID = {0} AND Field1 = {1}", 1, 2).First();
 
 			watch.Stop();
 

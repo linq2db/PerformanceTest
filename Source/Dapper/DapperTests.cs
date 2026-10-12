@@ -29,7 +29,7 @@ namespace Tests.Dapper
 			{
 				con.Open();
 				for (var i = 0; i < repeatCount; i++)
-					con.Query<int>(GetSingleColumnSql);
+					con.QueryFirst<int>(GetSingleColumnSql);
 			}
 
 			watch.Stop();
@@ -49,7 +49,7 @@ namespace Tests.Dapper
 			{
 				await con.OpenAsync();
 				for (var i = 0; i < repeatCount; i++)
-					await con.QueryAsync<int>(GetSingleColumnSql);
+					await con.QueryFirstAsync<int>(GetSingleColumnSql);
 			}
 
 			watch.Stop();
@@ -65,7 +65,7 @@ namespace Tests.Dapper
 			{
 				using var con = new SqlConnection(ConnectionString);
 				con.Open();
-				con.Query<int>(GetSingleColumnSql);
+				con.QueryFirst<int>(GetSingleColumnSql);
 			}
 
 			watch.Stop();
@@ -85,7 +85,7 @@ namespace Tests.Dapper
 				await using var con = new SqlConnection(ConnectionString);
 #endif
 				await con.OpenAsync();
-				await con.QueryAsync<int>(GetSingleColumnSql);
+				await con.QueryFirstAsync<int>(GetSingleColumnSql);
 			}
 
 			watch.Stop();
@@ -101,7 +101,7 @@ namespace Tests.Dapper
 			{
 				con.Open();
 				for (var i = 0; i < repeatCount; i++)
-					con.Query<int>(GetParamSql, new { id = 1, p = 2 });
+					con.QueryFirst<int>(GetParamSql, new { id = 1, p = 2 });
 			}
 
 			watch.Stop();
@@ -121,7 +121,7 @@ namespace Tests.Dapper
 			{
 				await con.OpenAsync();
 				for (var i = 0; i < repeatCount; i++)
-					await con.QueryAsync<int>(GetParamSql, new { id = 1, p = 2 });
+					await con.QueryFirstAsync<int>(GetParamSql, new { id = 1, p = 2 });
 			}
 
 			watch.Stop();
@@ -139,7 +139,7 @@ namespace Tests.Dapper
 			{
 				using var con = new SqlConnection(ConnectionString);
 				con.Open();
-				foreach (var _ in con.Query<NarrowLong>(sql)) {}
+				foreach (var _ in con.Query<NarrowLong>(sql, buffered: false)) {}
 			}
 
 			watch.Stop();
@@ -161,7 +161,7 @@ namespace Tests.Dapper
 				await using var con = new SqlConnection(ConnectionString);
 #endif
 				await con.OpenAsync();
-				foreach (var _ in await con.QueryAsync<NarrowLong>(sql)) {}
+				await foreach (var _ in con.QueryUnbufferedAsync<NarrowLong>(sql)) {}
 			}
 
 			watch.Stop();
@@ -179,7 +179,7 @@ namespace Tests.Dapper
 			{
 				using var con = new SqlConnection(ConnectionString);
 				con.Open();
-				foreach (var _ in con.Query<WideLong>(sql)) {}
+				foreach (var _ in con.Query<WideLong>(sql, buffered: false)) {}
 			}
 
 			watch.Stop();
@@ -201,7 +201,7 @@ namespace Tests.Dapper
 				await using var con = new SqlConnection(ConnectionString);
 #endif
 				await con.OpenAsync();
-				foreach (var _ in await con.QueryAsync<WideLong>(sql)) {}
+				await foreach (var _ in con.QueryUnbufferedAsync<WideLong>(sql)) {}
 			}
 
 			watch.Stop();

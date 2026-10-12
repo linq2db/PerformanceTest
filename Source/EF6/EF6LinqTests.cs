@@ -60,7 +60,7 @@ namespace Tests.EF6
 				{
 					var q = !TrackChanges ? db.Narrow.AsNoTracking() : db.Narrow;
 
-					db.Narrow.AsNoTracking().Where(t => t.ID == 1).Select(t => t.ID).AsEnumerable().First();
+					q.Where(t => t.ID == 1).Select(t => t.ID).AsEnumerable().First();
 				}
 			}
 
@@ -79,7 +79,7 @@ namespace Tests.EF6
 				{
 					var q = !TrackChanges ? db.Narrow.AsNoTracking() : db.Narrow;
 
-					await db.Narrow.AsNoTracking().Where(t => t.ID == 1).Select(t => t.ID).FirstAsync();
+					await q.Where(t => t.ID == 1).Select(t => t.ID).FirstAsync();
 				}
 			}
 

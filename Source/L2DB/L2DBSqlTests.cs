@@ -121,7 +121,7 @@ namespace Tests.L2DB
 
 			for (var i = 0; i < repeatCount; i++)
 				await using (var db = new L2DBContext(TrackChanges))
-					foreach (var _ in await db.QueryToListAsync<NarrowLong>(sql)) {}
+					await foreach (var _ in db.QueryToAsyncEnumerable<NarrowLong>(sql)) {}
 
 			watch.Stop();
 
@@ -151,7 +151,7 @@ namespace Tests.L2DB
 
 			for (var i = 0; i < repeatCount; i++)
 				await using (var db = new L2DBContext(TrackChanges))
-					foreach (var _ in await db.QueryToListAsync<WideLong>(sql)) {}
+					await foreach (var _ in db.QueryToAsyncEnumerable<WideLong>(sql)) {}
 
 			watch.Stop();
 

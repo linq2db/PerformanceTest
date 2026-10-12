@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
@@ -113,11 +114,15 @@ namespace Tests.AdoNet
 				con.Open();
 				cmd.CommandText = GetParamSql;
 
+				// Hand-written baseline: the command and its parameters are created once
+				// and only the values are set for every call.
+				var id = cmd.Parameters.Add("@id", SqlDbType.Int);
+				var p  = cmd.Parameters.Add("@p",  SqlDbType.Int);
+
 				for (var i = 0; i < repeatCount; i++)
 				{
-					cmd.Parameters.Clear();
-					cmd.Parameters.Add(new SqlParameter("@id", 1));
-					cmd.Parameters.Add(new SqlParameter("@p",  2));
+					id.Value = 1;
+					p. Value = 2;
 					cmd.ExecuteScalar();
 				}
 			}
@@ -142,11 +147,13 @@ namespace Tests.AdoNet
 				await con.OpenAsync();
 				cmd.CommandText = GetParamSql;
 
+				var id = cmd.Parameters.Add("@id", SqlDbType.Int);
+				var p  = cmd.Parameters.Add("@p",  SqlDbType.Int);
+
 				for (var i = 0; i < repeatCount; i++)
 				{
-					cmd.Parameters.Clear();
-					cmd.Parameters.Add(new SqlParameter("@id", 1));
-					cmd.Parameters.Add(new SqlParameter("@p",  2));
+					id.Value = 1;
+					p. Value = 2;
 					await cmd.ExecuteScalarAsync();
 				}
 			}
