@@ -34,6 +34,11 @@ namespace TestRunner
 		/// </summary>
 		public static int WarmupMaxRuns { get; set; } = 10;
 
+		/// <summary>
+		/// When set, only the test group with this name runs.
+		/// </summary>
+		public static string? GroupFilter { get; set; }
+
 		static readonly Random _random = new Random();
 
 		public static void RunTests<T>(string platform, string testName, IEnumerable<T> testProviders, Test<T>[] testMethods)
@@ -45,6 +50,9 @@ namespace TestRunner
 		public static void RunTests<T>(string platform, string testName, IEnumerable<T> providers, Action<T> action, Test<T>[] testMethods)
 			where T : class, ITests
 		{
+			if (GroupFilter != null && !string.Equals(GroupFilter, testName, StringComparison.OrdinalIgnoreCase))
+				return;
+
 			Console.WriteLine($"Testing {testName}...");
 
 			var testProviders =

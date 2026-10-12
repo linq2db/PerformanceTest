@@ -12,9 +12,10 @@ Target frameworks: `net10.0` and `net481`.
 
 ```
 dotnet build ConsoleRunner/ConsoleRunner.csproj -c Release
-dotnet ConsoleRunner/bin/Release/net10.0/ConsoleRunner.dll [--connection "<connection string>"] [perform]
+dotnet ConsoleRunner/bin/Release/net10.0/ConsoleRunner.dll [--connection "<connection string>"] [--group "<group name>"] [perform]
 ```
 
+`--group` runs one test group only, for example `--group "Single Column"`.
 `RunAll.cmd` builds the solution and runs both frameworks five times, interleaved.
 `UI.cmd` starts the WPF viewer for `Result/Result.sqlite`.
 

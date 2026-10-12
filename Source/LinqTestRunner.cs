@@ -44,7 +44,7 @@ namespace Tests
 			};
 #endif
 
-			args = ReadConnectionString(args, out var baseConnectionString);
+			args = ReadOptions(args, out var baseConnectionString);
 
 			var builder = new SqlConnectionStringBuilder(baseConnectionString);
 
@@ -431,11 +431,12 @@ return;
 		}
 
 		/// <summary>
-		/// Takes the connection string from <c>--connection &lt;value&gt;</c> or <c>--connection=&lt;value&gt;</c>,
-		/// then from the PERFTEST_CONNECTION_STRING environment variable, then the default,
-		/// and returns the remaining arguments (the connection string may hold a password and is not printed).
+		/// Reads <c>--group &lt;name&gt;</c> (run only that test group) and the connection string:
+		/// <c>--connection &lt;value&gt;</c> or <c>--connection=&lt;value&gt;</c>, then the
+		/// PERFTEST_CONNECTION_STRING environment variable, then the default.
+		/// Returns the remaining arguments (the connection string may hold a password and is not printed).
 		/// </summary>
-		static string[] ReadConnectionString(string[] args, out string connectionString)
+		static string[] ReadOptions(string[] args, out string connectionString)
 		{
 			string? fromArgs = null;
 			var     rest     = new List<string>();
@@ -446,6 +447,8 @@ return;
 					fromArgs = args[++i];
 				else if (args[i].StartsWith("--connection="))
 					fromArgs = args[i].Substring("--connection=".Length);
+				else if (args[i] == "--group" && i + 1 < args.Length)
+					GroupFilter = args[++i];
 				else
 					rest.Add(args[i]);
 			}
