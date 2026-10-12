@@ -32,9 +32,40 @@ namespace Tests
 		/// </summary>
 		const string DefaultConnectionString = "Server=.;Database=PerformanceTest;Trusted_Connection=True;TrustServerCertificate=True;";
 
-		public static void Run(string platform, bool asyncProcessing, string[] args)
+		/// <summary>
+		/// Runs the test plan. Returns the process exit code: 0 on success, 2 on bad arguments.
+		/// </summary>
+		public static int Run(string platform, bool asyncProcessing, string[] args)
 		{
 			Console.WriteLine($"Testing {platform}...");
+
+			if (!ReadOptions(args, out var baseConnectionString, out var perform))
+				return 2;
+
+			if (GroupFilter != null)
+			{
+				// Walk the plan without running anything to check the group name before any database work.
+				ListOnly = true;
+
+				try
+				{
+					RunPlan(platform, perform);
+				}
+				finally
+				{
+					ListOnly = false;
+				}
+
+				if (!KnownGroups.Contains(GroupFilter, StringComparer.OrdinalIgnoreCase))
+				{
+					Console.Error.WriteLine($"Unknown test group '{GroupFilter}'. Groups{(perform ? " in perform mode" : "")}:");
+
+					foreach (var group in KnownGroups)
+						Console.Error.WriteLine($"  {group}");
+
+					return 2;
+				}
+			}
 
 #if DEBUG
 			DataConnection.TurnTraceSwitchOn();
@@ -43,8 +74,6 @@ namespace Tests
 				Debug.WriteLine(s, s1);
 			};
 #endif
-
-			args = ReadOptions(args, out var baseConnectionString);
 
 			var builder = new SqlConnectionStringBuilder(baseConnectionString);
 
@@ -79,27 +108,40 @@ namespace Tests
 
 			RecordEnvironment();
 
-			for (var index = 0; index < args.Length; index++)
-				Console.WriteLine($"{index}: {args[index]}");
+			RunPlan(platform, perform);
 
-			if (args.Contains("perform"))
+			return 0;
+		}
+
+		static void RunPlan(string platform, bool perform)
+		{
+			if (perform)
+				RunPerform(platform);
+			else
+				RunTests(platform);
+		}
+
+		/// <summary>
+		/// The ad-hoc profiling plan selected by the "perform" argument.
+		/// </summary>
+		static void RunPerform(string platform)
+		{
+			var testProviders = new ITests[]
 			{
-				var testProviders = new ITests[]
-				{
-					new AdoNet   .AdoNetTests       (),
-					new L2DB     .L2DBSqlTests      (),
-					new L2DB     .L2DBLinqTests     (),
-					new L2DB     .L2DBLinqParamTests(),
-					new L2DB     .L2DBCompTests     (),
-					new EFCore   .EFCoreSqlTests    (),
-					new EFCore   .EFCoreLinqTests   (),
-					new EFCore   .EFCoreCompTests   (),
-				};
+				new AdoNet   .AdoNetTests       (),
+				new L2DB     .L2DBSqlTests      (),
+				new L2DB     .L2DBLinqTests     (),
+				new L2DB     .L2DBLinqParamTests(),
+				new L2DB     .L2DBCompTests     (),
+				new EFCore   .EFCoreSqlTests    (),
+				new EFCore   .EFCoreLinqTests   (),
+				new EFCore   .EFCoreCompTests   (),
+			};
 
-				RunTests(platform, "Linq Query Test", testProviders.OfType<ILinqQueryTests>(), new[]
-				{
-					CreateTest<ILinqQueryTests>(t => t.ComplicatedLinqSlow, 1, 10, 500000),
-				});
+			RunTests(platform, "Linq Query Test", testProviders.OfType<ILinqQueryTests>(), new[]
+			{
+				CreateTest<ILinqQueryTests>(t => t.ComplicatedLinqSlow, 1, 10, 500000),
+			});
 
 //				RunTests(platform, "Narrow List", testProviders.OfType<IGetListTests>(), new[]
 //				{
@@ -114,11 +156,6 @@ namespace Tests
 //					CreateTest<ISingleColumnTests>(t => t.GetSingleColumnSlow,  10000),
 //					CreateTest<ISingleColumnTests>(t => t.GetSingleColumnParam, 10000),
 //				});
-
-				return;
-			}
-
-			RunTests(platform);
 		}
 
 		static void RunTests(string platform)
@@ -434,26 +471,39 @@ return;
 		}
 
 		/// <summary>
-		/// Reads <c>--group &lt;name&gt;</c> (run only that test group) and the connection string:
-		/// <c>--connection &lt;value&gt;</c> or <c>--connection=&lt;value&gt;</c>, then the
-		/// PERFTEST_CONNECTION_STRING environment variable, then the default.
-		/// Returns the remaining arguments (the connection string may hold a password and is not printed).
+		/// Reads the arguments: <c>--group &lt;name&gt;</c> (run only that test group), <c>perform</c>
+		/// (the profiling plan) and the connection string: <c>--connection &lt;value&gt;</c> or
+		/// <c>--connection=&lt;value&gt;</c>, then the PERFTEST_CONNECTION_STRING environment variable,
+		/// then the default. Option names are case-insensitive. Any other argument is an error;
+		/// arguments are never printed because one may hold a password.
 		/// </summary>
-		static string[] ReadOptions(string[] args, out string connectionString)
+		static bool ReadOptions(string[] args, out string connectionString, out bool perform)
 		{
 			string? fromArgs = null;
-			var     rest     = new List<string>();
+
+			perform          = false;
+			connectionString = "";
 
 			for (var i = 0; i < args.Length; i++)
 			{
-				if (args[i] == "--connection" && i + 1 < args.Length)
+				var arg = args[i];
+
+				if (string.Equals(arg, "--connection", StringComparison.OrdinalIgnoreCase) && i + 1 < args.Length)
 					fromArgs = args[++i];
-				else if (args[i].StartsWith("--connection="))
-					fromArgs = args[i].Substring("--connection=".Length);
-				else if (args[i] == "--group" && i + 1 < args.Length)
+				else if (arg.StartsWith("--connection=", StringComparison.OrdinalIgnoreCase))
+					fromArgs = arg.Substring("--connection=".Length);
+				else if (string.Equals(arg, "--group", StringComparison.OrdinalIgnoreCase) && i + 1 < args.Length)
 					GroupFilter = args[++i];
+				else if (arg.StartsWith("--group=", StringComparison.OrdinalIgnoreCase))
+					GroupFilter = arg.Substring("--group=".Length);
+				else if (string.Equals(arg, "perform", StringComparison.OrdinalIgnoreCase))
+					perform = true;
 				else
-					rest.Add(args[i]);
+				{
+					Console.Error.WriteLine($"Unknown or incomplete argument #{i + 1} (not shown: it may hold a password).");
+					Console.Error.WriteLine("Usage: ConsoleRunner [--connection <connection string>] [--group <group name>] [perform]");
+					return false;
+				}
 			}
 
 			var fromEnvironment = Environment.GetEnvironmentVariable("PERFTEST_CONNECTION_STRING");
@@ -474,7 +524,7 @@ return;
 				connectionString = DefaultConnectionString;
 			}
 
-			return rest.ToArray();
+			return true;
 		}
 
 		static void RecordEnvironment()

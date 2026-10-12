@@ -4,12 +4,12 @@ namespace ConsoleRunner
 {
 	class Program
 	{
-		static void Main(string[] args)
+		static int Main(string[] args)
 		{
 #if NET481
-			Tests.LinqTestRunner.Run("NET 4.8.2", true, args);
+			return Tests.LinqTestRunner.Run("NET 4.8.2", true, args);
 #elif NET10_0
-			Tests.LinqTestRunner.Run("NET 10.0", false, args);
+			return Tests.LinqTestRunner.Run("NET 10.0", false, args);
 #else
 #error Unknown platform.
 #endif

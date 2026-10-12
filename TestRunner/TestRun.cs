@@ -39,6 +39,17 @@ namespace TestRunner
 		/// </summary>
 		public static string? GroupFilter { get; set; }
 
+		/// <summary>
+		/// When set, <see cref="RunTests{T}(string,string,IEnumerable{T},Action{T},Test{T}[])"/> only records
+		/// the group name in <see cref="KnownGroups"/> and runs nothing.
+		/// </summary>
+		public static bool ListOnly { get; set; }
+
+		/// <summary>
+		/// Names of the test groups seen so far, in plan order.
+		/// </summary>
+		public static List<string> KnownGroups { get; } = new List<string>();
+
 		static readonly Random _random = new Random();
 
 		public static void RunTests<T>(string platform, string testName, IEnumerable<T> testProviders, Test<T>[] testMethods)
@@ -50,6 +61,12 @@ namespace TestRunner
 		public static void RunTests<T>(string platform, string testName, IEnumerable<T> providers, Action<T> action, Test<T>[] testMethods)
 			where T : class, ITests
 		{
+			if (!KnownGroups.Contains(testName))
+				KnownGroups.Add(testName);
+
+			if (ListOnly)
+				return;
+
 			if (GroupFilter != null && !string.Equals(GroupFilter, testName, StringComparison.OrdinalIgnoreCase))
 				return;
 
