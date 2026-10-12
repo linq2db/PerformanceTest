@@ -39,6 +39,10 @@ without changing it.
   List tests stream: rows are enumerated one by one and discarded, nobody builds a `List<T>`
   (Dapper uses `buffered: false`). The one exception is "BLToolkit Sql" (.NET Framework only), whose
   raw-SQL API fills a list (`ExecuteList`). Single-value tests read the value.
+- **Same query shape.** The LINQ and compiled variants of every library run the same query.
+  Single-value tests call `First()` (`FirstAsync()` in the async tests) on the query, so the
+  library asks the server for one row (`TOP (1)`); list and LINQ query tests enumerate the query.
+  Raw-SQL providers run the fixed SQL text (`SELECT ID FROM Narrow WHERE ID = 1`).
 - **Idiomatic settings.** Change tracking is off unless a test asks for it (EF Core and EF6
   `NoTracking`, LINQ to SQL `ObjectTrackingEnabled = false`). EF Core contexts share one prebuilt
   `DbContextOptions`; context pooling is not used, because linq2db creates a plain `DataConnection`

@@ -18,7 +18,7 @@ namespace Tests.BLToolkit
 
 			using (var db = new BLTContext())
 				for (var i = 0; i < repeatCount; i++)
-					db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).AsEnumerable().First();
+					db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).First();
 
 			watch.Stop();
 
@@ -31,7 +31,7 @@ namespace Tests.BLToolkit
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new BLTContext())
-					db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).AsEnumerable().First();
+					db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).First();
 
 			watch.Stop();
 
@@ -47,7 +47,7 @@ namespace Tests.BLToolkit
 				{
 					var id = 1;
 					var p  = 2;
-					db.Narrows.Where(t => t.ID == id && t.Field1 == p).Select(t => t.ID).AsEnumerable().First();
+					db.Narrows.Where(t => t.ID == id && t.Field1 == p).Select(t => t.ID).First();
 				}
 
 			watch.Stop();

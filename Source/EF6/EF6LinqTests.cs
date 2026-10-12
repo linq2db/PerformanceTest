@@ -25,7 +25,7 @@ namespace Tests.EF6
 				var q = !TrackChanges ? db.Narrow.AsNoTracking() : db.Narrow;
 
 				for (var i = 0; i < repeatCount; i++)
-					q.Where(t => t.ID == 1).Select(t => t.ID).AsEnumerable().First();
+					q.Where(t => t.ID == 1).Select(t => t.ID).First();
 			}
 
 			watch.Stop();
@@ -60,7 +60,7 @@ namespace Tests.EF6
 				{
 					var q = !TrackChanges ? db.Narrow.AsNoTracking() : db.Narrow;
 
-					q.Where(t => t.ID == 1).Select(t => t.ID).AsEnumerable().First();
+					q.Where(t => t.ID == 1).Select(t => t.ID).First();
 				}
 			}
 
@@ -100,7 +100,7 @@ namespace Tests.EF6
 				{
 					var id = 1;
 					var p  = 2;
-					q.Where(t => t.ID == id && t.Field1 == p).Select(t => t.ID).AsEnumerable().First();
+					q.Where(t => t.ID == id && t.Field1 == p).Select(t => t.ID).First();
 				}
 			}
 

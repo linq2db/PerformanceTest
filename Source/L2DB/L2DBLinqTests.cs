@@ -30,7 +30,7 @@ namespace Tests.L2DB
 
 			using (var db = CreateContext())
 				for (var i = 0; i < repeatCount; i++)
-					db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).AsEnumerable().First();
+					db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).First();
 
 			watch.Stop();
 
@@ -56,7 +56,7 @@ namespace Tests.L2DB
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = CreateContext())
-					_ = db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).AsEnumerable().First();
+					_ = db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).First();
 
 			watch.Stop();
 
@@ -85,7 +85,7 @@ namespace Tests.L2DB
 				{
 					var id = 1;
 					var p  = 2;
-					_ = db.Narrows.Where(t => t.ID == id && t.Field1 == p).Select(t => t.ID).AsEnumerable().First();
+					_ = db.Narrows.Where(t => t.ID == id && t.Field1 == p).Select(t => t.ID).First();
 				}
 
 			watch.Stop();
