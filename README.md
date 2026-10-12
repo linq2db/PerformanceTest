@@ -41,6 +41,9 @@ without changing it.
   raw-SQL API fills a list (`ExecuteList`). Single-value tests read the value. `SimpleLinqQuery`
   reads the first row of an unlimited query and stops, for every library including the ADO.NET
   baseline; `SimpleLinqQueryTop` limits the query on the server instead and reads all it returns.
+  "LoWcf Linq" (linq2db over WCF, .NET Framework only, off by default) cannot stop early: the service
+  reads and sends the whole result before the client sees the first row, so in `SimpleLinqQuery` it
+  transfers every row.
 - **Same query shape.** The LINQ and compiled variants of every library run the same query.
   Single-value tests call `First()` (`FirstAsync()` in the async tests) on the query, so the
   library asks the server for one row (`TOP (1)`); list and LINQ query tests enumerate the query.
