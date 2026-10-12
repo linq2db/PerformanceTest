@@ -2,7 +2,5 @@
 	<PropertyGroup>
 		<LangVersion>latest</LangVersion>
 		<Nullable>enable</Nullable>
-
-		<ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
 	</PropertyGroup>
 </Project>

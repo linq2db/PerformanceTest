@@ -6,18 +6,17 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\TestRunner\TestRunner.csproj" />
-		<PackageReference Include="CodeJam" Version="5.0.0" />
-		<PackageReference Include="Dapper" Version="2.1.79" />
-		<PackageReference Include="PetaPoco.Compiled" Version="6.0.683" />
-		<PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.1" />
+		<PackageReference Include="CodeJam" />
+		<PackageReference Include="Dapper" />
+		<PackageReference Include="PetaPoco.Compiled" />
+		<PackageReference Include="Microsoft.Data.SqlClient" />
 
-		<!--<PackageReference Include="linq2db" Version="3.6.0" />-->
 		<ProjectReference Include="..\..\linq2db\Source\LinqToDB\LinqToDB.csproj" />
 		<ProjectReference Include="..\..\linq2db\Source\LinqToDB.Remote.Wcf\LinqToDB.Remote.Wcf.csproj" Condition="'$(TargetFramework)' == 'net481'" />
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.8" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
@@ -28,9 +27,9 @@
 	</ItemGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net481'">
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.32" />
-		<PackageReference Include="EntityFramework" Version="6.4.4" />
-		<PackageReference Include="BLToolkit" Version="4.3.9" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+		<PackageReference Include="EntityFramework" />
+		<PackageReference Include="BLToolkit" />
 
 		<Reference Include="System.Data.Linq" />
 		<Reference Include="System.ServiceModel" />

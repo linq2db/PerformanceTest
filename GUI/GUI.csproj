@@ -11,10 +11,10 @@
 	<ItemGroup>
 		<Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
 
-		<PackageReference Include="linq2db.t4models"        Version="6.2.1" />
-		<PackageReference Include="MahApps.Metro"           Version="3.0.0-rc0529" />
-		<PackageReference Include="MahApps.Metro.IconPacks" Version="6.2.1" />
-		<PackageReference Include="Microsoft.Data.Sqlite"   Version="10.0.8" />
+		<PackageReference Include="linq2db.t4models" />
+		<PackageReference Include="MahApps.Metro" />
+		<PackageReference Include="MahApps.Metro.IconPacks" />
+		<PackageReference Include="Microsoft.Data.Sqlite" />
 
 		<ProjectReference Include="..\TestRunner\TestRunner.csproj" />
 
