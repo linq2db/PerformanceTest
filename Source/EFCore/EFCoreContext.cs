@@ -9,26 +9,33 @@ namespace Tests.EFCore
 	public class EFCoreContext : DbContext
 	{
 		public EFCoreContext(bool trackChanges)
+			: base(GetOptions(trackChanges))
 		{
-			ChangeTracker.QueryTrackingBehavior =
-				trackChanges ? QueryTrackingBehavior.TrackAll : QueryTrackingBehavior.NoTracking;
 		}
 
-		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+		// Options are built once and shared, as EF Core recommends for applications that create many contexts;
+		// configuring them in OnConfiguring would repeat that work for every context instance.
+		static DbContextOptions<EFCoreContext>? _noTrackingOptions;
+		static DbContextOptions<EFCoreContext>? _trackingOptions;
+
+		static DbContextOptions<EFCoreContext> GetOptions(bool trackChanges)
 		{
-			optionsBuilder.UseSqlServer(GetConnectionString());
+			if (trackChanges)
+				return _trackingOptions ??= CreateOptions(QueryTrackingBehavior.TrackAll);
+
+			return _noTrackingOptions ??= CreateOptions(QueryTrackingBehavior.NoTracking);
 		}
 
-		static string _connectionString;
-
-		static string GetConnectionString()
+		static DbContextOptions<EFCoreContext> CreateOptions(QueryTrackingBehavior trackingBehavior)
 		{
-			_connectionString ??= LinqToDB.Data.DataConnection.GetConnectionString("Test").Replace("LinqToDB", "EFCore");
-			return _connectionString;
+			return new DbContextOptionsBuilder<EFCoreContext>()
+				.UseSqlServer(Tests.TestsBase.GetConnectionString("EFCore"))
+				.UseQueryTrackingBehavior(trackingBehavior)
+				.Options;
 		}
 
-		public DbSet<Narrow>     Narrow     { get; set; }
-		public DbSet<NarrowLong> NarrowLong { get; set; }
-		public DbSet<WideLong>   WideLong   { get; set; }
+		public DbSet<Narrow>     Narrow     { get; set; } = default!;
+		public DbSet<NarrowLong> NarrowLong { get; set; } = default!;
+		public DbSet<WideLong>   WideLong   { get; set; } = default!;
 	}
 }

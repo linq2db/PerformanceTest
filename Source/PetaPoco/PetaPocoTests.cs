@@ -15,7 +15,7 @@ namespace Tests.PetaPoco
 	{
 		public PetaPocoTests()
 		{
-			ConnectionString = ConnectionString.Replace("LinqToDB", "PetaPoco");
+			ConnectionString = GetConnectionString("PetaPoco");
 		}
 
 		public override string Name { get; set; } = "PetaPoco";

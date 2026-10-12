@@ -20,7 +20,7 @@ namespace Tests.L2S
 		static string GetConnectionString()
 		{
 			if (_connectionString == null)
-				_connectionString = LinqToDB.Data.DataConnection.GetConnectionString("Test").Replace("LinqToDB", "LinqToSql");
+				_connectionString = Tests.TestsBase.GetConnectionString("LinqToSql");
 			return _connectionString;
 		}
 

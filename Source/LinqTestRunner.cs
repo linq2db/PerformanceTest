@@ -3,6 +3,7 @@
 #define TEST_WCF1
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -11,8 +12,11 @@ using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider.SqlServer;
 
+using Microsoft.Data.SqlClient;
+
 using TestRunner;
 using TestRunner.DataModel;
+using TestRunner.Tools;
 
 namespace Tests
 {
@@ -23,11 +27,14 @@ namespace Tests
 	{
 		const string DatabaseVersion = "1";
 
+		/// <summary>
+		/// Used when neither <c>--connection</c> nor the PERFTEST_CONNECTION_STRING environment variable is set.
+		/// </summary>
+		const string DefaultConnectionString = "Server=.;Database=PerformanceTest;Trusted_Connection=True;TrustServerCertificate=True;";
+
 		public static void Run(string platform, bool asyncProcessing, string[] args)
 		{
 			Console.WriteLine($"Testing {platform}...");
-
-			var serverName = ".";
 
 #if DEBUG
 			DataConnection.TurnTraceSwitchOn();
@@ -37,10 +44,18 @@ namespace Tests
 			};
 #endif
 
-			var connectionString =
-				$"Server={serverName};Database=PerformanceTest;Trusted_Connection=True;Application Name=LinqToDB Test;TrustServerCertificate=True;"
-				//+ (asyncProcessing ? "Asynchronous Processing=True;" : "")
-				;
+			args = ReadConnectionString(args, out var baseConnectionString);
+
+			var builder = new SqlConnectionStringBuilder(baseConnectionString);
+
+			if (string.IsNullOrEmpty(builder.InitialCatalog))
+				builder.InitialCatalog = "PerformanceTest";
+
+			var databaseName = builder.InitialCatalog;
+
+			TestsBase.BaseConnectionString = builder.ConnectionString;
+
+			var connectionString = TestsBase.GetConnectionString("LinqToDB");
 
 			DataConnection.AddConfiguration(
 				"Test",
@@ -57,7 +72,9 @@ namespace Tests
 			var resultPath = Path.Combine(basePath, "Result");
 
 			CreateResultDatabase(false, resultPath);
-			CreateTestDatabase  (false, serverName);
+			CreateTestDatabase  (false, builder, databaseName);
+
+			RecordEnvironment();
 
 			for (var index = 0; index < args.Length; index++)
 				Console.WriteLine($"{index}: {args[index]}");
@@ -69,6 +86,7 @@ namespace Tests
 					new AdoNet   .AdoNetTests       (),
 					new L2DB     .L2DBSqlTests      (),
 					new L2DB     .L2DBLinqTests     (),
+					new L2DB     .L2DBLinqParamTests(),
 					new L2DB     .L2DBCompTests     (),
 					new EFCore   .EFCoreSqlTests    (),
 					new EFCore   .EFCoreLinqTests   (),
@@ -112,6 +130,7 @@ namespace Tests
 				new PetaPoco .PetaPocoTests     (),
 				new L2DB     .L2DBSqlTests      (),
 				new L2DB     .L2DBLinqTests     (),
+				new L2DB     .L2DBLinqParamTests(),
 				new L2DB     .L2DBCompTests     (),
 				new EFCore   .EFCoreSqlTests    (),
 				new EFCore   .EFCoreLinqTests   (),
@@ -411,23 +430,103 @@ return;
 #endif
 		}
 
-		static void CreateTestDatabase(bool enforceCreate, string serverName)
+		/// <summary>
+		/// Takes the connection string from <c>--connection &lt;value&gt;</c> or <c>--connection=&lt;value&gt;</c>,
+		/// then from the PERFTEST_CONNECTION_STRING environment variable, then the default,
+		/// and returns the remaining arguments (the connection string may hold a password and is not printed).
+		/// </summary>
+		static string[] ReadConnectionString(string[] args, out string connectionString)
+		{
+			string? fromArgs = null;
+			var     rest     = new List<string>();
+
+			for (var i = 0; i < args.Length; i++)
+			{
+				if (args[i] == "--connection" && i + 1 < args.Length)
+					fromArgs = args[++i];
+				else if (args[i].StartsWith("--connection="))
+					fromArgs = args[i].Substring("--connection=".Length);
+				else
+					rest.Add(args[i]);
+			}
+
+			var fromEnvironment = Environment.GetEnvironmentVariable("PERFTEST_CONNECTION_STRING");
+
+			if (!string.IsNullOrEmpty(fromArgs))
+			{
+				Console.WriteLine("Connection string: --connection");
+				connectionString = fromArgs!;
+			}
+			else if (!string.IsNullOrEmpty(fromEnvironment))
+			{
+				Console.WriteLine("Connection string: PERFTEST_CONNECTION_STRING");
+				connectionString = fromEnvironment!;
+			}
+			else
+			{
+				Console.WriteLine("Connection string: default");
+				connectionString = DefaultConnectionString;
+			}
+
+			return rest.ToArray();
+		}
+
+		static void RecordEnvironment()
+		{
+			RunEnvironment.AddVersion("linq2db",                  typeof(DataConnection));
+			RunEnvironment.AddVersion("Microsoft.Data.SqlClient", typeof(SqlConnection));
+			RunEnvironment.AddVersion("EF Core",                  typeof(Microsoft.EntityFrameworkCore.DbContext));
+			RunEnvironment.AddVersion("Dapper",                   typeof(global::Dapper.SqlMapper));
+			RunEnvironment.AddVersion("PetaPoco",                 typeof(global::PetaPoco.Database));
+#if NET481
+			RunEnvironment.AddVersion("EF6",                      typeof(System.Data.Entity.DbContext));
+			RunEnvironment.AddVersion("BLToolkit",                typeof(global::BLToolkit.Data.DbManager));
+			RunEnvironment.AddVersion("LINQ to SQL",              typeof(System.Data.Linq.DataContext));
+#endif
+
+			RunEnvironment.Items["linq2db settings"] = L2DB.L2DBContext.SettingsDescription;
+			RunEnvironment.Items["Warmup"]           = $"full repeat x take, until {WarmupTime.TotalSeconds:0.###} s, at most {WarmupMaxRuns} runs";
+
+			try
+			{
+				using var db = new L2DB.L2DBContext();
+
+				RunEnvironment.Items["Database server"] = db.Execute<string>("SELECT CAST(SERVERPROPERTY('ProductVersion') AS nvarchar(128)) + N' ' + CAST(SERVERPROPERTY('Edition') AS nvarchar(128))");
+			}
+			catch (Exception ex)
+			{
+				RunEnvironment.Items["Database server"] = ex.Message;
+			}
+		}
+
+		static void CreateTestDatabase(bool enforceCreate, SqlConnectionStringBuilder builder, string databaseName)
 		{
 			Console.WriteLine("Creating database...");
 
-			using (var db = SqlServerTools.CreateDataConnection(
-				$"Server={serverName};Database=master;Trusted_Connection=True;TrustServerCertificate=True;"))
+			var masterBuilder = new SqlConnectionStringBuilder(builder.ConnectionString)
 			{
-				if (!enforceCreate)
-					if (db.Execute<object>("SELECT db_id('PerformanceTest')") != null)
-						if (db.Execute<object>("SELECT OBJECT_ID('PerformanceTest.dbo.Setting', N'U')") != null)
-							if (db.GetTable<Setting>()
-								.DatabaseName("PerformanceTest")
-								.Any(s => s.Name == "DB Version" && s.Value == DatabaseVersion))
-								return;
+				InitialCatalog  = "master",
+				ApplicationName = "PerformanceTest Setup",
+			};
 
-				db.Execute("DROP DATABASE IF EXISTS PerformanceTest");
-				db.Execute("CREATE DATABASE PerformanceTest");
+			using (var db = SqlServerTools.CreateDataConnection(masterBuilder.ConnectionString))
+			{
+				var quotedName = "[" + databaseName.Replace("]", "]]") + "]";
+
+				if (db.Execute<object>("SELECT db_id(@name)", new DataParameter("name", databaseName, DataType.NVarChar)) != null)
+				{
+					// The database name is configurable now: never drop a database this harness did not create.
+					if (db.Execute<object>("SELECT OBJECT_ID(@name, N'U')", new DataParameter("name", quotedName + ".dbo.Setting", DataType.NVarChar)) == null)
+						throw new InvalidOperationException($"Database '{databaseName}' exists but was not created by this test; use another database name.");
+
+					if (!enforceCreate && db.GetTable<Setting>()
+						.DatabaseName(databaseName)
+						.Any(s => s.Name == "DB Version" && s.Value == DatabaseVersion))
+						return;
+				}
+
+				db.Execute($"DROP DATABASE IF EXISTS {quotedName}");
+				db.Execute($"CREATE DATABASE {quotedName}");
 			}
 
 			using (var db = new L2DB.L2DBContext())

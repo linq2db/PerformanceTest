@@ -11,7 +11,7 @@ namespace Tests.BLToolkit
 	public class BLTContext : DbManager
 	{
 		public BLTContext()
-			: base( _dataProvider, LinqToDB.Data.DataConnection.GetConnectionString("Test").Replace("LinqToDB", "BLToolkit"))
+			: base( _dataProvider, Tests.TestsBase.GetConnectionString("BLToolkit"))
 		{
 		}
 

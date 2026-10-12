@@ -19,11 +19,16 @@ namespace Tests.L2DB
 		public override string Name         { get; set; } = "L2DB Linq";
 		public          bool   TrackChanges { get; set; }
 
+		protected virtual L2DBContext CreateContext()
+		{
+			return new L2DBContext(TrackChanges);
+		}
+
 		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
 
-			using (var db = new L2DBContext(TrackChanges))
+			using (var db = CreateContext())
 				for (var i = 0; i < repeatCount; i++)
 					db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).AsEnumerable().First();
 
@@ -36,7 +41,7 @@ namespace Tests.L2DB
 		{
 			watch.Start();
 
-			await using (var db = new L2DBContext(TrackChanges))
+			await using (var db = CreateContext())
 				for (var i = 0; i < repeatCount; i++)
 					await db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).FirstAsync();
 
@@ -50,7 +55,7 @@ namespace Tests.L2DB
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(TrackChanges))
+				using (var db = CreateContext())
 					_ = db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).AsEnumerable().First();
 
 			watch.Stop();
@@ -63,7 +68,7 @@ namespace Tests.L2DB
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				await using (var db = new L2DBContext(TrackChanges))
+				await using (var db = CreateContext())
 					await db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).FirstAsync();
 
 			watch.Stop();
@@ -75,7 +80,7 @@ namespace Tests.L2DB
 		{
 			watch.Start();
 
-			using (var db = new L2DBContext(TrackChanges))
+			using (var db = CreateContext())
 				for (var i = 0; i < repeatCount; i++)
 				{
 					var id = 1;
@@ -92,7 +97,7 @@ namespace Tests.L2DB
 		{
 			watch.Start();
 
-			await using (var db = new L2DBContext(TrackChanges))
+			await using (var db = CreateContext())
 				for (var i = 0; i < repeatCount; i++)
 				{
 					var id = 1;
@@ -110,7 +115,7 @@ namespace Tests.L2DB
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(TrackChanges))
+				using (var db = CreateContext())
 					foreach (var _ in db.NarrowLongs.Take(takeCount)) {}
 
 			watch.Stop();
@@ -126,7 +131,7 @@ namespace Tests.L2DB
 
 			for (var i = 0; i < repeatCount; i++)
 			{
-				await using var db = new L2DBContext(TrackChanges);
+				await using var db = CreateContext();
 
 				var q = db.NarrowLongs.Take(takeCount).AsAsyncEnumerable();
 
@@ -145,7 +150,7 @@ namespace Tests.L2DB
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(TrackChanges))
+				using (var db = CreateContext())
 					foreach (var _ in db.WideLongs.Take(takeCount)) {}
 
 			watch.Stop();
@@ -158,7 +163,7 @@ namespace Tests.L2DB
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				await using (var db = new L2DBContext(TrackChanges))
+				await using (var db = CreateContext())
 					await db.WideLongs.Take(takeCount).ForEachAsync(_ => {});
 
 			watch.Stop();
@@ -172,7 +177,7 @@ namespace Tests.L2DB
 
 			for (var i = 0; i < repeatCount; i++)
 			{
-				using var db = new L2DBContext(TrackChanges);
+				using var db = CreateContext();
 
 				var q =
 					(
@@ -196,7 +201,7 @@ namespace Tests.L2DB
 
 			for (var i = 0; i < repeatCount; i++)
 			{
-				using var db = new L2DBContext(TrackChanges);
+				using var db = CreateContext();
 
 				var q =
 					(
@@ -220,7 +225,7 @@ namespace Tests.L2DB
 
 			for (var i = 0; i < repeatCount; i++)
 			{
-				using var db = new L2DBContext(TrackChanges);
+				using var db = CreateContext();
 
 				var q =
 					(
@@ -252,7 +257,7 @@ namespace Tests.L2DB
 
 			for (var i = 0; i < repeatCount; i++)
 			{
-				using var db = new L2DBContext(TrackChanges);
+				using var db = CreateContext();
 
 				var q =
 					(
@@ -293,6 +298,19 @@ namespace Tests.L2DB
 			watch.Stop();
 
 			return true;
+		}
+	}
+
+	/// <summary>
+	/// The LINQ tests with linq2db's default settings: parameterized SQL, including Take/Skip.
+	/// </summary>
+	class L2DBLinqParamTests : L2DBLinqTests
+	{
+		public override string Name { get; set; } = "L2DB Linq Param";
+
+		protected override L2DBContext CreateContext()
+		{
+			return new L2DBContext(TrackChanges, inlineParameters: false);
 		}
 	}
 }

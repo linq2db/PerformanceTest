@@ -23,7 +23,7 @@ namespace Tests.EF6
 		static string GetConnectionString()
 		{
 			if (_connectionString == null)
-				_connectionString = LinqToDB.Data.DataConnection.GetConnectionString("Test").Replace("LinqToDB", "EF6");
+				_connectionString = Tests.TestsBase.GetConnectionString("EF6");
 			return _connectionString;
 		}
 

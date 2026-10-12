@@ -15,7 +15,7 @@ namespace Tests.Dapper
 	{
 		public DapperTests()
 		{
-			ConnectionString = ConnectionString.Replace("LinqToDB", "Dapper");
+			ConnectionString = GetConnectionString("Dapper");
 		}
 
 		public override string Name { get; set; } = "Dapper";

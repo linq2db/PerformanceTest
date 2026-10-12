@@ -36,6 +36,21 @@ namespace Tests.Tests
 		{
 		}
 
-		protected string ConnectionString = LinqToDB.Data.DataConnection.GetConnectionString("Test");
+		/// <summary>
+		/// The configured connection string without an application name.
+		/// </summary>
+		public static string BaseConnectionString { get; set; } = "";
+
+		/// <summary>
+		/// Returns the connection string for one library. Every library gets its own
+		/// Application Name and therefore its own connection pool.
+		/// </summary>
+		public static string GetConnectionString(string libraryName)
+		{
+			// SqlClient uses the last occurrence of a keyword, so this overrides any application name in the base string.
+			return BaseConnectionString.TrimEnd(';') + $";Application Name={libraryName} Test";
+		}
+
+		protected string ConnectionString = GetConnectionString("LinqToDB");
 	}
 }

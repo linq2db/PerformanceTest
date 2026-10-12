@@ -14,7 +14,7 @@ namespace Tests.AdoNet
 	{
 		public AdoNetTests()
 		{
-			ConnectionString = ConnectionString.Replace("LinqToDB", "AdoNet");
+			ConnectionString = GetConnectionString("AdoNet");
 		}
 
 		public override string Name { get; set; } = "AdoNet";
