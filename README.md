@@ -42,7 +42,9 @@ without changing it.
 - **Idiomatic settings.** Change tracking is off unless a test asks for it (EF Core and EF6
   `NoTracking`, LINQ to SQL `ObjectTrackingEnabled = false`). EF Core contexts share one prebuilt
   `DbContextOptions`; context pooling is not used, because linq2db creates a plain `DataConnection`
-  per context too. Compiled queries are measured separately where the library has them.
+  per context too. Compiled queries are measured separately where the library has them; they are
+  held in static fields and compiled once per process, as an application keeps them, so their
+  translation happens during warmup and never inside a timed run.
 - **linq2db configuration.** The main linq2db providers run with `InlineParameters = true` and
   `ParameterizeTakeSkip = false`. "L2DB Linq Param" runs the LINQ tests with the library
   defaults (parameterized SQL).
