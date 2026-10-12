@@ -38,7 +38,9 @@ without changing it.
 - **Same work for everyone.** Every library runs the same query and reads every row it returns.
   List tests stream: rows are enumerated one by one and discarded, nobody builds a `List<T>`
   (Dapper uses `buffered: false`). The one exception is "BLToolkit Sql" (.NET Framework only), whose
-  raw-SQL API fills a list (`ExecuteList`). Single-value tests read the value.
+  raw-SQL API fills a list (`ExecuteList`). Single-value tests read the value. `SimpleLinqQuery`
+  reads the first row of an unlimited query and stops, for every library including the ADO.NET
+  baseline; `SimpleLinqQueryTop` limits the query on the server instead and reads all it returns.
 - **Same query shape.** The LINQ and compiled variants of every library run the same query.
   Single-value tests call `First()` (`FirstAsync()` in the async tests) on the query, so the
   library asks the server for one row (`TOP (1)`); list and LINQ query tests enumerate the query.

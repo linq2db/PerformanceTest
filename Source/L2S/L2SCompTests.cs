@@ -185,7 +185,8 @@ namespace Tests.L2S
 
 			for (var i = 0; i < repeatCount; i++)
 				using (var db = new L2SContext(TrackChanges))
-					foreach (var item in query(db)) {}
+					foreach (var item in query(db))
+						break;
 
 			watch.Stop();
 

@@ -94,7 +94,8 @@ namespace Tests.L2S
 						select n1.ID
 					);
 
-					foreach (var item in q) {}
+					foreach (var item in q)
+						break;
 				}
 
 			watch.Stop();
