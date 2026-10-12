@@ -11,8 +11,8 @@ namespace TestRunner.DataModel
 	[Table]
 	public class TestRunInfo
 	{
-		[PrimaryKey(1)]                       public int    TestRunID { get; set; }
-		[PrimaryKey(2), Column(Length = 50)]  public string Name      { get; set; } = default!;
-		[Column(Length = 500), Nullable]      public string? Value    { get; set; }
+		[PrimaryKey(1)]                               public int     TestRunID { get; set; }
+		[PrimaryKey(2), Column(Length = 50), NotNull] public string  Name      { get; set; } = default!;
+		[Column(Length = 500), Nullable]              public string? Value     { get; set; }
 	}
 }
