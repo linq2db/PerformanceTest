@@ -365,7 +365,7 @@ return;
 				CreateTest<ILinqQueryTests>(t => t.ComplicatedLinqSlow,   10, 10, 500000),
 			});
 
-#if !NET6_0
+#if NET481
 #if TEST_WCF
 			var wcfTestProviders = new ITests[]
 			{
