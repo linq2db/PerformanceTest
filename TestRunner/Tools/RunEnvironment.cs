@@ -48,6 +48,9 @@ namespace TestRunner.Tools
 				["Processor count"]      = Environment.ProcessorCount.ToString(),
 				["GC"]                   = (GCSettings.IsServerGC ? "Server" : "Workstation") + ", " + GCSettings.LatencyMode,
 				["Stopwatch frequency"]  = Stopwatch.Frequency.ToString(),
+				// TestStopwatch.Ticks of this run; runs recorded before this table existed stored
+				// raw Stopwatch ticks, which equal TimeSpan ticks only at 10 MHz (Windows).
+				["Tick unit"]            = "TimeSpan ticks (100 ns)",
 #if DEBUG
 				["Build configuration"]  = "Debug",
 #else

@@ -26,7 +26,10 @@ The SQL Server connection string is taken from, in this order:
 3. `Server=.;Database=PerformanceTest;Trusted_Connection=True;TrustServerCertificate=True;`.
 
 The database named in it is created and filled on the first run (two tables of one million rows).
-An existing database that this test did not create is never dropped.
+The test marks a database it creates (table `PerformanceTestOwner`) and drops and recreates only a
+marked database whose data is out of date. An existing unmarked database is used as is when it holds
+the current test data (as databases from earlier versions of this test do); otherwise the run stops
+without changing it.
 
 ## Method
 
@@ -53,3 +56,12 @@ An existing database that this test did not create is never dropped.
 `TimeSpan` ticks) and, per run, `TestRunInfo`: runtime, OS, CPU, GC mode, build configuration,
 library versions (linq2db with its commit), linq2db settings, warmup rule and SQL Server version.
 `Result/<platform>.<group>.txt` holds the last run's table.
+
+Tick units: runs with `TestRunInfo` rows store `TimeSpan` ticks (100 ns; the row "Tick unit" says
+so, "Stopwatch frequency" records the timer). Older runs have no `TestRunInfo` rows and stored raw
+`Stopwatch` ticks. All of them were recorded on Windows, where the `Stopwatch` frequency is 10 MHz,
+so their ticks are `TimeSpan` ticks too and the viewer shows them as such. An old run made on Linux
+(1 GHz timer, 100x larger values) cannot be told apart by the viewer: delete such runs.
+
+`Result.sqlite` is never deleted or replaced by the test. If it cannot be opened or has another
+version, the run stops and asks to move the file away; a new one is created on the next run.
