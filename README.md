@@ -64,9 +64,9 @@ without changing it.
 - **ADO.NET baseline in the LINQ query tests.** The hand-written SQL of `ComplicatedLinqFast` and
   `ComplicatedLinqSlow` passes Take/Skip and the row limit as parameters, as linq2db's default
   configuration does, and keeps the constants of the query as literals, as linq2db does too.
-  `SimpleLinqQueryTop` passes its row count as a parameter. Results recorded before this change
-  used literal values in the baseline (matching the inline configuration then used by the main
-  linq2db providers), so the "AdoNet" column of these tests is not comparable across that change.
+  (`SimpleLinqQueryTop` has always passed its row count as a parameter.) Results of the two
+  complicated queries recorded before this change used literal values in the baseline (matching the inline configuration then used by the main
+  linq2db providers), so their "AdoNet" column is not comparable across that change.
   The list tests keep the fixed SQL (`TOP (<n>)` as a literal) that all raw-SQL providers run.
 - **Connection pools.** Every library uses its own `Application Name`, and so its own pool. The
   variants of one library share it: all linq2db providers use one pool, all EF Core providers another.
