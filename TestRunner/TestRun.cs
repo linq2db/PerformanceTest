@@ -353,8 +353,18 @@ namespace TestRunner
 						$"'{filePath}' is not a results database of version {DatabaseVersion}. " +
 						"Move it away; a new one is created on the next run.");
 
-				// Added after DB Version 1; created in place to keep existing results. Errors propagate.
-				db.CreateTable<TestRunInfo>(tableOptions: TableOptions.CreateIfNotExists);
+				// Added after DB Version 1; created in place to keep existing results.
+				// A failure stops the run; the file is never deleted to recover from it.
+				try
+				{
+					db.CreateTable<TestRunInfo>(tableOptions: TableOptions.CreateIfNotExists);
+				}
+				catch (Exception ex)
+				{
+					throw new InvalidOperationException(
+						$"Cannot add the TestRunInfo table to the results database '{filePath}': {ex.Message} " +
+						"The file was left in place; make it writable or move it away.", ex);
+				}
 
 				return;
 			}

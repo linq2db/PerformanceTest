@@ -103,8 +103,17 @@ namespace Tests
 
 			var resultPath = Path.Combine(basePath, "Result");
 
-			CreateResultDatabase(false, resultPath);
-			CreateTestDatabase  (false, builder, databaseName);
+			try
+			{
+				CreateResultDatabase(false, resultPath);
+				CreateTestDatabase  (false, builder, databaseName);
+			}
+			catch (InvalidOperationException ex)
+			{
+				// Refusals to touch an existing results file or database: a message, not a crash.
+				Console.Error.WriteLine(ex.Message);
+				return 1;
+			}
 
 			RecordEnvironment();
 
