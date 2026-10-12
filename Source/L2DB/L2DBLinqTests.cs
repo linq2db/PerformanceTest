@@ -302,15 +302,16 @@ namespace Tests.L2DB
 	}
 
 	/// <summary>
-	/// The LINQ tests with linq2db's default settings: parameterized SQL, including Take/Skip.
+	/// The LINQ tests with InlineParameters = true and ParameterizeTakeSkip = false: values and
+	/// Take/Skip are put into the SQL text instead of parameters.
 	/// </summary>
-	class L2DBLinqParamTests : L2DBLinqTests
+	class L2DBLinqInlineTests : L2DBLinqTests
 	{
-		public override string Name { get; set; } = "L2DB Linq Param";
+		public override string Name { get; set; } = "L2DB Linq Inline";
 
 		protected override L2DBContext CreateContext()
 		{
-			return new L2DBContext(TrackChanges, inlineParameters: false);
+			return new L2DBContext(TrackChanges, inlineParameters: true);
 		}
 	}
 }

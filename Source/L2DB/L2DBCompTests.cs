@@ -309,17 +309,18 @@ namespace Tests.L2DB
 	}
 
 	/// <summary>
-	/// The compiled tests with linq2db's default settings: parameterized SQL, including Take/Skip.
+	/// The compiled tests with InlineParameters = true and ParameterizeTakeSkip = false: values and
+	/// Take/Skip are put into the SQL text instead of parameters.
 	/// A compiled query keeps its translations per configuration, so it shares the compiled queries
 	/// with "L2DB Compiled".
 	/// </summary>
-	class L2DBCompParamTests : L2DBCompTests
+	class L2DBCompInlineTests : L2DBCompTests
 	{
-		public override string Name { get; set; } = "L2DB Compiled Param";
+		public override string Name { get; set; } = "L2DB Compiled Inline";
 
 		protected override L2DBContext CreateContext()
 		{
-			return new L2DBContext(TrackChanges, inlineParameters: false);
+			return new L2DBContext(TrackChanges, inlineParameters: true);
 		}
 	}
 }

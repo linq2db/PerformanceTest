@@ -357,7 +357,7 @@ namespace Tests.AdoNet
 		public bool SimpleLinqQueryTop(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			var sql =
-				$"""
+				"""
 				SELECT TOP (@takeCount)
 					[t1].[ID]
 				FROM
@@ -398,8 +398,10 @@ namespace Tests.AdoNet
 
 		public bool ComplicatedLinqFast(Stopwatch watch, int repeatCount, int takeCount)
 		{
+			// linq2db's default configuration sends Take/Skip and captured values as parameters;
+			// the baseline does the same.
 			var sql =
-				$"""
+				"""
 				SELECT
 					[n1].[ID],
 					Count(*) as [c1]
@@ -411,7 +413,7 @@ namespace Tests.AdoNet
 					[n1].[ID]
 				ORDER BY
 					[n1].[ID]
-				OFFSET 1 ROWS FETCH NEXT {takeCount} ROWS ONLY
+				OFFSET @skip ROWS FETCH NEXT @take ROWS ONLY
 				""";
 
 			watch.Start();
@@ -422,6 +424,9 @@ namespace Tests.AdoNet
 				{
 					con.Open();
 					cmd.CommandText = sql;
+
+					cmd.Parameters.Add("@skip", SqlDbType.Int).Value = 1;
+					cmd.Parameters.Add("@take", SqlDbType.Int).Value = takeCount;
 
 					using (var rd = cmd.ExecuteReader())
 						if (rd.HasRows)
@@ -443,8 +448,7 @@ namespace Tests.AdoNet
 		public bool ComplicatedLinqSlow(Stopwatch watch, int repeatCount, int takeCount, int nRows)
 		{
 			var sql =
-				$"""
-
+				"""
 				SELECT
 					[t1].[ID] as [ID1],
 					[t1].[Field1] as [Field11]
@@ -457,7 +461,7 @@ namespace Tests.AdoNet
 							[NarrowLong] [n]
 								INNER JOIN [WideLong] [w] ON [n].[Field1] = [w].[Field1]
 						WHERE
-							[n].[ID] >= 0 AND [n].[ID] <= {nRows} AND [w].[Field1] NOT IN (0, 20, 50, 187635)
+							[n].[ID] >= 0 AND [n].[ID] <= @nRows AND [w].[Field1] NOT IN (0, 20, 50, 187635)
 						UNION
 						SELECT
 							[n1].[ID],
@@ -466,11 +470,11 @@ namespace Tests.AdoNet
 							[NarrowLong] [n1]
 								INNER JOIN [WideLong] [w1] ON [n1].[Field1] = [w1].[Field1]
 						WHERE
-							[n1].[ID] >= 0 AND [n1].[ID] <= {nRows} AND [w1].[Field1] NOT IN (0, 240, 500, 18635)
+							[n1].[ID] >= 0 AND [n1].[ID] <= @nRows AND [w1].[Field1] NOT IN (0, 240, 500, 18635)
 					) [t1]
 				ORDER BY
 					[t1].[Field1] DESC
-				OFFSET 1000 ROWS FETCH NEXT {takeCount} ROWS ONLY
+				OFFSET @skip ROWS FETCH NEXT @take ROWS ONLY
 				""";
 
 			watch.Start();
@@ -481,6 +485,10 @@ namespace Tests.AdoNet
 				{
 					con.Open();
 					cmd.CommandText = sql;
+
+					cmd.Parameters.Add("@nRows", SqlDbType.Int).Value = nRows;
+					cmd.Parameters.Add("@skip",  SqlDbType.Int).Value = 1000;
+					cmd.Parameters.Add("@take",  SqlDbType.Int).Value = takeCount;
 
 					using (var rd = cmd.ExecuteReader())
 						if (rd.HasRows)

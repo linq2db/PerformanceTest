@@ -4,7 +4,7 @@ Compares linq2db with plain ADO.NET and other data access libraries on SQL Serve
 linq2db's own performance over time. linq2db is built from source: the solution expects a linq2db
 checkout next to this repository (`../linq2db`).
 
-Libraries: ADO.NET (baseline), linq2db (Sql, Linq, Linq Param, Compiled, Compiled Param), EF Core
+Libraries: ADO.NET (baseline), linq2db (Sql, Linq, Linq Inline, Compiled, Compiled Inline), EF Core
 (Sql, Linq, Compiled), Dapper, PetaPoco; on .NET Framework 4.8 also EF6, LINQ to SQL and BLToolkit.
 Target frameworks: `net10.0` and `net481`.
 
@@ -54,9 +54,20 @@ without changing it.
   per context too. Compiled queries are measured separately where the library has them; they are
   held in static fields and compiled once per process, as an application keeps them, so their
   translation happens during warmup and never inside a timed run.
-- **linq2db configuration.** The main linq2db providers run with `InlineParameters = true` and
-  `ParameterizeTakeSkip = false`. "L2DB Linq Param" and "L2DB Compiled Param" run the LINQ and
-  the compiled tests with the library defaults (parameterized SQL).
+- **linq2db configuration.** The main linq2db providers run with the library defaults
+  (`InlineParameters = false`, `ParameterizeTakeSkip = true`): captured values and Take/Skip go to
+  the server as parameters. "L2DB Linq Inline" and "L2DB Compiled Inline" run the LINQ and the
+  compiled tests with `InlineParameters = true` and `ParameterizeTakeSkip = false`, which put these
+  values into the SQL text; they are there for comparison only. "LoWcf Linq" uses the library
+  defaults on both sides. Earlier runs measured the main providers with the inline configuration;
+  the row "linq2db settings" in `TestRunInfo` records which one a run used.
+- **ADO.NET baseline in the LINQ query tests.** The hand-written SQL of `ComplicatedLinqFast` and
+  `ComplicatedLinqSlow` passes Take/Skip and the row limit as parameters, as linq2db's default
+  configuration does, and keeps the constants of the query as literals, as linq2db does too.
+  `SimpleLinqQueryTop` passes its row count as a parameter. Results recorded before this change
+  used literal values in the baseline (matching the inline configuration then used by the main
+  linq2db providers), so the "AdoNet" column of these tests is not comparable across that change.
+  The list tests keep the fixed SQL (`TOP (<n>)` as a literal) that all raw-SQL providers run.
 - **Connection pools.** Every library uses its own `Application Name`, and so its own pool. The
   variants of one library share it: all linq2db providers use one pool, all EF Core providers another.
 - **Warmup.** Before each timed run the same method runs with the same repeat and take counts until

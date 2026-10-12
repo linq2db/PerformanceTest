@@ -15,32 +15,34 @@ namespace Tests.L2DB
 
 	public class L2DBContext : DataConnection
 	{
-		// The main linq2db configuration deliberately inlines parameter values and Take/Skip
-		// into the SQL text. The "L2DB Linq Param" and "L2DB Compiled Param" providers run the same
-		// tests with the library defaults (parameterized SQL) so the difference can be measured.
+		// The main linq2db providers run with the library defaults: parameter values and Take/Skip
+		// are sent as parameters. The "L2DB Linq Inline" and "L2DB Compiled Inline" providers run the
+		// same tests with InlineParameters = true and ParameterizeTakeSkip = false, which put the values
+		// into the SQL text, so the difference can be measured.
 		static readonly DataOptions _options = new DataOptions()
+			.UseConfiguration("Test")
+//			.WithOptions<LinqOptions>(o => o with { EnableAutoFluentMapping = false })
+			;
+
+		static readonly DataOptions _inlineOptions = new DataOptions()
 			.UseConfiguration("Test")
 			.WithOptions<LinqOptions>(o => o with
 			{
-//				EnableAutoFluentMapping = false,
-				ParameterizeTakeSkip    = false
+				ParameterizeTakeSkip = false
 			})
 			;
 
-		static readonly DataOptions _defaultOptions = new DataOptions()
-			.UseConfiguration("Test")
-			;
-
 		public const string SettingsDescription =
-			"InlineParameters = true, ParameterizeTakeSkip = false; 'L2DB Linq Param', 'L2DB Compiled Param': library defaults";
+			"library defaults (InlineParameters = false, ParameterizeTakeSkip = true); " +
+			"'L2DB Linq Inline', 'L2DB Compiled Inline': InlineParameters = true, ParameterizeTakeSkip = false";
 
 		static L2DBContext()
 		{
 //			LinqToDB.Common.Configuration.Linq.EnableAutoFluentMapping = false;
 		}
 
-		public L2DBContext(bool trackChanges = false, bool inlineParameters = true)
-			: base(inlineParameters ? _options : _defaultOptions)
+		public L2DBContext(bool trackChanges = false, bool inlineParameters = false)
+			: base(inlineParameters ? _inlineOptions : _options)
 		{
 			InlineParameters = inlineParameters;
 //			if (trackChanges)
