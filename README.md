@@ -4,8 +4,8 @@ Compares linq2db with plain ADO.NET and other data access libraries on SQL Serve
 linq2db's own performance over time. linq2db is built from source: the solution expects a linq2db
 checkout next to this repository (`../linq2db`).
 
-Libraries: ADO.NET (baseline), linq2db (Sql, Linq, Linq Param, Compiled), EF Core (Sql, Linq,
-Compiled), Dapper, PetaPoco; on .NET Framework 4.8 also EF6, LINQ to SQL and BLToolkit.
+Libraries: ADO.NET (baseline), linq2db (Sql, Linq, Linq Param, Compiled, Compiled Param), EF Core
+(Sql, Linq, Compiled), Dapper, PetaPoco; on .NET Framework 4.8 also EF6, LINQ to SQL and BLToolkit.
 Target frameworks: `net10.0` and `net481`.
 
 ## Running
@@ -50,8 +50,8 @@ without changing it.
   held in static fields and compiled once per process, as an application keeps them, so their
   translation happens during warmup and never inside a timed run.
 - **linq2db configuration.** The main linq2db providers run with `InlineParameters = true` and
-  `ParameterizeTakeSkip = false`. "L2DB Linq Param" runs the LINQ tests with the library
-  defaults (parameterized SQL).
+  `ParameterizeTakeSkip = false`. "L2DB Linq Param" and "L2DB Compiled Param" run the LINQ and
+  the compiled tests with the library defaults (parameterized SQL).
 - **Connection pools.** Every library uses its own `Application Name`, and so its own pool. The
   variants of one library share it: all linq2db providers use one pool, all EF Core providers another.
 - **Warmup.** Before each timed run the same method runs with the same repeat and take counts until

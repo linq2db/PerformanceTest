@@ -25,6 +25,11 @@ namespace Tests.L2DB
 		public override string Name         { get; set; } = "L2DB Compiled";
 		public          bool   TrackChanges { get; set; }
 
+		protected virtual L2DBContext CreateContext()
+		{
+			return new L2DBContext(TrackChanges);
+		}
+
 		static readonly Func<L2DBContext,int> _singleColumnFast = CompiledQuery.Compile((L2DBContext db) =>
 			db.Narrows.Where(t => t.ID == 1).Select(t => t.ID).First());
 
@@ -32,7 +37,7 @@ namespace Tests.L2DB
 		{
 			watch.Start();
 
-			using (var db = new L2DBContext(TrackChanges))
+			using (var db = CreateContext())
 				for (var i = 0; i < repeatCount; i++)
 					_singleColumnFast(db);
 
@@ -48,7 +53,7 @@ namespace Tests.L2DB
 		{
 			watch.Start();
 
-			await using (var db = new L2DBContext(TrackChanges))
+			await using (var db = CreateContext())
 				for (var i = 0; i < repeatCount; i++)
 					await _singleColumnFastAsync(db);
 
@@ -65,7 +70,7 @@ namespace Tests.L2DB
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(TrackChanges))
+				using (var db = CreateContext())
 					_singleColumnSlow(db);
 
 			watch.Stop();
@@ -81,7 +86,7 @@ namespace Tests.L2DB
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				await using (var db = new L2DBContext(TrackChanges))
+				await using (var db = CreateContext())
 					await _singleColumnSlowAsync(db);
 
 			watch.Stop();
@@ -96,7 +101,7 @@ namespace Tests.L2DB
 		{
 			watch.Start();
 
-			using (var db = new L2DBContext(TrackChanges))
+			using (var db = CreateContext())
 				for (var i = 0; i < repeatCount; i++)
 					_singleColumnParam(db, 1, 2);
 
@@ -112,7 +117,7 @@ namespace Tests.L2DB
 		{
 			watch.Start();
 
-			await using (var db = new L2DBContext(TrackChanges))
+			await using (var db = CreateContext())
 				for (var i = 0; i < repeatCount; i++)
 					await _singleColumnParamAsync(db, 1, 2);
 
@@ -129,7 +134,7 @@ namespace Tests.L2DB
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(TrackChanges))
+				using (var db = CreateContext())
 					foreach (var _ in _narrowList(db, takeCount)) {}
 
 			watch.Stop();
@@ -145,7 +150,7 @@ namespace Tests.L2DB
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				await using (var db = new L2DBContext(TrackChanges))
+				await using (var db = CreateContext())
 					await foreach (var item in _narrowListAsync(db, takeCount))
 					{}
 
@@ -162,7 +167,7 @@ namespace Tests.L2DB
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(TrackChanges))
+				using (var db = CreateContext())
 					foreach (var item in _wideList(db, takeCount)) {}
 
 			watch.Stop();
@@ -178,7 +183,7 @@ namespace Tests.L2DB
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				await using (var db = new L2DBContext(TrackChanges))
+				await using (var db = CreateContext())
 					await foreach (var item in _wideListAsync(db, takeCount))
 					{}
 
@@ -199,7 +204,7 @@ namespace Tests.L2DB
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(TrackChanges))
+				using (var db = CreateContext())
 					foreach (var _ in _simpleLinqQuery(db))
 						break;
 
@@ -221,7 +226,7 @@ namespace Tests.L2DB
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(TrackChanges))
+				using (var db = CreateContext())
 					foreach (var _ in _simpleLinqQueryTop(db, takeCount)) {}
 
 			watch.Stop();
@@ -251,7 +256,7 @@ namespace Tests.L2DB
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(TrackChanges))
+				using (var db = CreateContext())
 					foreach (var _ in _complicatedLinqFast(db, takeCount)) {}
 
 			watch.Stop();
@@ -294,12 +299,27 @@ namespace Tests.L2DB
 			watch.Start();
 
 			for (var i = 0; i < repeatCount; i++)
-				using (var db = new L2DBContext(TrackChanges))
+				using (var db = CreateContext())
 					foreach (var item in _complicatedLinqSlow(db, takeCount, nRows)) {}
 
 			watch.Stop();
 
 			return true;
+		}
+	}
+
+	/// <summary>
+	/// The compiled tests with linq2db's default settings: parameterized SQL, including Take/Skip.
+	/// A compiled query keeps its translations per configuration, so it shares the compiled queries
+	/// with "L2DB Compiled".
+	/// </summary>
+	class L2DBCompParamTests : L2DBCompTests
+	{
+		public override string Name { get; set; } = "L2DB Compiled Param";
+
+		protected override L2DBContext CreateContext()
+		{
+			return new L2DBContext(TrackChanges, inlineParameters: false);
 		}
 	}
 }

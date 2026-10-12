@@ -16,8 +16,8 @@ namespace Tests.L2DB
 	public class L2DBContext : DataConnection
 	{
 		// The main linq2db configuration deliberately inlines parameter values and Take/Skip
-		// into the SQL text. The "L2DB Linq Param" provider runs the same tests with the
-		// library defaults (parameterized SQL) so the difference can be measured.
+		// into the SQL text. The "L2DB Linq Param" and "L2DB Compiled Param" providers run the same
+		// tests with the library defaults (parameterized SQL) so the difference can be measured.
 		static readonly DataOptions _options = new DataOptions()
 			.UseConfiguration("Test")
 			.WithOptions<LinqOptions>(o => o with
@@ -32,7 +32,7 @@ namespace Tests.L2DB
 			;
 
 		public const string SettingsDescription =
-			"InlineParameters = true, ParameterizeTakeSkip = false; 'L2DB Linq Param': library defaults";
+			"InlineParameters = true, ParameterizeTakeSkip = false; 'L2DB Linq Param', 'L2DB Compiled Param': library defaults";
 
 		static L2DBContext()
 		{
