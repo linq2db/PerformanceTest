@@ -15,7 +15,9 @@ dotnet build ConsoleRunner/ConsoleRunner.csproj -c Release
 dotnet ConsoleRunner/bin/Release/net10.0/ConsoleRunner.dll [--connection "<connection string>"] [--group "<group name>"] [perform]
 ```
 
-`--group` runs one test group only, for example `--group "Single Column"`.
+`--group` runs one test group only, for example `--group "Single Column"`; an unknown name lists the
+groups and exits with code 2. Option names are case-insensitive. Any other argument is an error
+(exit code 2), and arguments are never printed, since the connection string may hold a password.
 `RunAll.cmd` builds the solution and runs both frameworks five times, interleaved.
 `UI.cmd` starts the WPF viewer for `Result/Result.sqlite`.
 
@@ -35,7 +37,8 @@ without changing it.
 
 - **Same work for everyone.** Every library runs the same query and reads every row it returns.
   List tests stream: rows are enumerated one by one and discarded, nobody builds a `List<T>`
-  (Dapper uses `buffered: false`). Single-value tests read the value.
+  (Dapper uses `buffered: false`). The one exception is "BLToolkit Sql" (.NET Framework only), whose
+  raw-SQL API fills a list (`ExecuteList`). Single-value tests read the value.
 - **Idiomatic settings.** Change tracking is off unless a test asks for it (EF Core and EF6
   `NoTracking`, LINQ to SQL `ObjectTrackingEnabled = false`). EF Core contexts share one prebuilt
   `DbContextOptions`; context pooling is not used, because linq2db creates a plain `DataConnection`
@@ -43,7 +46,8 @@ without changing it.
 - **linq2db configuration.** The main linq2db providers run with `InlineParameters = true` and
   `ParameterizeTakeSkip = false`. "L2DB Linq Param" runs the LINQ tests with the library
   defaults (parameterized SQL).
-- **Connection pools.** Every library uses its own `Application Name`, and so its own pool.
+- **Connection pools.** Every library uses its own `Application Name`, and so its own pool. The
+  variants of one library share it: all linq2db providers use one pool, all EF Core providers another.
 - **Warmup.** Before each timed run the same method runs with the same repeat and take counts until
   one second has passed (at most ten runs), so tiered JIT, caches and pools have settled.
 - **Timing.** One timed run per test, provider and process, measured with `Stopwatch.Elapsed`.
