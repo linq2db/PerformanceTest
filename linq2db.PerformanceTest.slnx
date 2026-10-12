@@ -2,6 +2,7 @@
   <Folder Name="/.root/">
     <File Path="Directory.Build.props" />
     <File Path="Directory.Packages.props" />
+    <File Path="README.md" />
     <File Path="RunAll.cmd" />
     <File Path="UI.cmd" />
   </Folder>
