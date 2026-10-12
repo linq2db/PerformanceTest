@@ -57,10 +57,13 @@ namespace Tests
 
 			var connectionString = TestsBase.GetConnectionString("LinqToDB");
 
+			// The server version is detected through master: the test database may not exist yet.
+			var masterConnectionString = new SqlConnectionStringBuilder(builder.ConnectionString) { InitialCatalog = "master" }.ConnectionString;
+
 			DataConnection.AddConfiguration(
 				"Test",
 				connectionString,
-				SqlServerTools.GetDataProvider(connectionString : connectionString));
+				SqlServerTools.GetDataProvider(connectionString : masterConnectionString));
 
 			DataConnection.DefaultConfiguration = "Test";
 
