@@ -269,8 +269,12 @@ namespace PerformanceTest.Views.MainWindow
 
 				Application.Current.Dispatcher.Invoke(() => Status = "Loading...");
 
+				// Result databases written before run info was recorded do not have the table yet.
+				await db.CreateTableAsync<TestRunInfo>(tableOptions: TableOptions.CreateIfNotExists);
+
 				await db.TestStopwatches.TruncateAsync();
 				await db.TestMethods.    TruncateAsync();
+				await db.TestRunInfos.   TruncateAsync();
 				await db.TestRuns.       TruncateAsync();
 
 				await RefreshDataAsync();

@@ -22,6 +22,18 @@ namespace TestRunner
 	{
 		const string DatabaseVersion = "1";
 
+		/// <summary>
+		/// Warmup runs the timed method with the full repeat and take counts until it has run for
+		/// at least this long, so tiered JIT has promoted the hot paths (it needs 30 calls and a
+		/// 100 ms quiet period) and caches, pools and dynamic PGO have settled before the timed run.
+		/// </summary>
+		public static TimeSpan WarmupTime { get; set; } = TimeSpan.FromSeconds(1);
+
+		/// <summary>
+		/// Upper bound on warmup runs for methods whose full run is short.
+		/// </summary>
+		public static int WarmupMaxRuns { get; set; } = 10;
+
 		static readonly Random _random = new Random();
 
 		public static void RunTests<T>(string platform, string testName, IEnumerable<T> testProviders, Test<T>[] testMethods)
@@ -56,11 +68,16 @@ namespace TestRunner
 					p.SetUp();
 					action(p);
 
-					// Warmup
-					if (func(p)(new Stopwatch(), 1, 1) == false)
+					// Warmup: the same work as the timed run, repeated until WarmupTime has passed.
+					var warmup = Stopwatch.StartNew();
+
+					for (var run = 0; run < WarmupMaxRuns && (run == 0 || warmup.Elapsed < WarmupTime); run++)
 					{
-						Console.Write(' ');
-						return null;
+						if (func(p)(new Stopwatch(), m.Repeat, m.Take ?? -1) == false)
+						{
+							Console.Write(' ');
+							return null;
+						}
 					}
 
 					GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
@@ -72,7 +89,9 @@ namespace TestRunner
 					var stopwatch = new Stopwatch();
 					if (func(p)(stopwatch, m.Repeat, m.Take ?? -1) == false)
 						return null;
-					var time = new TimeSpan(stopwatch.ElapsedTicks);
+					// Stopwatch.ElapsedTicks counts Stopwatch.Frequency ticks, which is 10 MHz on Windows
+					// but 1 GHz on Linux; Elapsed is a TimeSpan everywhere.
+					var time = stopwatch.Elapsed;
 
 					Console.Write('.');
 
@@ -97,6 +116,15 @@ namespace TestRunner
 						.Value(t => t.CreatedOn, () => Sql.CurrentTimestamp)
 					.InsertWithInt32Identity();
 
+				foreach (var item in RunEnvironment.GetAll())
+				{
+					db.GetTable<TestRunInfo>()
+							.Value(t => t.TestRunID, id)
+							.Value(t => t.Name,      item.Key)
+							.Value(t => t.Value,     item.Value)
+						.Insert();
+				}
+
 				foreach (var test in tests)
 				{
 					var mid = db.GetTable<TestMethod>()
@@ -112,7 +140,7 @@ namespace TestRunner
 						db.GetTable<TestStopwatch>()
 								.Value(t => t.TestMethodID, mid)
 								.Value(t => t.Time,         watch!.time)
-								.Value(t => t.Ticks,        watch.stopwatch.ElapsedTicks)
+								.Value(t => t.Ticks,        watch.time.Ticks)
 								.Value(t => t.Provider,     watch.p.Name)
 								.Value(t => t.CreatedOn,    () => Sql.CurrentTimestamp)
 							.Insert();
@@ -277,7 +305,11 @@ namespace TestRunner
 					try
 					{
 						if (db.GetTable<Setting>().Any(s => s.Name == "DB Version" && s.Value == DatabaseVersion))
+						{
+							// Added after DB Version 1; created in place to keep existing results.
+							db.CreateTable<TestRunInfo>(tableOptions: TableOptions.CreateIfNotExists);
 							return;
+						}
 					}
 					catch
 					{
@@ -293,6 +325,7 @@ namespace TestRunner
 				db.CreateTable<TestRun>();
 				db.CreateTable<TestMethod>();
 				db.CreateTable<TestStopwatch>();
+				db.CreateTable<TestRunInfo>();
 				//db.CreateTable<TestResult>();
 			}
 

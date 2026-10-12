@@ -74,8 +74,17 @@ namespace PerformanceTest.Views.TestControl
 					join m in methods on w.TestMethodID equals m.ID
 					select w;
 
+				var infos =
+					from i in db.TestRunInfos
+					join r in runs on i.TestRunID equals r.ID
+					select i;
+
+				// Result databases written before run info was recorded do not have the table yet.
+				await db.CreateTableAsync<TestRunInfo>(tableOptions: TableOptions.CreateIfNotExists);
+
 				await watches.DeleteAsync();
 				await methods.DeleteAsync();
+				await infos.  DeleteAsync();
 				await runs.   DeleteAsync();
 
 				await App.Root.ViewModel.RefreshDataAsync();

@@ -9,6 +9,7 @@ namespace TestRunner.DataModel
 		public ITable<Setting>       Settings        => this.GetTable<Setting>();
 		public ITable<TestMethod>    TestMethods     => this.GetTable<TestMethod>();
 		public ITable<TestRun>       TestRuns        => this.GetTable<TestRun>();
+		public ITable<TestRunInfo>   TestRunInfos    => this.GetTable<TestRunInfo>();
 		public ITable<TestStopwatch> TestStopwatches => this.GetTable<TestStopwatch>();
 
 		public ResultDB()
