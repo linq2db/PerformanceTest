@@ -505,6 +505,37 @@ return;
 			}
 		}
 
+		const string OwnershipMarkerTable = "PerformanceTestOwner";
+		const string OwnershipMarker      = "Created by linq2db PerformanceTest; the test may drop and recreate this database.";
+
+		static readonly string[] TestTables = { "Setting", "Narrow", "NarrowLong", "WideLong" };
+
+		static bool HasOwnershipMarker(DataConnection db, string quotedName)
+		{
+			if (db.Execute<object>("SELECT OBJECT_ID(@name, N'U')",
+				new DataParameter("name", $"{quotedName}.dbo.{OwnershipMarkerTable}", DataType.NVarChar)) == null)
+				return false;
+
+			return db.Execute<int>(
+				$"SELECT COUNT(*) FROM {quotedName}.dbo.{OwnershipMarkerTable} WHERE Marker = @marker",
+				new DataParameter("marker", OwnershipMarker, DataType.NVarChar)) > 0;
+		}
+
+		/// <summary>
+		/// True when the database holds all test tables and the current data version.
+		/// </summary>
+		static bool IsCurrent(DataConnection db, string quotedName, string databaseName)
+		{
+			foreach (var table in TestTables)
+				if (db.Execute<object>("SELECT OBJECT_ID(@name, N'U')",
+					new DataParameter("name", $"{quotedName}.dbo.{table}", DataType.NVarChar)) == null)
+					return false;
+
+			return db.GetTable<Setting>()
+				.DatabaseName(databaseName)
+				.Any(s => s.Name == "DB Version" && s.Value == DatabaseVersion);
+		}
+
 		static void CreateTestDatabase(bool enforceCreate, SqlConnectionStringBuilder builder, string databaseName)
 		{
 			Console.WriteLine("Creating database...");
@@ -521,18 +552,29 @@ return;
 
 				if (db.Execute<object>("SELECT db_id(@name)", new DataParameter("name", databaseName, DataType.NVarChar)) != null)
 				{
-					// The database name is configurable now: never drop a database this harness did not create.
-					if (db.Execute<object>("SELECT OBJECT_ID(@name, N'U')", new DataParameter("name", quotedName + ".dbo.Setting", DataType.NVarChar)) == null)
-						throw new InvalidOperationException($"Database '{databaseName}' exists but was not created by this test; use another database name.");
+					var hasMarker = HasOwnershipMarker(db, quotedName);
 
-					if (!enforceCreate && db.GetTable<Setting>()
-						.DatabaseName(databaseName)
-						.Any(s => s.Name == "DB Version" && s.Value == DatabaseVersion))
+					if (!enforceCreate && IsCurrent(db, quotedName, databaseName))
 						return;
+
+					// The database name is configurable: drop only a database that carries the marker
+					// this harness writes when it creates one. Anything else is left alone.
+					if (!hasMarker)
+						throw new InvalidOperationException(
+							$"Database '{databaseName}' exists, but it is not marked as created by this test " +
+							$"(no {OwnershipMarkerTable} row) or its data is out of date. It was not changed. " +
+							"Drop it yourself or use another database name.");
+
+					db.Execute($"DROP DATABASE {quotedName}");
 				}
 
-				db.Execute($"DROP DATABASE IF EXISTS {quotedName}");
 				db.Execute($"CREATE DATABASE {quotedName}");
+
+				// The first thing in a new database: the proof that this harness owns it.
+				db.Execute($"CREATE TABLE {quotedName}.dbo.{OwnershipMarkerTable} (Marker nvarchar(200) NOT NULL)");
+				db.Execute(
+					$"INSERT INTO {quotedName}.dbo.{OwnershipMarkerTable} (Marker) VALUES (@marker)",
+					new DataParameter("marker", OwnershipMarker, DataType.NVarChar));
 			}
 
 			using (var db = new L2DB.L2DBContext())
