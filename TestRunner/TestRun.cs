@@ -298,37 +298,54 @@ namespace TestRunner
 			);
 		}
 
+		/// <summary>
+		/// Opens or creates <c>Result.sqlite</c> in <paramref name="resultFolder"/>.
+		/// An existing file is never deleted or replaced: if it cannot be used, the run stops
+		/// and asks the user to move it away.
+		/// </summary>
 		public static void CreateResultDatabase(bool enforceCreate, string resultFolder)
 		{
-			Console.WriteLine("Creating database...");
+			var dbPath   = Path.Combine(resultFolder, "Result");
+			var filePath = $"{dbPath}.sqlite";
 
-			var dbPath = Path.Combine(resultFolder, "Result");
+			DataConnection.AddConfiguration("Result", $"Data Source={filePath}", SQLiteTools.GetDataProvider());
 
-			DataConnection.AddConfiguration("Result", $"Data Source={dbPath}.sqlite", SQLiteTools.GetDataProvider());
+			if (File.Exists(filePath))
+			{
+				if (enforceCreate)
+					throw new InvalidOperationException(
+						$"A new results database was requested, but '{filePath}' exists. Move it away and run again.");
+
+				using var db = new DataConnection("Result");
+
+				bool isCurrent;
+
+				try
+				{
+					isCurrent = db.GetTable<Setting>().Any(s => s.Name == "DB Version" && s.Value == DatabaseVersion);
+				}
+				catch (Exception ex)
+				{
+					throw new InvalidOperationException(
+						$"Cannot read the results database '{filePath}': {ex.Message} " +
+						"If it is damaged, move it away; a new one is created on the next run.", ex);
+				}
+
+				if (!isCurrent)
+					throw new InvalidOperationException(
+						$"'{filePath}' is not a results database of version {DatabaseVersion}. " +
+						"Move it away; a new one is created on the next run.");
+
+				// Added after DB Version 1; created in place to keep existing results. Errors propagate.
+				db.CreateTable<TestRunInfo>(tableOptions: TableOptions.CreateIfNotExists);
+
+				return;
+			}
+
+			Console.WriteLine("Creating results database...");
 
 			using (var db = new DataConnection("Result"))
 			{
-				if (!enforceCreate)
-				{
-					try
-					{
-						if (db.GetTable<Setting>().Any(s => s.Name == "DB Version" && s.Value == DatabaseVersion))
-						{
-							// Added after DB Version 1; created in place to keep existing results.
-							db.CreateTable<TestRunInfo>(tableOptions: TableOptions.CreateIfNotExists);
-							return;
-						}
-					}
-					catch
-					{
-						// ignored
-					}
-				}
-
-				db.Close();
-
-				File.Delete($"{dbPath}.sqlite");
-
 				CreateTable(db, [new Setting { Name = "DB Version", Value =  DatabaseVersion }]);
 				db.CreateTable<TestRun>();
 				db.CreateTable<TestMethod>();
@@ -337,7 +354,7 @@ namespace TestRunner
 				//db.CreateTable<TestResult>();
 			}
 
-			Console.WriteLine("Database created.");
+			Console.WriteLine("Results database created.");
 		}
 
 		public static void CreateTable<T>(DataConnection db, IEnumerable<T> data)
