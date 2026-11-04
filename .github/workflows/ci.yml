@@ -8,7 +8,13 @@ on:
   pull_request:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 env:
+  # The linq2db commit the recorded results were measured with. It is bumped on purpose, together with
+  # new results, so that a linq2db change cannot break this build by itself.
+  LINQ2DB_REF: f3f31790fa55d4ab04c89a91e16f0e8df952b50d
   DOTNET_NOLOGO: 1
   DOTNET_CLI_TELEMETRY_OPTOUT: 1
 
@@ -23,6 +29,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: linq2db/linq2db
+          ref: ${{ env.LINQ2DB_REF }}
           path: linq2db
       - uses: actions/setup-dotnet@v4
         with:
@@ -63,6 +70,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: linq2db/linq2db
+          ref: ${{ env.LINQ2DB_REF }}
           path: linq2db
       - uses: actions/setup-dotnet@v4
         with:
