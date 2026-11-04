@@ -1,6 +1,7 @@
 ﻿<Project>
 	<PropertyGroup>
 		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+		<CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -14,6 +15,10 @@
 		<PackageVersion Include="EntityFramework"          Version="6.5.2"        />
 		<PackageVersion Include="BLToolkit"                Version="4.3.9"        />
 		<PackageVersion Include="linq2db.t4models"         Version="6.5.0"        />
+
+		<!-- Microsoft.Data.Sqlite brings SQLitePCLRaw.lib.e_sqlite3 2.x, whose net461 targets declare a win-arm native
+		     that the package does not ship, so every .NET Framework build fails with MSB3030. The 3.x line has no such target. -->
+		<PackageVersion Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.53.3" />
 	</ItemGroup>
 
 	<!-- EF Core 3.1 is the last EF Core release that runs on .NET Framework. -->

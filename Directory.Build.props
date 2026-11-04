@@ -3,4 +3,11 @@
 		<LangVersion>latest</LangVersion>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
+
+	<!-- The 3.x SQLite native package (see Directory.Packages.props) refuses Any CPU builds on .NET Framework
+	     unless a runtime identifier is set; the benchmark is 64-bit anyway. Output paths stay unchanged. -->
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net481'">
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+	</PropertyGroup>
 </Project>
