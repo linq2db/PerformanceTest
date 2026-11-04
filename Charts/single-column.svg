@@ -2,7 +2,7 @@
 <title>Single Column</title>
 <rect width="1140" height="585" fill="#ffffff"/>
 <text x="20" y="32" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="22" font-weight="600" fill="#111827">Single Column</text>
-<text x="20" y="50" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" fill="#4b5563">Median time of one call (shorter is better); the number after it is the ratio to the ADO.NET baseline.</text>
+<text x="20" y="50" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" fill="#4b5563">Median time of one call (shorter is better); the number after it is the ratio to the &quot;AdoNet&quot; baseline.</text>
 <text x="20" y="66" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#b91c1c">Provisional: measured through docker-proxy, to be replaced by the clean run</text>
 <text x="20" y="92" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#111827">GetSingleColumnFast (10,000 calls)</text>
 <text x="145" y="114" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">AdoNet</text>

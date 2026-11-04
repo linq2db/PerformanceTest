@@ -81,6 +81,9 @@ namespace ChartTool
 			// Runs of the same platform with the same environment and library versions are samples of one measurement.
 			var reference = Describe(newest.Info);
 			var selected  = candidates.Where(r => r.Platform == newest.Platform && Describe(r.Info) == reference).ToList();
+			foreach (var skipped in candidates.Where(r => !selected.Contains(r)))
+				Console.Error.WriteLine($"Skipped run {skipped.Id} ({skipped.Platform}, {skipped.Name}, {skipped.CreatedOn.ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture)}): its platform or environment differs from the newest run's.");
+
 			var selectedIds = selected.Select(r => r.Id).ToHashSet();
 
 			var samples = ReadSamples(db, selectedIds);
@@ -271,11 +274,21 @@ namespace ChartTool
 
 			var sb = new StringBuilder();
 
+			var withBase = methods.Count(m => samples.Any(x => x.Method == m && x.Provider == "AdoNet"));
+			var subtitle = "Median time of one call (shorter is better)";
+
+			if (withBase == methods.Count)
+				subtitle += "; the number after it is the ratio to the \"AdoNet\" baseline.";
+			else if (withBase > 0)
+				subtitle += "; where the \"AdoNet\" baseline was measured, the number after it is the ratio to it.";
+			else
+				subtitle += ".";
+
 			sb.Append(CultureInfo.InvariantCulture, $"<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"{width}\" height=\"{height}\" viewBox=\"0 0 {width} {height}\">\n");
 			sb.Append(CultureInfo.InvariantCulture, $"<title>{Esc(groupName)}</title>\n");
 			sb.Append(CultureInfo.InvariantCulture, $"<rect width=\"{width}\" height=\"{height}\" fill=\"#ffffff\"/>\n");
 			sb.Append(CultureInfo.InvariantCulture, $"<text x=\"{Margin}\" y=\"32\" {Font} font-size=\"22\" font-weight=\"600\" fill=\"#111827\">{Esc(groupName)}</text>\n");
-			sb.Append(CultureInfo.InvariantCulture, $"<text x=\"{Margin}\" y=\"50\" {Font} font-size=\"12\" fill=\"#4b5563\">Median time of one call (shorter is better); the number after it is the ratio to the ADO.NET baseline.</text>\n");
+			sb.Append(CultureInfo.InvariantCulture, $"<text x=\"{Margin}\" y=\"50\" {Font} font-size=\"12\" fill=\"#4b5563\">{Esc(subtitle)}</text>\n");
 
 			if (note != null)
 				sb.Append(CultureInfo.InvariantCulture, $"<text x=\"{Margin}\" y=\"66\" {Font} font-size=\"12\" font-weight=\"600\" fill=\"#b91c1c\">{Esc(note)}</text>\n");
@@ -344,7 +357,7 @@ namespace ChartTool
 			var calls = m.Repeat.ToString("N0", CultureInfo.InvariantCulture);
 			var take  = m.Take is { } t ? $", take {t.ToString("N0", CultureInfo.InvariantCulture)}" : "";
 
-			return $"{m.Name} ({calls} calls{take})";
+			return $"{m.Name} ({calls} {(m.Repeat == 1 ? "call" : "calls")}{take})";
 		}
 
 		static List<string> Caption(SortedDictionary<string, string> info, List<Run> runs)
@@ -381,16 +394,28 @@ namespace ChartTool
 
 		static string FormatTime(double seconds)
 		{
-			if (seconds < 1e-3)
-				return Sig(seconds * 1e6) + " µs";
+			// Round to three significant digits first so that the unit is chosen from the printed value
+			// (999.6 us is "1.00 ms", not "1000 us").
+			var r = Round3(seconds);
 
-			if (seconds < 1)
-				return Sig(seconds * 1e3) + " ms";
+			if (r < 1e-3)
+				return Sig(Round3(r * 1e6)) + " µs";
 
-			return Sig(seconds) + " s";
+			if (r < 1)
+				return Sig(Round3(r * 1e3)) + " ms";
+
+			return Sig(r) + " s";
 		}
 
-		// Three significant digits.
+		static double Round3(double v)
+		{
+			if (v <= 0)
+				return 0;
+
+			return Math.Round(v, 2 - (int)Math.Floor(Math.Log10(v)), MidpointRounding.AwayFromZero);
+		}
+
+		// Three significant digits; the value is already rounded by Round3.
 		static string Sig(double v)
 		{
 			if (v >= 100)
@@ -414,7 +439,9 @@ namespace ChartTool
 			foreach (var c in name.ToLowerInvariant())
 				sb.Append(char.IsAsciiLetterOrDigit(c) ? c : '-');
 
-			return sb.ToString().Trim('-');
+			var slug = sb.ToString().Trim('-');
+
+			return slug.Length > 0 ? slug : "group";
 		}
 
 		static string Esc(string s)
