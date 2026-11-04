@@ -17,7 +17,9 @@
 		<PackageVersion Include="linq2db.t4models"         Version="6.5.0"        />
 
 		<!-- Microsoft.Data.Sqlite brings SQLitePCLRaw.lib.e_sqlite3 2.x, whose net461 targets declare a win-arm native
-		     that the package does not ship, so every .NET Framework build fails with MSB3030. The 3.x line has no such target. -->
+		     that the package does not ship, so every .NET Framework build fails with MSB3030. The 3.x line has no such target.
+		     CentralPackageTransitivePinningEnabled (above) is repo-wide: any package listed here also pins the version of
+		     that package when it is only a transitive dependency. -->
 		<PackageVersion Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.53.3" />
 	</ItemGroup>
 
