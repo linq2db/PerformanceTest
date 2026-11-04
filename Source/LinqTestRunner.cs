@@ -176,6 +176,7 @@ namespace Tests
 			var testProviders = new ITests[]
 			{
 				new AdoNet   .AdoNetTests       (),
+				new AdoNet   .AdoNetParamTests  (),
 				new Dapper   .DapperTests       (),
 				new PetaPoco .PetaPocoTests     (),
 				new L2DB     .L2DBSqlTests      (),

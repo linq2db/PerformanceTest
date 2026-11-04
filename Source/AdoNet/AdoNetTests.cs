@@ -20,6 +20,18 @@ namespace Tests.AdoNet
 
 		public override string Name { get; set; } = "AdoNet";
 
+		/// <summary>
+		/// Sends the row limit of the list tests as the parameter <c>@take</c> instead of a literal in the SQL text,
+		/// as linq2db does with its default <c>ParameterizeTakeSkip</c>.
+		/// </summary>
+		public bool ParameterizeTake { get; set; }
+
+		void AddTake(SqlCommand cmd, int takeCount)
+		{
+			if (ParameterizeTake)
+				cmd.Parameters.Add("@take", SqlDbType.Int).Value = takeCount;
+		}
+
 		public bool GetSingleColumnFast(Stopwatch watch, int repeatCount, int takeCount)
 		{
 			watch.Start();
@@ -165,7 +177,7 @@ namespace Tests.AdoNet
 
 		public bool GetNarrowList(Stopwatch watch, int repeatCount, int takeCount)
 		{
-			var sql = GetNarrowListSql(takeCount);
+			var sql = GetNarrowListSql(takeCount, ParameterizeTake);
 
 			watch.Start();
 
@@ -175,6 +187,7 @@ namespace Tests.AdoNet
 				{
 					con.Open();
 					cmd.CommandText = sql;
+					AddTake(cmd, takeCount);
 
 					using (var rd = cmd.ExecuteReader())
 						if (rd.HasRows)
@@ -193,7 +206,7 @@ namespace Tests.AdoNet
 
 		public async Task<bool> GetNarrowListAsync(Stopwatch watch, int repeatCount, int takeCount)
 		{
-			var sql = GetNarrowListSql(takeCount);
+			var sql = GetNarrowListSql(takeCount, ParameterizeTake);
 
 			watch.Start();
 
@@ -209,6 +222,7 @@ namespace Tests.AdoNet
 
 				await con.OpenAsync();
 				cmd.CommandText = sql;
+				AddTake(cmd, takeCount);
 
 #if NET481
 				using var rd = await cmd.ExecuteReaderAsync();
@@ -232,7 +246,7 @@ namespace Tests.AdoNet
 
 		public bool GetWideList(Stopwatch watch, int repeatCount, int takeCount)
 		{
-			var sql = GetWideListSql(takeCount);
+			var sql = GetWideListSql(takeCount, ParameterizeTake);
 
 			watch.Start();
 
@@ -242,6 +256,7 @@ namespace Tests.AdoNet
 				{
 					con.Open();
 					cmd.CommandText = sql;
+					AddTake(cmd, takeCount);
 
 					using (var rd = cmd.ExecuteReader())
 						if (rd.HasRows)
@@ -270,7 +285,7 @@ namespace Tests.AdoNet
 
 		public async Task<bool> GetWideListAsync(Stopwatch watch, int repeatCount, int takeCount)
 		{
-			var sql = GetWideListSql(takeCount);
+			var sql = GetWideListSql(takeCount, ParameterizeTake);
 
 			watch.Start();
 
@@ -285,6 +300,7 @@ namespace Tests.AdoNet
 				{
 					await con.OpenAsync();
 					cmd.CommandText = sql;
+					AddTake(cmd, takeCount);
 
 #if NET481
 					using (var rd = await cmd.ExecuteReaderAsync())

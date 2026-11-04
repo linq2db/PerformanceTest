@@ -4,7 +4,7 @@ Compares linq2db with plain ADO.NET and other data access libraries on SQL Serve
 linq2db's own performance over time. linq2db is built from source: the solution expects a linq2db
 checkout next to this repository (`../linq2db`).
 
-Libraries: ADO.NET (baseline), linq2db (Sql, Linq, Linq Inline, Compiled, Compiled Inline), EF Core
+Libraries: ADO.NET (baseline, in two variants: "AdoNet" and "AdoNet Param"), linq2db (Sql, Linq, Linq Inline, Compiled, Compiled Inline), EF Core
 (Sql, Linq, Compiled), Dapper, PetaPoco; on .NET Framework 4.8 also EF6, LINQ to SQL and BLToolkit.
 Target frameworks: `net10.0` and `net481`.
 
@@ -68,6 +68,13 @@ without changing it.
   complicated queries recorded before this change used literal values in the baseline (matching the inline configuration then used by the main
   linq2db providers), so their "AdoNet" column is not comparable across that change.
   The list tests keep the fixed SQL (`TOP (<n>)` as a literal) that all raw-SQL providers run.
+- **Two ADO.NET baselines.** linq2db's default configuration sends `Take` as a parameter, so in the list
+  tests (Narrow List, Wide List) "L2DB Linq" and "L2DB Compiled" run `TOP (@take)` while the raw-SQL
+  providers run `TOP (<n>)` with a literal. "AdoNet" keeps the literal and is the floor for the raw-SQL
+  providers; "AdoNet Param" runs the same reader loop with `TOP (@take)` as an `Int` parameter and is the
+  floor for the linq2db variants that parameterize. The other tests need no second variant: the single-value
+  and LINQ query baselines already pass parameters wherever linq2db does. Runs recorded before "AdoNet Param"
+  existed have no such column.
 - **Connection pools.** Every library uses its own `Application Name`, and so its own pool. The
   variants of one library share it: all linq2db providers use one pool, all EF Core providers another.
 - **Warmup.** Before each timed run the same method runs with the same repeat and take counts until

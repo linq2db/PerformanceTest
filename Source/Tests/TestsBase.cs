@@ -7,10 +7,21 @@ namespace Tests.Tests
 		protected const string GetSingleColumnSql = "SELECT ID FROM Narrow WHERE ID = 1";
 		protected const string GetParamSql        = "SELECT ID FROM Narrow WHERE ID = @id AND Field1 = @p";
 
-		protected string GetNarrowListSql(int takeCount) => $"SELECT TOP ({takeCount}) ID, Field1 FROM NarrowLong";
-		protected string GetWideListSql  (int takeCount) =>
+		/// <summary>
+		/// The row limit is the literal <paramref name="takeCount"/>, or the parameter <c>@take</c> when <paramref name="parameterized"/> is set.
+		/// </summary>
+		protected string GetNarrowListSql(int takeCount, bool parameterized = false)
+		{
+			return $"SELECT TOP ({(parameterized ? "@take" : takeCount.ToString())}) ID, Field1 FROM NarrowLong";
+		}
+
+		protected string GetWideListSql(int takeCount, bool parameterized = false)
+		{
+			var top = parameterized ? "@take" : takeCount.ToString();
+
+			return
 			$"""
-			SELECT TOP ({takeCount})
+			SELECT TOP ({top})
 				ID,
 				Field1,
 				ByteValue,
@@ -25,6 +36,7 @@ namespace Tests.Tests
 				FloatValue
 			FROM WideLong
 			""";
+		}
 
 		public abstract string Name { get; set; }
 
