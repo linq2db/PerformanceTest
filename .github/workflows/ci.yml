@@ -1,0 +1,88 @@
+name: CI
+
+# Build and smoke only: no benchmark runs here and no SQL Server is available.
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  DOTNET_NOLOGO: 1
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      # The solution expects a linq2db checkout next to this repository.
+      - uses: actions/checkout@v4
+        with:
+          path: PerformanceTest
+      - uses: actions/checkout@v4
+        with:
+          repository: linq2db/linq2db
+          path: linq2db
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Build
+        working-directory: PerformanceTest
+        run: |
+          dotnet build ConsoleRunner/ConsoleRunner.csproj -c Release -f net10.0
+          dotnet build ChartTool/ChartTool.csproj -c Release
+
+      # An unknown group name is rejected (exit code 2) and the known groups are listed before any
+      # database is touched, so this exercises argument parsing and the test plan without SQL Server.
+      - name: Smoke - harness argument parsing
+        working-directory: PerformanceTest
+        run: |
+          set +e
+          dotnet ConsoleRunner/bin/Release/net10.0/ConsoleRunner.dll --group "No Such Group" 2> groups.txt
+          code=$?
+          set -e
+          cat groups.txt
+          test "$code" -eq 2
+          grep -q "Single Column" groups.txt
+
+      # The committed charts must be what the tool produces from the committed data.
+      - name: Smoke - charts are reproducible
+        working-directory: PerformanceTest
+        run: |
+          dotnet ChartTool/bin/Release/net10.0/ChartTool.dll Charts/Result.sqlite "$RUNNER_TEMP/charts"
+          for f in Charts/*.svg; do diff "$f" "$RUNNER_TEMP/charts/$(basename "$f")"; done
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: PerformanceTest
+      - uses: actions/checkout@v4
+        with:
+          repository: linq2db/linq2db
+          path: linq2db
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      # Whole solution: net10.0 and net481 targets and the WPF viewer.
+      - name: Build
+        working-directory: PerformanceTest
+        run: dotnet build linq2db.PerformanceTest.slnx -c Release
+
+      - name: Smoke - harness argument parsing
+        working-directory: PerformanceTest
+        shell: bash
+        run: |
+          for fw in net10.0 net481; do
+            set +e
+            ./ConsoleRunner/bin/Release/$fw/ConsoleRunner.exe --group "No Such Group" 2> groups.txt
+            code=$?
+            set -e
+            cat groups.txt
+            test "$code" -eq 2
+            grep -q "Single Column" groups.txt
+          done
