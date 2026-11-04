@@ -1,0 +1,248 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1140" height="1033" viewBox="0 0 1140 1033">
+<title>Narrow List</title>
+<rect width="1140" height="1033" fill="#ffffff"/>
+<text x="20" y="32" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="22" font-weight="600" fill="#111827">Narrow List</text>
+<text x="20" y="50" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" fill="#4b5563">Median time of one call (shorter is better); the number after it is the ratio to the ADO.NET baseline.</text>
+<text x="20" y="66" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#b91c1c">Provisional: measured through docker-proxy, to be replaced by the clean run</text>
+<text x="20" y="92" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#111827">GetNarrowList (10,000 calls, take 1)</text>
+<text x="145" y="114" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">AdoNet</text>
+<rect x="151" y="105" width="140.2" height="11" fill="#6b7280"/>
+<text x="296.2" y="114" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">172 µs  1.00x</text>
+<text x="145" y="130" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">Dapper</text>
+<rect x="151" y="121" width="139.73" height="11" fill="#0f766e"/>
+<text x="295.73" y="130" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">171 µs  1.00x</text>
+<text x="145" y="146" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">PetaPoco</text>
+<rect x="151" y="137" width="149.38" height="11" fill="#14b8a6"/>
+<text x="305.38" y="146" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">183 µs  1.07x</text>
+<text x="145" y="162" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">L2DB Sql</text>
+<rect x="151" y="153" width="138.74" height="11" fill="#1e3a8a"/>
+<text x="294.74" y="162" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">170 µs  0.99x</text>
+<text x="145" y="178" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">L2DB Linq</text>
+<rect x="151" y="169" width="163.68" height="11" fill="#2563eb"/>
+<text x="319.68" y="178" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">201 µs  1.17x</text>
+<text x="145" y="194" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">L2DB Linq Inline</text>
+<rect x="151" y="185" width="168.52" height="11" fill="#60a5fa"/>
+<text x="324.52" y="194" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">207 µs  1.20x</text>
+<text x="145" y="210" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">L2DB Compiled</text>
+<rect x="151" y="201" width="144.76" height="11" fill="#4f46e5"/>
+<text x="300.76" y="210" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">178 µs  1.03x</text>
+<text x="145" y="226" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">L2DB Compiled Inline</text>
+<rect x="151" y="217" width="159.13" height="11" fill="#818cf8"/>
+<text x="315.13" y="226" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">195 µs  1.13x</text>
+<text x="145" y="242" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">EF Core Sql</text>
+<rect x="151" y="233" width="231.32" height="11" fill="#9a3412"/>
+<text x="387.32" y="242" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">284 µs  1.65x</text>
+<text x="145" y="258" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">EF Core Linq</text>
+<rect x="151" y="249" width="240" height="11" fill="#ea580c"/>
+<text x="396" y="258" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">295 µs  1.71x</text>
+<text x="145" y="274" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">EF Core Compiled</text>
+<rect x="151" y="265" width="221.92" height="11" fill="#fb923c"/>
+<text x="377.92" y="274" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">272 µs  1.58x</text>
+<text x="580" y="92" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#111827">GetNarrowList (10,000 calls, take 10)</text>
+<text x="705" y="114" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">AdoNet</text>
+<rect x="711" y="105" width="133.97" height="11" fill="#6b7280"/>
+<text x="849.97" y="114" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">167 µs  1.00x</text>
+<text x="705" y="130" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">Dapper</text>
+<rect x="711" y="121" width="135.2" height="11" fill="#0f766e"/>
+<text x="851.2" y="130" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">169 µs  1.01x</text>
+<text x="705" y="146" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">PetaPoco</text>
+<rect x="711" y="137" width="150.66" height="11" fill="#14b8a6"/>
+<text x="866.66" y="146" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">188 µs  1.12x</text>
+<text x="705" y="162" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">L2DB Sql</text>
+<rect x="711" y="153" width="137.99" height="11" fill="#1e3a8a"/>
+<text x="853.99" y="162" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">172 µs  1.03x</text>
+<text x="705" y="178" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">L2DB Linq</text>
+<rect x="711" y="169" width="164.09" height="11" fill="#2563eb"/>
+<text x="880.09" y="178" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">205 µs  1.22x</text>
+<text x="705" y="194" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">L2DB Linq Inline</text>
+<rect x="711" y="185" width="168.56" height="11" fill="#60a5fa"/>
+<text x="884.56" y="194" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">210 µs  1.26x</text>
+<text x="705" y="210" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">L2DB Compiled</text>
+<rect x="711" y="201" width="141.67" height="11" fill="#4f46e5"/>
+<text x="857.67" y="210" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">177 µs  1.06x</text>
+<text x="705" y="226" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">L2DB Compiled Inline</text>
+<rect x="711" y="217" width="163.19" height="11" fill="#818cf8"/>
+<text x="879.19" y="226" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">204 µs  1.22x</text>
+<text x="705" y="242" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">EF Core Sql</text>
+<rect x="711" y="233" width="236.43" height="11" fill="#9a3412"/>
+<text x="952.43" y="242" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">295 µs  1.76x</text>
+<text x="705" y="258" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">EF Core Linq</text>
+<rect x="711" y="249" width="240" height="11" fill="#ea580c"/>
+<text x="956" y="258" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">299 µs  1.79x</text>
+<text x="705" y="274" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">EF Core Compiled</text>
+<rect x="711" y="265" width="220.03" height="11" fill="#fb923c"/>
+<text x="936.03" y="274" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">274 µs  1.64x</text>
+<text x="20" y="316" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#111827">GetNarrowList (10,000 calls, take 100)</text>
+<text x="145" y="338" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">AdoNet</text>
+<rect x="151" y="329" width="133.21" height="11" fill="#6b7280"/>
+<text x="289.21" y="338" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">187 µs  1.00x</text>
+<text x="145" y="354" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">Dapper</text>
+<rect x="151" y="345" width="138.75" height="11" fill="#0f766e"/>
+<text x="294.75" y="354" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">195 µs  1.04x</text>
+<text x="145" y="370" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">PetaPoco</text>
+<rect x="151" y="361" width="149.91" height="11" fill="#14b8a6"/>
+<text x="305.91" y="370" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">211 µs  1.13x</text>
+<text x="145" y="386" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">L2DB Sql</text>
+<rect x="151" y="377" width="137.21" height="11" fill="#1e3a8a"/>
+<text x="293.21" y="386" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">193 µs  1.03x</text>
+<text x="145" y="402" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">L2DB Linq</text>
+<rect x="151" y="393" width="161.29" height="11" fill="#2563eb"/>
+<text x="317.29" y="402" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">227 µs  1.21x</text>
+<text x="145" y="418" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">L2DB Linq Inline</text>
+<rect x="151" y="409" width="163.89" height="11" fill="#60a5fa"/>
+<text x="319.89" y="418" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">230 µs  1.23x</text>
+<text x="145" y="434" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">L2DB Compiled</text>
+<rect x="151" y="425" width="138.56" height="11" fill="#4f46e5"/>
+<text x="294.56" y="434" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">195 µs  1.04x</text>
+<text x="145" y="450" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">L2DB Compiled Inline</text>
+<rect x="151" y="441" width="156.47" height="11" fill="#818cf8"/>
+<text x="312.47" y="450" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">220 µs  1.17x</text>
+<text x="145" y="466" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">EF Core Sql</text>
+<rect x="151" y="457" width="226.2" height="11" fill="#9a3412"/>
+<text x="382.2" y="466" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">318 µs  1.70x</text>
+<text x="145" y="482" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">EF Core Linq</text>
+<rect x="151" y="473" width="240" height="11" fill="#ea580c"/>
+<text x="396" y="482" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">337 µs  1.80x</text>
+<text x="145" y="498" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">EF Core Compiled</text>
+<rect x="151" y="489" width="219.95" height="11" fill="#fb923c"/>
+<text x="375.95" y="498" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">309 µs  1.65x</text>
+<text x="580" y="316" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#111827">GetNarrowList (1,000 calls, take 1,000)</text>
+<text x="705" y="338" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">AdoNet</text>
+<rect x="711" y="329" width="147.01" height="11" fill="#6b7280"/>
+<text x="863.01" y="338" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">426 µs  1.00x</text>
+<text x="705" y="354" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">Dapper</text>
+<rect x="711" y="345" width="160.36" height="11" fill="#0f766e"/>
+<text x="876.36" y="354" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">465 µs  1.09x</text>
+<text x="705" y="370" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">PetaPoco</text>
+<rect x="711" y="361" width="163.05" height="11" fill="#14b8a6"/>
+<text x="879.05" y="370" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">472 µs  1.11x</text>
+<text x="705" y="386" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">L2DB Sql</text>
+<rect x="711" y="377" width="149.9" height="11" fill="#1e3a8a"/>
+<text x="865.9" y="386" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">434 µs  1.02x</text>
+<text x="705" y="402" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">L2DB Linq</text>
+<rect x="711" y="393" width="154.36" height="11" fill="#2563eb"/>
+<text x="870.36" y="402" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">447 µs  1.05x</text>
+<text x="705" y="418" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">L2DB Linq Inline</text>
+<rect x="711" y="409" width="158.94" height="11" fill="#60a5fa"/>
+<text x="874.94" y="418" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">461 µs  1.08x</text>
+<text x="705" y="434" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">L2DB Compiled</text>
+<rect x="711" y="425" width="132.6" height="11" fill="#4f46e5"/>
+<text x="848.6" y="434" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">384 µs  0.90x</text>
+<text x="705" y="450" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">L2DB Compiled Inline</text>
+<rect x="711" y="441" width="159.74" height="11" fill="#818cf8"/>
+<text x="875.74" y="450" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">463 µs  1.09x</text>
+<text x="705" y="466" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">EF Core Sql</text>
+<rect x="711" y="457" width="240" height="11" fill="#9a3412"/>
+<text x="956" y="466" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">695 µs  1.63x</text>
+<text x="705" y="482" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">EF Core Linq</text>
+<rect x="711" y="473" width="236.8" height="11" fill="#ea580c"/>
+<text x="952.8" y="482" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">686 µs  1.61x</text>
+<text x="705" y="498" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">EF Core Compiled</text>
+<rect x="711" y="489" width="212.67" height="11" fill="#fb923c"/>
+<text x="928.67" y="498" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">616 µs  1.45x</text>
+<text x="20" y="540" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#111827">GetNarrowList (100 calls, take 10,000)</text>
+<text x="145" y="562" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">AdoNet</text>
+<rect x="151" y="553" width="153.18" height="11" fill="#6b7280"/>
+<text x="309.18" y="562" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">1.65 ms  1.00x</text>
+<text x="145" y="578" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">Dapper</text>
+<rect x="151" y="569" width="162.86" height="11" fill="#0f766e"/>
+<text x="318.86" y="578" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">1.75 ms  1.06x</text>
+<text x="145" y="594" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">PetaPoco</text>
+<rect x="151" y="585" width="157.5" height="11" fill="#14b8a6"/>
+<text x="313.5" y="594" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">1.69 ms  1.03x</text>
+<text x="145" y="610" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">L2DB Sql</text>
+<rect x="151" y="601" width="152.79" height="11" fill="#1e3a8a"/>
+<text x="308.79" y="610" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">1.64 ms  1.00x</text>
+<text x="145" y="626" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">L2DB Linq</text>
+<rect x="151" y="617" width="157.55" height="11" fill="#2563eb"/>
+<text x="313.55" y="626" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">1.69 ms  1.03x</text>
+<text x="145" y="642" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">L2DB Linq Inline</text>
+<rect x="151" y="633" width="159.19" height="11" fill="#60a5fa"/>
+<text x="315.19" y="642" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">1.71 ms  1.04x</text>
+<text x="145" y="658" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">L2DB Compiled</text>
+<rect x="151" y="649" width="153.96" height="11" fill="#4f46e5"/>
+<text x="309.96" y="658" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">1.66 ms  1.01x</text>
+<text x="145" y="674" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">L2DB Compiled Inline</text>
+<rect x="151" y="665" width="161.63" height="11" fill="#818cf8"/>
+<text x="317.63" y="674" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">1.74 ms  1.06x</text>
+<text x="145" y="690" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">EF Core Sql</text>
+<rect x="151" y="681" width="240" height="11" fill="#9a3412"/>
+<text x="396" y="690" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">2.58 ms  1.57x</text>
+<text x="145" y="706" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">EF Core Linq</text>
+<rect x="151" y="697" width="224.16" height="11" fill="#ea580c"/>
+<text x="380.16" y="706" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">2.41 ms  1.46x</text>
+<text x="145" y="722" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">EF Core Compiled</text>
+<rect x="151" y="713" width="225.52" height="11" fill="#fb923c"/>
+<text x="381.52" y="722" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">2.43 ms  1.47x</text>
+<text x="580" y="540" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#111827">GetNarrowList (10 calls, take 100,000)</text>
+<text x="705" y="562" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">AdoNet</text>
+<rect x="711" y="553" width="159.04" height="11" fill="#6b7280"/>
+<text x="875.04" y="562" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">13.8 ms  1.00x</text>
+<text x="705" y="578" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">Dapper</text>
+<rect x="711" y="569" width="163.4" height="11" fill="#0f766e"/>
+<text x="879.4" y="578" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">14.2 ms  1.03x</text>
+<text x="705" y="594" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">PetaPoco</text>
+<rect x="711" y="585" width="164.87" height="11" fill="#14b8a6"/>
+<text x="880.87" y="594" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">14.3 ms  1.04x</text>
+<text x="705" y="610" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">L2DB Sql</text>
+<rect x="711" y="601" width="163.07" height="11" fill="#1e3a8a"/>
+<text x="879.07" y="610" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">14.2 ms  1.03x</text>
+<text x="705" y="626" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">L2DB Linq</text>
+<rect x="711" y="617" width="160.25" height="11" fill="#2563eb"/>
+<text x="876.25" y="626" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">13.9 ms  1.01x</text>
+<text x="705" y="642" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">L2DB Linq Inline</text>
+<rect x="711" y="633" width="160.92" height="11" fill="#60a5fa"/>
+<text x="876.92" y="642" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">14.0 ms  1.01x</text>
+<text x="705" y="658" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">L2DB Compiled</text>
+<rect x="711" y="649" width="161.85" height="11" fill="#4f46e5"/>
+<text x="877.85" y="658" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">14.1 ms  1.02x</text>
+<text x="705" y="674" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">L2DB Compiled Inline</text>
+<rect x="711" y="665" width="160.97" height="11" fill="#818cf8"/>
+<text x="876.97" y="674" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">14.0 ms  1.01x</text>
+<text x="705" y="690" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">EF Core Sql</text>
+<rect x="711" y="681" width="240" height="11" fill="#9a3412"/>
+<text x="956" y="690" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">20.9 ms  1.51x</text>
+<text x="705" y="706" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">EF Core Linq</text>
+<rect x="711" y="697" width="235.72" height="11" fill="#ea580c"/>
+<text x="951.72" y="706" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">20.5 ms  1.48x</text>
+<text x="705" y="722" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">EF Core Compiled</text>
+<rect x="711" y="713" width="234.07" height="11" fill="#fb923c"/>
+<text x="950.07" y="722" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">20.3 ms  1.47x</text>
+<text x="20" y="764" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#111827">GetNarrowList (1 calls, take 1,000,000)</text>
+<text x="145" y="786" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">AdoNet</text>
+<rect x="151" y="777" width="158.37" height="11" fill="#6b7280"/>
+<text x="314.37" y="786" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">139 ms  1.00x</text>
+<text x="145" y="802" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">Dapper</text>
+<rect x="151" y="793" width="156.07" height="11" fill="#0f766e"/>
+<text x="312.07" y="802" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">137 ms  0.99x</text>
+<text x="145" y="818" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">PetaPoco</text>
+<rect x="151" y="809" width="155.59" height="11" fill="#14b8a6"/>
+<text x="311.59" y="818" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">137 ms  0.98x</text>
+<text x="145" y="834" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">L2DB Sql</text>
+<rect x="151" y="825" width="155.81" height="11" fill="#1e3a8a"/>
+<text x="311.81" y="834" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">137 ms  0.98x</text>
+<text x="145" y="850" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">L2DB Linq</text>
+<rect x="151" y="841" width="156.91" height="11" fill="#2563eb"/>
+<text x="312.91" y="850" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">138 ms  0.99x</text>
+<text x="145" y="866" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">L2DB Linq Inline</text>
+<rect x="151" y="857" width="156.98" height="11" fill="#60a5fa"/>
+<text x="312.98" y="866" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">138 ms  0.99x</text>
+<text x="145" y="882" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">L2DB Compiled</text>
+<rect x="151" y="873" width="154.99" height="11" fill="#4f46e5"/>
+<text x="310.99" y="882" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">136 ms  0.98x</text>
+<text x="145" y="898" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">L2DB Compiled Inline</text>
+<rect x="151" y="889" width="157.99" height="11" fill="#818cf8"/>
+<text x="313.99" y="898" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">139 ms  1.00x</text>
+<text x="145" y="914" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">EF Core Sql</text>
+<rect x="151" y="905" width="240" height="11" fill="#9a3412"/>
+<text x="396" y="914" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">211 ms  1.52x</text>
+<text x="145" y="930" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">EF Core Linq</text>
+<rect x="151" y="921" width="233.22" height="11" fill="#ea580c"/>
+<text x="389.22" y="930" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">205 ms  1.47x</text>
+<text x="145" y="946" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" text-anchor="end" fill="#111827">EF Core Compiled</text>
+<rect x="151" y="937" width="225.25" height="11" fill="#fb923c"/>
+<text x="381.25" y="946" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="10" fill="#374151">198 ms  1.42x</text>
+<text x="20" y="989" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#4b5563">Runtime .NET 10.0.12, Ubuntu 26.04.1 LTS (X64), AMD Ryzen 9 5950X 16-Core Processor, GC Workstation, Interactive.</text>
+<text x="20" y="1004" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#4b5563">SQL Server 17.0.5005.3 Enterprise Developer Edition (64-bit).</text>
+<text x="20" y="1019" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="#4b5563">linq2db 6.6.0+f3f31790fa55d4ab04c89a91e16f0e8df952b50d. Measured 2026-10-12; median of 3 process run(s).</text>
+</svg>

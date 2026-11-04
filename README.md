@@ -33,6 +33,36 @@ marked database whose data is out of date. An existing unmarked database is used
 the current test data (as databases from earlier versions of this test do); otherwise the run stops
 without changing it.
 
+## Results
+
+**Provisional: measured through docker-proxy, to be replaced by the clean run.** The charts below come
+from three back-to-back processes of one Linux run (net10.0, SQL Server 2025 in a Docker container on the same
+machine, reached through docker-proxy rather than the host network). The proxy adds latency to every
+round trip, which compresses the differences between libraries in the call-bound tests. This run predates
+"AdoNet Param", so that column is absent.
+
+Each chart is one test group. A panel is one test method (calls and row limit in its title); a bar is the
+median time of one call over the processes, and the number after it is the ratio to the "AdoNet" baseline of
+the same panel. Every panel has its own scale. The environment (runtime, OS, CPU, SQL Server, linq2db
+version, date) is printed under each chart.
+
+[![Single Column](Charts/single-column.svg)](Charts/single-column.svg)
+[![Narrow List](Charts/narrow-list.svg)](Charts/narrow-list.svg)
+[![Wide List](Charts/wide-list.svg)](Charts/wide-list.svg)
+[![Linq Query](Charts/linq-query.svg)](Charts/linq-query.svg)
+
+Raw results: [`Charts/Result.sqlite`](Charts/Result.sqlite) (every sample and the environment of each run).
+The charts are generated from it; `Charts/note.txt` is the provisional label printed on them (delete it for
+a final set):
+
+```
+dotnet run --project ChartTool -c Release -- Charts/Result.sqlite Charts
+```
+
+The tool takes the platform of the newest run (or `--platform "NET 10.0"`), pools the runs with an
+identical environment and library versions, and writes one SVG per group. The output depends only on the
+data, so the same database gives byte-identical files.
+
 ## Method
 
 - **Same work for everyone.** Every library runs the same query and reads every row it returns.
@@ -83,7 +113,7 @@ without changing it.
   Providers run in random order within a process. Repeat the process (as `RunAll.cmd` does) to get
   several samples; the viewer shows a trimmed mean.
 
-## Results
+## Result data
 
 `Result/Result.sqlite` holds every sample (`TestRun` → `TestMethod` → `TestStopwatch`, times as
 `TimeSpan` ticks) and, per run, `TestRunInfo`: runtime, OS, CPU, GC mode, build configuration,
